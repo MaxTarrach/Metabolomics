@@ -23,8 +23,41 @@
     <script src="https://d3js.org/d3.v7.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale@4" defer></script>
     <script src="clusteredSpectra.js" defer></script>
+
+    <input type="file" id="uploadfile" accept=".csv">
+    <button id="uploadconfirm">Upload File</button>
+
+
+    <!-- Papaparse CSV to JSON 
+    https://www.youtube.com/watch?v=00SBedXA4Yc&ab_channel=ChartJS
+    results = uploaded CSV to JSON File
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+
+    <script>
+        const massDiffData = [];
+        const uploadconfirm = document.getElementById('uploadconfirm').
+        addEventListener('click', () => {
+        Papa.parse(document.getElementById('uploadfile').files[0],
+            {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results){
+                    console.log(results);
+                    // console.log(results.data[5].MassDiff_GNPS_results);
+                    
+                    for (i = 0; i < results.data.length; i++){
+                     //   results.data[i].MassDiff_GNPS_results;
+                     massDiffData.push(results.data[i].MassDiff_GNPS_results);
+                    }
+                    console.log(massDiffData);
+                }
+             })    
+        })
+    </script>
 <!-- <script src="index.js" defer></script>  -->
-   
+ <!-- Alt + Z für Zeilenumbruch-->  
   
 
   
