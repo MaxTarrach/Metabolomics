@@ -8,7 +8,7 @@
 
 </head>
 <body>
-    <h1>Hello World</h1>
+    <h1>Metabolomics</h1>
     <style>
         .container{
             width: 250px;
@@ -34,33 +34,19 @@
     -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
 
-    <script>
-        const massDiffData = [];
-        const uploadconfirm = document.getElementById('uploadconfirm').
-        addEventListener('click', () => {
-        Papa.parse(document.getElementById('uploadfile').files[0],
-            {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: function(results){
-                    console.log(results);
-                    // console.log(results.data[5].MassDiff_GNPS_results);
-                    
-                    for (i = 0; i < results.data.length; i++){
-                     //   results.data[i].MassDiff_GNPS_results;
-                     massDiffData.push(results.data[i].MassDiff_GNPS_results);
-                    }
-                    console.log(massDiffData);
-                }
-             })    
-        })
-    </script>
-<!-- <script src="index.js" defer></script>  -->
- <!-- Alt + Z für Zeilenumbruch-->  
+   <!--  <script src="jsonData.js" defer></script> --> 
+    <script src="index.js" defer></script> 
+    <div id="my_dataviz"></div>
+
+    <!-- Alt + Z für Zeilenumbruch-->  
   
 
-  
+ 
+ 
+ <script>
+
+
+    </script>
     
 </body>
 </html>
