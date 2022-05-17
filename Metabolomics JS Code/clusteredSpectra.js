@@ -17,5 +17,5 @@ d3.csv("clustered_spectra_sample.csv", function(data){
         .attr("y", function(d, i){return i * 50;})
         .attr("fill", "blue")
     
-        console.log(data);
+      //  console.log(data);
     })
