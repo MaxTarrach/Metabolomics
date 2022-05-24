@@ -9,18 +9,18 @@
 // Set Text for every paragraph element. Data(dta) gives you Access to the Data for Each Datapoint in each Paragraph
 
 
-var groupedData; 
+
 const massDiffData = [];
-const CSdataSet = [];
+let CSdataSet = [];
+let groupedData; 
 const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
   convertToJSON();
-  groupBySuperClass() 
-  visualizeData(); 
+ // groupBySuperClass();
 
 
 //loadCSVFile();
-// groupBySuperClass();
+
 
 
 })
@@ -51,8 +51,10 @@ function convertToJSON(){
           }
           console.log(massDiffData);
           console.log(CSdataSet);
-       
-          
+
+          groupBySuperClass();
+          visualizeData();
+
           
       
       }
@@ -62,14 +64,33 @@ function convertToJSON(){
 }
 
 
+function sumMassOfSubClasses(group){
+
+return d3.sum(group, function(d){
+  return d.MassDiff_GNPS_results;
+});
+}
+
 function groupBySuperClass(){
 
- data = CSdataSet;
-  group = d3.group(data, d => d.analog_compound_name_ms2query_results, d => d.cf_superclass_ms2query_results)
+ // data = CSdataSet
+// console.log(CSdataSet);
 
-// data pushen
-groupedData = data; 
+groupedData = d3.rollup(CSdataSet, 
+ sumMassOfSubClasses,
+  function(d) {return d.cf_superclass_ms2query_results},
+  function(d) {return d.cf_class_ms2query_results}
+);
+console.log(groupedData);
+console.log(groupedData.get('Benzenoids'));
+
+let root = d3.hierarchy(groupedData);
+console.log(root);
+
+
 }
+
+
  // express.static("https://d3js.org/d3.v7.min.js");
 
     // set the dimensions and margins of the graph
@@ -102,19 +123,25 @@ groupedData = data;
 
 function visualizeData(){ 
  
-
 console.log(groupedData);
-console.log(data);
+
+
+
+
+
+}
+
+
+// ----------- Old Treemap VisualizeCode -------------
+  /*
 //d3.json oder d3.csv
-  d3.csv( ///"clustered_spectra_FractionProfiling_RPOS_ToF10_PreCheck_LTR_01_DDA_Filtered_merged.csv"
- //  "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_dendrogram_full.json"
-  groupedData
-  ).then(function(groupedData)
+d3.csv(groupedData).then(function(groupedData)
+
   { 
     console.log(groupedData);
     console.log(data)
       // Give the data to this cluster layout:
-      const root = d3.hierarchy(data).sum(function(d){ return d.value}) // Here the size of each leave is given in the 'value' field in input data
+      const root = d3.hierarchy(groupedData).sum(function(d){ return d.value}) // Here the size of each leave is given in the 'value' field in input data
       
       // Then d3.treemap computes the position of each element of the hierarchy
       d3.treemap()
@@ -145,9 +172,10 @@ console.log(data);
           .attr("font-size", "15px")
           .attr("fill", "white")
    
-          console.log(data);
-    })
+          console.log(groupedData);
+    }
+    )
 
-  }
+  */
 
   
