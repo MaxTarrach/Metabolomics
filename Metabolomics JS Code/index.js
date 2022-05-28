@@ -13,6 +13,7 @@
 const massDiffData = [];
 let CSdataSet = [];
 let groupedData; 
+let hierarchicalDataGroup;
 const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
   convertToJSON();
@@ -52,10 +53,14 @@ function convertToJSON(){
           console.log(massDiffData);
           console.log(CSdataSet);
 
+          hierachyBySuperClass();
           groupBySuperClass();
           visualizeData();
 
-          
+       d3.json("https://gist.githubusercontent.com/mbostock/4348373/raw/85f18ac90409caa5529b32156aa6e71cf985263f/flare.json",function(data){
+
+console.log(data);
+        });
       
       }
    })
@@ -79,35 +84,33 @@ function groupBySuperClass(){
 groupedData = d3.rollup(CSdataSet, 
  sumMassOfSubClasses,
   function(d) {return d.cf_superclass_ms2query_results},
-  function(d) {return d.cf_class_ms2query_results}
+  function(d) {return d.cf_class_ms2query_results},
+  function(d) {return d.cf_subclass_ms2query_results}
 );
 console.log(groupedData);
 console.log(groupedData.get('Benzenoids'));
 
-let root = d3.hierarchy(groupedData);
-console.log(root);
-
+hierarchy = d3.hierarchy(groupedData);
+console.log(hierarchy);
 
 }
 
+function hierachyBySuperClass(){
+hierarchicalDataGroup = d3.group(CSdataSet,
+function(d) {return d.cf_superclass_ms2query_results},
+function(d) {return d.cf_class_ms2query_results},
+function(d) {return d.cf_subclass_ms2query_results},
+//function(d) {return d.cf_direct_parent_ms2query_results},
+//function(d) {return d.analog_compound_name_ms2query_results},
+)
+console.log(hierarchicalDataGroup);
 
- // express.static("https://d3js.org/d3.v7.min.js");
+//hierarchy = d3.hierarchy(hierarchicalDataGroup);
+//console.log(hierarchy);
+}
 
-    // set the dimensions and margins of the graph
-    
-    const margin = {top: 10, right: 10, bottom: 10, left: 10},
-      width = 445 - margin.left - margin.right,
-      height = 445 - margin.top - margin.bottom;
-    
-    // append the svg object to the body of the page
-    const svg = d3.select("#my_dataviz")
-    .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform",
-            `translate(${margin.left}, ${margin.top})`);
-    
+
+
    
 /*
    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_dendrogram_full.json").then(function(data)
@@ -122,14 +125,79 @@ console.log(root);
 
 
 function visualizeData(){ 
- 
-console.log(groupedData);
+  var width = 960,
+  height = 700,
+  radius = (Math.min(width, height) / 2) - 10;
+
+var formatNumber = d3.format(",d");
+
+var x = d3.scaleLinear()
+  .range([0, 2 * Math.PI]);
+
+var y = d3.scaleSqrt()
+  .range([0, radius]);
+
+var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+var partition = d3.partition();
+
+var arc = d3.arc()
+  .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+  .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+  .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+  .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
 
+var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height)
+.append("g")
+  .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+
+d3.json(
+  "https://gist.githubusercontent.com/mbostock/4348373/raw/85f18ac90409caa5529b32156aa6e71cf985263f/flare.json"
+
+  , function(error, root) {
+if (error) throw error;
+
+root = d3.hierarchy(root);
+root.sum(function(d) { return d.size; });
+svg.selectAll("path")
+    .data(partition(root).descendants())
+  .enter().append("path")
+    .attr("d", arc)
+    .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
+    .on("click", click)
+  .append("title")
+    .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
+console.log(root);
+
+    function click(d) {
+      svg.transition()
+          .duration(750)
+          .tween("scale", function() {
+            var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
+                yd = d3.interpolate(y.domain(), [d.y0, 1]),
+                yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
+            return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
+          })
+        .selectAll("path")
+          .attrTween("d", function(d) { return function() { return arc(d); }; });
+      }
+
+
+    d3.select(self.frameElement).style("height", height + "px");
+    console.log(groupedData);
+
+});
 
 
 
 }
+
+  
+
+
 
 
 // ----------- Old Treemap VisualizeCode -------------
@@ -178,4 +246,4 @@ d3.csv(groupedData).then(function(groupedData)
 
   */
 
-  
+ 
