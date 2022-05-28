@@ -10,19 +10,15 @@
 <body>
     <h1>Metabolomics</h1>
     <style>
-        .container{
-            width: 250px;
-            height: 200px;
-           border: 1px solid rgb(204, 145, 61);
-        }
-        .bar{
-            fill: rgb(204, 145, 61);
-        }
+path {
+  stroke: #fff;
+}
     </style>
-    <svg></svg>
-    <script src="https://d3js.org/d3.v7.min.js" defer></script>
+   
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale@4" defer></script>
-    <script src="clusteredSpectra.js" defer></script>
+   
 
     <input type="file" id="uploadfile" accept=".csv">
     <button id="uploadconfirm">Upload File</button>
@@ -36,15 +32,16 @@
 
   
     <script src="index.js" defer></script>
- 
+    <!--  <script src="sunburst.js"></script> -->
+    
     <!--     <script src="testGroup.js" defer></script>  -->  
    <!--   <script src="clusteredDataSampleGroup.js" defer></script> -->
-    <div id="my_dataviz"></div>
+    <div id="dataviz"></div>
 
     <!-- Alt + Z für Zeilenumbruch-->  
   
 
- 
+   
  
  <script>
 
