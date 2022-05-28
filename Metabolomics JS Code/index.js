@@ -125,6 +125,7 @@ console.log(hierarchicalDataGroup);
 
 
 function visualizeData(){ 
+<<<<<<< Updated upstream
   var width = 960,
   height = 700,
   radius = (Math.min(width, height) / 2) - 10;
@@ -190,16 +191,24 @@ console.log(root);
     console.log(groupedData);
 
 });
+=======
+ 
+console.log(groupedData);
+data = CSdataSet; 
+>>>>>>> Stashed changes
 
 
 
 }
 
+<<<<<<< Updated upstream
   
 
 
 
 
+=======
+>>>>>>> Stashed changes
 // ----------- Old Treemap VisualizeCode -------------
   /*
 //d3.json oder d3.csv
