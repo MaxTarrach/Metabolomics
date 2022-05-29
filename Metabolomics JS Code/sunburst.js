@@ -1,4 +1,4 @@
-<<<<<<< Updated upstream
+
 var width = 960,
     height = 700,
     radius = (Math.min(width, height) / 2) - 10;
@@ -59,7 +59,7 @@ function click(d) {
 }
 
 d3.select(self.frameElement).style("height", height + "px");
-=======
+
 // Copyright 2021 Observable, Inc.
 // Released under the ISC license.
 // https://observablehq.com/@d3/sunburst
@@ -173,4 +173,4 @@ function Sunburst(data, { // data is either tabular (array of objects) or hierar
 
     return svg.node();
   }
->>>>>>> Stashed changes
+
