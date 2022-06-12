@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metabolomics App</title>
-
+    <link href="styles.css" type="text/css" rel="stylesheet">
 </head>
 <body>
     <h1>Metabolomics</h1>
@@ -40,7 +40,10 @@ path {
 
     <!-- Alt + Z für Zeilenumbruch-->  
 
-
+    <div class="slideContainer">
+        <input type="range" min="0" max="100" value="1" id="myRange" class="slider">
+        <p>Value: <span id="value"> </span></p>
+    </div>
    
  
  <script>
