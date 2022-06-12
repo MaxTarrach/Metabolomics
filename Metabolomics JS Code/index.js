@@ -9,7 +9,9 @@
 // Set Text for every paragraph element. Data(dta) gives you Access to the Data for Each Datapoint in each Paragraph
 
 
-
+var slider = document.getElementById("myRange");
+var output = document.getElementById("value");
+var sliderValue; 
 const massDiffData = [];
 let CSdataSet = [];
 let groupedData; 
@@ -19,17 +21,10 @@ let hierarchy;
 const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
   convertToJSON();
-  //loadCSVFile();
- // groupBySuperClass();
-
-
-
-
-
 
 })
 
-
+/*
 function loadCSVFile(){
   d3.csv(document.getElementById('uploadfile').files[0],function(data){
 
@@ -40,9 +35,7 @@ function loadCSVFile(){
   groupBySuperClass();
   visualizeData();
 
- // let file = document.getElementById('uploadconfirm').files[0];
-
-}
+}*/
 
 function convertToJSON(){
   Papa.parse(document.getElementById('uploadfile').files[0],
@@ -51,9 +44,7 @@ function convertToJSON(){
       header: true,
       skipEmptyLines: true,
       complete: function(results){
-        //  console.log(results);
-          // console.log(results.data[5].MassDiff_GNPS_results);
-          
+        console.log(sliderValue); 
           for (i = 0; i < results.data.length; i++){
            //   results.data[i].MassDiff_GNPS_results;
            massDiffData.push(results.data[i].MassDiff_GNPS_results);
@@ -69,7 +60,7 @@ function convertToJSON(){
 
        d3.json("https://gist.githubusercontent.com/mbostock/4348373/raw/85f18ac90409caa5529b32156aa6e71cf985263f/flare.json",function(data){
 
-console.log(data);
+      console.log(data);
         });
       
       }
@@ -78,6 +69,17 @@ console.log(data);
 
 }
 
+output.innerHTML = slider.value;
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+
+slider.addEventListener("input", function(){
+  sliderValue = slider.value;
+  var color = "linear-gradient(90deg, rgb(117,252,117)" + sliderValue + "%, rgb(214,214,214)" + sliderValue + "%";
+  slider.style.background = color;
+  
+})
 
 function sumMassOfSubClasses(group){
 
@@ -99,10 +101,6 @@ groupedData = d3.rollup(CSdataSet,
 );
 console.log(groupedData);
 console.log(groupedData.get('Benzenoids'));
-
-hierarchy = d3.hierarchy(groupedData);
-console.log(hierarchy);
-
 }
 
 function hierachyBySuperClass(){
@@ -114,9 +112,6 @@ function(d) {return d.cf_subclass_ms2query_results},
 //function(d) {return d.analog_compound_name_ms2query_results},
 )
 console.log(hierarchicalDataGroup);
-
-//hierarchy = d3.hierarchy(hierarchicalDataGroup);
-//console.log(hierarchy);
 }
 
 function nestBySuperClass(){
@@ -136,18 +131,11 @@ console.log(hierarchy);
 
 }
 
-
    
 /*
    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_dendrogram_full.json").then(function(data)
-
-
    "clustered_spectra_FractionProfiling_RPOS_ToF10_PreCheck_LTR_01_DDA_Filtered_merged.csv"
 */
-
-
-
-
 
 
 function visualizeData(){
@@ -186,21 +174,27 @@ var svg = d3.select("body").append("svg")
 
 
 
-
-//hierarchy = d3.hierarchy(nestedData[0]);
-//hierarchy = d3.hierarchy(nestedData[0],function(d) { return d.values; });
-//hierarchy = d3.hierarchy(nestedData[0],function(d) { return d.MassDiff_GNPS_results; });
-//hierarchy = d3.hierarchy(nestedData[0]);
-//hierarchy = d3.hierarchy(nestedData[0]).sum(function (d){return d.values});
 nestBySuperClass();
 console.log(hierarchy);
-hierarchy.sum(function(d) { return d.MassDiff_GNPS_results; });
 
-//hierarchy.sum(function (d){return d.MassDiff_GNPS_results});
-//d3.sum(CSdataSet, function(d){return d.MassDiff_GNPS_results;});
-//sumMassOfSubClasses(hierarchy);
+/*  Setting up the size of each Pie-Slice/Subgroup on the Diagram:  
 
-   
+hierarchy.sum(value) 
+--> Determines which value is used to calculate the size of the "Pie-Slices" example: Mass
+
+
+hierarchy.count(value like Mass from the list, example: every Entry that has a mass, should be counted as an object in this Node)
+--> You can use this to Sort the Diagram by the Count/amount of objects in each Node 
+
+*/
+
+
+hierarchy.count(function(d) { return d.precursor_mz_query_spectrum; });
+
+console.log(hierarchy.length);
+//hierarchy.sum(function(d) { return d.MassDiff_GNPS_results; });
+//hierarchy.sum(function(d) { return d.precursor_mz_query_spectrum; }); 
+
 
 
 svg.selectAll("path")
