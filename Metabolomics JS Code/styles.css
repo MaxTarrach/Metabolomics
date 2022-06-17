@@ -2,7 +2,10 @@
 /* CSS Document*/
 
 body {
+<<<<<<< HEAD
  
+=======
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
 /*
   background: rgb(110, 110, 110);
     font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
@@ -25,8 +28,13 @@ p{
     content: "100";
     color: black;
     font-size: 2rem;
+<<<<<<< HEAD
     position: absolute;
     left: 92%;
+=======
+    position: sticky;
+    left: 90%;
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
     top: 26%;
 }
 
@@ -35,13 +43,20 @@ p{
     content: "0";
     color: black;
     font-size: 2rem;
+<<<<<<< HEAD
     position: absolute;
+=======
+    position: sticky;
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
     left: 1%;
     top: 26%;
 }
 
 .slidecontainer {
+<<<<<<< HEAD
  
+=======
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
     width: 75%;
     margin-top: 200px;
 }

@@ -11,8 +11,12 @@
 
 var slider = document.getElementById("myRange");
 var output = document.getElementById("value");
+<<<<<<< HEAD
 var sliderValue = 1;
 var filteredCSdataSet =[]; 
+=======
+var sliderValue; 
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
 const massDiffData = [];
 let CSdataSet = [];
 let groupedData; 
@@ -26,6 +30,21 @@ addEventListener('click', () => {
 
 })
 
+<<<<<<< HEAD
+=======
+/*
+function loadCSVFile(){
+  d3.csv(document.getElementById('uploadfile').files[0],function(data){
+
+    console.log(data);
+  });
+  
+  hierachyBySuperClass();
+  groupBySuperClass();
+  visualizeData();
+
+}*/
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
 
 function convertToJSON(){
   Papa.parse(document.getElementById('uploadfile').files[0],
@@ -34,7 +53,11 @@ function convertToJSON(){
       header: true,
       skipEmptyLines: true,
       complete: function(results){
+<<<<<<< HEAD
         //
+=======
+        console.log(sliderValue); 
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
           for (i = 0; i < results.data.length; i++){
            //   results.data[i].MassDiff_GNPS_results;
            massDiffData.push(results.data[i].MassDiff_GNPS_results);
@@ -72,12 +95,16 @@ slider.addEventListener("input", function(){
   sliderValue = slider.value;
   var color = "linear-gradient(90deg, rgb(117,252,117)" + sliderValue + "%, rgb(214,214,214)" + sliderValue + "%";
   slider.style.background = color;
+<<<<<<< HEAD
   console.log("Slider Value: "+ sliderValue)
 
 if(dataLoaded == true){
   nestBySuperClass();
   visualizeData();
 }
+=======
+  
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
 })
 
 function sumMassOfSubClasses(group){
@@ -142,6 +169,7 @@ console.log(hierarchy);
 
 }
 
+<<<<<<< HEAD
 function filterByPredictionValue(){
 
 console.log(sliderValue);
@@ -158,6 +186,8 @@ if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100
 
   }
 }
+=======
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
    
 /*
    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_dendrogram_full.json").then(function(data)
@@ -205,7 +235,11 @@ var svg = d3.select("body").append("svg")
 
 
 
+<<<<<<< HEAD
 //nestBySuperClass();
+=======
+nestBySuperClass();
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
 console.log(hierarchy);
 
 /*  Setting up the size of each Pie-Slice/Subgroup on the Diagram:  
@@ -219,8 +253,15 @@ hierarchy.count(value like Mass from the list, example: every Entry that has a m
 
 */
 
+<<<<<<< HEAD
 hierarchy.count();
 console.log(hierarchy);
+=======
+
+hierarchy.count(function(d) { return d.precursor_mz_query_spectrum; });
+
+console.log(hierarchy.length);
+>>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
 //hierarchy.sum(function(d) { return d.MassDiff_GNPS_results; });
 //hierarchy.sum(function(d) { return d.precursor_mz_query_spectrum; }); 
 
