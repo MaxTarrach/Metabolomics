@@ -26,18 +26,6 @@ addEventListener('click', () => {
 
 })
 
-/*
-function loadCSVFile(){
-  d3.csv(document.getElementById('uploadfile').files[0],function(data){
-
-    console.log(data);
-  });
-  
-  hierachyBySuperClass();
-  groupBySuperClass();
-  visualizeData();
-
-}*/
 
 function convertToJSON(){
   Papa.parse(document.getElementById('uploadfile').files[0],
@@ -85,9 +73,10 @@ slider.addEventListener("input", function(){
   var color = "linear-gradient(90deg, rgb(117,252,117)" + sliderValue + "%, rgb(214,214,214)" + sliderValue + "%";
   slider.style.background = color;
   console.log("Slider Value: "+ sliderValue)
+
 if(dataLoaded == true){
   nestBySuperClass();
-visualizeData();
+  visualizeData();
 }
 })
 
@@ -137,8 +126,6 @@ filteredCSdataSet = filteredCSdataSet.filter((value, index, self) =>
   ))
 )
 
-
-
 nestedData =  d3.nest()
 .key(function(d) {return d.cf_kingdom_ms2query_results})
 .key(function(d) {return d.cf_superclass_ms2query_results})
@@ -149,9 +136,7 @@ nestedData =  d3.nest()
 
 console.log(nestedData[0]);
 
-
 hierarchy = d3.hierarchy(nestedData[0],function(d) { return d.values; });
-
 
 console.log(hierarchy);
 
@@ -235,19 +220,6 @@ hierarchy.count(value like Mass from the list, example: every Entry that has a m
 */
 
 hierarchy.count();
-
-/*for(var i = 0; i < hierarchy.value; i++){
-
- 
-  
-  if (hierarchy.ms2query_model_prediction_ms2query_results > 0.5){
-
-console.log(hierarchy.ms2query_model_prediction_ms2query_results); 
-  }
-}*/
-//hierarchy.count();
-
-
 console.log(hierarchy);
 //hierarchy.sum(function(d) { return d.MassDiff_GNPS_results; });
 //hierarchy.sum(function(d) { return d.precursor_mz_query_spectrum; }); 
