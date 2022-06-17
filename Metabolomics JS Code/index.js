@@ -11,13 +11,15 @@
 
 var slider = document.getElementById("myRange");
 var output = document.getElementById("value");
-var sliderValue; 
+var sliderValue = 1;
+var filteredCSdataSet =[]; 
 const massDiffData = [];
 let CSdataSet = [];
 let groupedData; 
 let hierarchicalDataGroup;
 let nestedData;
 let hierarchy; 
+var dataLoaded; 
 const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
   convertToJSON();
@@ -44,18 +46,22 @@ function convertToJSON(){
       header: true,
       skipEmptyLines: true,
       complete: function(results){
-        console.log(sliderValue); 
+        //
           for (i = 0; i < results.data.length; i++){
            //   results.data[i].MassDiff_GNPS_results;
            massDiffData.push(results.data[i].MassDiff_GNPS_results);
            CSdataSet.push(results.data[i]);
           }
+
           console.log(massDiffData);
           console.log(CSdataSet);
-
+          dataLoaded = true; 
           nestBySuperClass();
-          hierachyBySuperClass();
-          groupBySuperClass();
+          //hierachyBySuperClass();
+       //   groupBySuperClass();
+
+
+       
           visualizeData();
 
        d3.json("https://gist.githubusercontent.com/mbostock/4348373/raw/85f18ac90409caa5529b32156aa6e71cf985263f/flare.json",function(data){
@@ -78,7 +84,11 @@ slider.addEventListener("input", function(){
   sliderValue = slider.value;
   var color = "linear-gradient(90deg, rgb(117,252,117)" + sliderValue + "%, rgb(214,214,214)" + sliderValue + "%";
   slider.style.background = color;
-  
+  console.log("Slider Value: "+ sliderValue)
+if(dataLoaded == true){
+  nestBySuperClass();
+visualizeData();
+}
 })
 
 function sumMassOfSubClasses(group){
@@ -103,7 +113,7 @@ console.log(groupedData);
 console.log(groupedData.get('Benzenoids'));
 }
 
-function hierachyBySuperClass(){
+/*function hierachyBySuperClass(){
 hierarchicalDataGroup = d3.group(CSdataSet,
 function(d) {return d.cf_superclass_ms2query_results},
 function(d) {return d.cf_class_ms2query_results},
@@ -113,24 +123,56 @@ function(d) {return d.cf_subclass_ms2query_results},
 )
 console.log(hierarchicalDataGroup);
 }
-
+*/
 function nestBySuperClass(){
+
+filterByPredictionValue();
+console.log(CSdataSet);
+console.log(filteredCSdataSet);
+
+//remove double entries so Dataset doesnt get double nested/added 
+filteredCSdataSet = filteredCSdataSet.filter((value, index, self) =>
+  index === self.findIndex((t) => (
+    t.query_spectrum_nr === value.query_spectrum_nr
+  ))
+)
+
+
+
 nestedData =  d3.nest()
 .key(function(d) {return d.cf_kingdom_ms2query_results})
 .key(function(d) {return d.cf_superclass_ms2query_results})
 .key(function(d) {return d.cf_class_ms2query_results})
 .key(function(d) {return d.cf_subclass_ms2query_results})
 .key(function(d) {return d.analog_compound_name_ms2query_results})
-.entries(CSdataSet);
+.entries(filteredCSdataSet);
 
 console.log(nestedData[0]);
 
 
 hierarchy = d3.hierarchy(nestedData[0],function(d) { return d.values; });
+
+
 console.log(hierarchy);
 
 }
 
+function filterByPredictionValue(){
+
+console.log(sliderValue);
+
+  for(var i = 0; i < CSdataSet.length; i++){
+   // console.log(CSdataSet[i].ms2query_model_prediction_ms2query_results); 
+
+if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100)){
+ // console.log(CSdataSet[i])
+ filteredCSdataSet.push(CSdataSet[i]);
+
+ //console.log(filteredCSdataSet);
+    }
+
+  }
+}
    
 /*
    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_dendrogram_full.json").then(function(data)
@@ -166,6 +208,10 @@ var arc = d3.arc()
   .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
 
+  //remove exsisting svg in case of reloading 
+  d3.select("svg").remove();
+
+
 var svg = d3.select("body").append("svg")
   .attr("width", width)
   .attr("height", height)
@@ -174,7 +220,7 @@ var svg = d3.select("body").append("svg")
 
 
 
-nestBySuperClass();
+//nestBySuperClass();
 console.log(hierarchy);
 
 /*  Setting up the size of each Pie-Slice/Subgroup on the Diagram:  
@@ -188,10 +234,21 @@ hierarchy.count(value like Mass from the list, example: every Entry that has a m
 
 */
 
+hierarchy.count();
 
-hierarchy.count(function(d) { return d.precursor_mz_query_spectrum; });
+/*for(var i = 0; i < hierarchy.value; i++){
 
-console.log(hierarchy.length);
+ 
+  
+  if (hierarchy.ms2query_model_prediction_ms2query_results > 0.5){
+
+console.log(hierarchy.ms2query_model_prediction_ms2query_results); 
+  }
+}*/
+//hierarchy.count();
+
+
+console.log(hierarchy);
 //hierarchy.sum(function(d) { return d.MassDiff_GNPS_results; });
 //hierarchy.sum(function(d) { return d.precursor_mz_query_spectrum; }); 
 
@@ -206,9 +263,9 @@ svg.selectAll("path")
   .append("title")
     .text(function(d) { return d.data.key + "\n" +
     //formatNumber(d.value) für ganze Zahlen
-    //toFixed für Nachkommastellen
+    //toFixed(2) für 2 Nachkommastellen
     //ohne alles maximale Nachkommastellen
-    d.value.toFixed(2); });
+    formatNumber(d.value); });
 
 
     function click(d) {
