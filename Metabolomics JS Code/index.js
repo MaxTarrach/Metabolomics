@@ -11,12 +11,8 @@
 
 var slider = document.getElementById("myRange");
 var output = document.getElementById("value");
-<<<<<<< HEAD
 var sliderValue = 1;
 var filteredCSdataSet =[]; 
-=======
-var sliderValue; 
->>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
 const massDiffData = [];
 let CSdataSet = [];
 let groupedData; 
@@ -30,21 +26,6 @@ addEventListener('click', () => {
 
 })
 
-<<<<<<< HEAD
-=======
-/*
-function loadCSVFile(){
-  d3.csv(document.getElementById('uploadfile').files[0],function(data){
-
-    console.log(data);
-  });
-  
-  hierachyBySuperClass();
-  groupBySuperClass();
-  visualizeData();
-
-}*/
->>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
 
 function convertToJSON(){
   Papa.parse(document.getElementById('uploadfile').files[0],
@@ -53,18 +34,14 @@ function convertToJSON(){
       header: true,
       skipEmptyLines: true,
       complete: function(results){
-<<<<<<< HEAD
         //
-=======
-        console.log(sliderValue); 
->>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
           for (i = 0; i < results.data.length; i++){
            //   results.data[i].MassDiff_GNPS_results;
            massDiffData.push(results.data[i].MassDiff_GNPS_results);
            CSdataSet.push(results.data[i]);
           }
 
-          console.log(massDiffData);
+          //console.log(massDiffData);
           console.log(CSdataSet);
           dataLoaded = true; 
           nestBySuperClass();
@@ -75,10 +52,7 @@ function convertToJSON(){
        
           visualizeData();
 
-       d3.json("https://gist.githubusercontent.com/mbostock/4348373/raw/85f18ac90409caa5529b32156aa6e71cf985263f/flare.json",function(data){
-
-      console.log(data);
-        });
+      
       
       }
    })
@@ -95,16 +69,12 @@ slider.addEventListener("input", function(){
   sliderValue = slider.value;
   var color = "linear-gradient(90deg, rgb(117,252,117)" + sliderValue + "%, rgb(214,214,214)" + sliderValue + "%";
   slider.style.background = color;
-<<<<<<< HEAD
   console.log("Slider Value: "+ sliderValue)
 
 if(dataLoaded == true){
   nestBySuperClass();
   visualizeData();
 }
-=======
-  
->>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
 })
 
 function sumMassOfSubClasses(group){
@@ -125,8 +95,8 @@ groupedData = d3.rollup(CSdataSet,
   function(d) {return d.cf_class_ms2query_results},
   function(d) {return d.cf_subclass_ms2query_results}
 );
-console.log(groupedData);
-console.log(groupedData.get('Benzenoids'));
+//console.log(groupedData);
+//console.log(groupedData.get('Benzenoids'));
 }
 
 /*function hierachyBySuperClass(){
@@ -143,15 +113,19 @@ console.log(hierarchicalDataGroup);
 function nestBySuperClass(){
 
 filterByPredictionValue();
-console.log(CSdataSet);
-console.log(filteredCSdataSet);
+//console.log(CSdataSet);
+//console.log(filteredCSdataSet);
 
 //remove double entries so Dataset doesnt get double nested/added 
-filteredCSdataSet = filteredCSdataSet.filter((value, index, self) =>
-  index === self.findIndex((t) => (
-    t.query_spectrum_nr === value.query_spectrum_nr
-  ))
-)
+
+
+
+removeDoubleValues(); 
+
+
+
+
+console.log(filteredCSdataSet); 
 
 nestedData =  d3.nest()
 .key(function(d) {return d.cf_kingdom_ms2query_results})
@@ -161,7 +135,7 @@ nestedData =  d3.nest()
 .key(function(d) {return d.analog_compound_name_ms2query_results})
 .entries(filteredCSdataSet);
 
-console.log(nestedData[0]);
+//console.log(nestedData[0]);
 
 hierarchy = d3.hierarchy(nestedData[0],function(d) { return d.values; });
 
@@ -169,25 +143,38 @@ console.log(hierarchy);
 
 }
 
-<<<<<<< HEAD
+function removeDoubleValues(){
+
+  filteredCSdataSet = filteredCSdataSet.filter((value, index, self) =>
+  index === self.findIndex((t) => (
+    t.query_spectrum_nr === value.query_spectrum_nr
+  ))
+)
+
+}
+
 function filterByPredictionValue(){
+
 
 console.log(sliderValue);
 
-  for(var i = 0; i < CSdataSet.length; i++){
-   // console.log(CSdataSet[i].ms2query_model_prediction_ms2query_results); 
+for(var i = 0; i < CSdataSet.length; i++){
 
-if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100)){
- // console.log(CSdataSet[i])
- filteredCSdataSet.push(CSdataSet[i]);
-
- //console.log(filteredCSdataSet);
+  if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100)){
+    filteredCSdataSet.push(CSdataSet[i]);
+    removeDoubleValues();
     }
-
-  }
 }
-=======
->>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
+
+for(var i = 0; i < filteredCSdataSet.length; i++){
+
+  if (filteredCSdataSet[i].ms2query_model_prediction_ms2query_results < (sliderValue / 100)){
+    filteredCSdataSet.splice(i, 1);
+    }
+}
+
+ console.log(filteredCSdataSet);
+}
    
 /*
    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_dendrogram_full.json").then(function(data)
@@ -197,8 +184,8 @@ if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100
 
 function visualizeData(){
 
-console.log(hierarchy);
-console.log(nestedData[0]);
+//console.log(hierarchy);
+//console.log(nestedData[0]);
 
   var width = 960,
   height = 700,
@@ -235,12 +222,8 @@ var svg = d3.select("body").append("svg")
 
 
 
-<<<<<<< HEAD
 //nestBySuperClass();
-=======
-nestBySuperClass();
->>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
-console.log(hierarchy);
+
 
 /*  Setting up the size of each Pie-Slice/Subgroup on the Diagram:  
 
@@ -253,15 +236,8 @@ hierarchy.count(value like Mass from the list, example: every Entry that has a m
 
 */
 
-<<<<<<< HEAD
 hierarchy.count();
 console.log(hierarchy);
-=======
-
-hierarchy.count(function(d) { return d.precursor_mz_query_spectrum; });
-
-console.log(hierarchy.length);
->>>>>>> 77c381e6579634c27201745ac7a5e95ecffa0c85
 //hierarchy.sum(function(d) { return d.MassDiff_GNPS_results; });
 //hierarchy.sum(function(d) { return d.precursor_mz_query_spectrum; }); 
 
@@ -296,7 +272,7 @@ svg.selectAll("path")
 
 
     d3.select(self.frameElement).style("height", height + "px");
-    console.log(groupedData);
+  
 
 
 
