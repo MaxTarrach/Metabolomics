@@ -187,8 +187,8 @@ function visualizeData(){
 //console.log(hierarchy);
 //console.log(nestedData[0]);
 
-  var width = 960,
-  height = 700,
+  var width = 480,
+  height = 350,
   radius = (Math.min(width, height) / 2) - 10;
 
 var formatNumber = d3.format(",d");
@@ -210,11 +210,11 @@ var arc = d3.arc()
   .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
 
-  //remove exsisting svg in case of reloading 
+  //remove existing svg in case of reloading 
   d3.select("svg").remove();
 
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#sunburst").append("svg")
   .attr("width", width)
   .attr("height", height)
 .append("g")
