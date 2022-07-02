@@ -182,7 +182,7 @@
             font-family: 'Open Sans';
           
         }
-  
+        
         #legend .container {
           display: flex;
           flex: auto;
@@ -193,7 +193,7 @@
         }
   
         #legend .legend-section {
-          width: 100%;
+          width:100%;
         }
   
         #legend .legend-section:not(:first-child) {
@@ -545,10 +545,20 @@ path {
 
 
 
+ 
+    
+
+
+  <!--   Tmap Viz -->
+
+
+
+  <div id="Tmap"> 
+
+    <div id="sunburst-container">
+        <div id="sunburst"></div>
+    </div>
    
-  <!--   Tmap Viz -->  
-  <div id="Tmap">   
-    <div id="sunburst"></div>
 
   <canvas id="smiles-canvas" data-bind="smilesCanvas"></canvas>
     
@@ -1186,7 +1196,9 @@ z: [375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.
         renderLegend() {
           if (!this.legend.show) return;
 
-          
+          //get the sunburst to append it to the legend down under
+          let sunburst = document.getElementById("sunburst");
+
           let legend = document.getElementById('legend');
           
           if (legend) this.body.removeChild(legend);
@@ -1259,6 +1271,10 @@ z: [375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.
                 this.changeSeries(value, s.name);
               });
 
+            //adding Sunburst
+              container.appendChild(
+                  sunburst
+              ); 
 
               container.appendChild(
                 Faerun.createElement(
@@ -1268,6 +1284,9 @@ z: [375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.0,375.
                   [ sectionHeader, seriesSelector, ...legendSection ]
                 )
               );
+
+
+           
             }
           });
         }

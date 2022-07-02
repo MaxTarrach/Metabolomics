@@ -144,7 +144,6 @@ console.log(hierarchy);
 }
 
 function removeDoubleValues(){
-
   filteredCSdataSet = filteredCSdataSet.filter((value, index, self) =>
   index === self.findIndex((t) => (
     t.query_spectrum_nr === value.query_spectrum_nr
@@ -154,7 +153,6 @@ function removeDoubleValues(){
 }
 
 function filterByPredictionValue(){
-
 
 console.log(sliderValue);
 
@@ -187,8 +185,9 @@ function visualizeData(){
 //console.log(hierarchy);
 //console.log(nestedData[0]);
 
-  var width = 480,
-  height = 350,
+//w 480, height 350
+  var width = 300,
+  height = 300,
   radius = (Math.min(width, height) / 2) - 10;
 
 var formatNumber = d3.format(",d");
