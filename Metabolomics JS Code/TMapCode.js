@@ -540,7 +540,7 @@ function initTMap(){
       renderLegend() {
         if (!this.legend.show) return;
 
-        //get the sunburst to append it to the legend down under
+        //MODIFIED get the sunburst to append it to the legend down under
         let sunburst = document.getElementById("sunburst");
 
         let legend = document.getElementById('legend');
@@ -615,7 +615,7 @@ function initTMap(){
               this.changeSeries(value, s.name);
             });
 
-          //adding Sunburst
+          //MODIFIED adding Sunburst
             container.appendChild(
                 sunburst
             ); 
