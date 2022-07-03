@@ -20,6 +20,29 @@ let hierarchicalDataGroup;
 let nestedData;
 let hierarchy; 
 var dataLoaded; 
+var TMapData;
+data;
+var filteredTmapData = {
+
+  Chemical_Space: {
+    x: [],
+    y: [],
+    z: [],
+    labels: [],
+    colors: {
+        r: [],
+        g: [],
+        b: [],
+    }[2]
+},
+Chemical_Space_tree: {
+    x: [],
+    y: [],
+    z: [],
+}
+
+};
+
 const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
   convertToJSON();
@@ -51,14 +74,17 @@ function convertToJSON(){
 
        
           visualizeData();
-
-      
+          filterFromTmap(); 
+      console.log(data);
+      initTMap(); 
       
       }
    })
 
 
 }
+
+
 
 output.innerHTML = slider.value;
 slider.oninput = function() {
@@ -76,6 +102,42 @@ if(dataLoaded == true){
   visualizeData();
 }
 })
+
+function  filterFromTmap(){
+TMapData = data; 
+console.log(TMapData.Chemical_Space);
+  
+for(var i = 0; i < TMapData.Chemical_Space.labels.length; i++){
+ for(var j = 0; j < filteredCSdataSet.length; j++){
+
+ 
+  //color the Data that is found in the TMap
+  if(TMapData.Chemical_Space.labels[i] === filteredCSdataSet[j].Smiles_GNPS_results)
+{
+
+TMapData.Chemical_Space.colors[0].r[i] = 255;
+TMapData.Chemical_Space.colors[0].g[i] = 0;
+TMapData.Chemical_Space.colors[0].b[i] = 255;
+//console.log(TMapData.Chemical_Space.labels[i]);
+
+//filteredTmapData.Chemical_Space.colors[0].r[i] = 
+//TMapData.Chemical_Space.colors[0].r[i];
+
+
+
+}
+
+
+
+ 
+//console.log(TMapData.Chemical_Space.labels[i])
+ }
+}
+data = TMapData; 
+initTMap();
+}
+
+
 
 function sumMassOfSubClasses(group){
 
@@ -279,6 +341,8 @@ svg.selectAll("path")
 
 
 }
+
+
 //standard Sunburst Code 
  /* 
 function visualizeData(){ 
