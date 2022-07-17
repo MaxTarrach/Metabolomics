@@ -289,8 +289,10 @@ function initTMap(){
 
               this.el.hoverIndicator.style.width = pointSize + 'px';
               this.el.hoverIndicator.style.height = pointSize + 'px';
-              this.el.hoverIndicator.style.left = (x - pointSize / 2.0 - 1) + 'px';
-              this.el.hoverIndicator.style.top = (y - pointSize / 2.0 - 1) + 'px';
+              //MODIFIED from -1 to -2 
+              this.el.hoverIndicator.style.left = (x - pointSize / 2.0 - 2) + 'px';
+              //MODIFIED from -1 to +180
+              this.el.hoverIndicator.style.top = (y - pointSize / 2.0 + 180) + 'px';
 
               this.el.hoverIndicator.classList.add('show');
               }
@@ -736,7 +738,9 @@ function initTMap(){
           pointSize *= 1.25;
           let halfPointSize = pointSize / 2.0;
           indicator.element.style.left = (screenPosition[0] - halfPointSize) + 'px';
-          indicator.element.style.top = (screenPosition[1] - halfPointSize) + 'px';
+
+          // ADDED +181 to adjust position
+          indicator.element.style.top = (screenPosition[1] - halfPointSize + 181) + 'px';
           indicator.element.style.width = pointSize + 'px';
           indicator.element.style.height = pointSize + 'px';
         });
