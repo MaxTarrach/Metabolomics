@@ -21,8 +21,7 @@ let nestedData;
 let hierarchy; 
 var dataLoaded; 
 var TMapData;
-var ChemicalSpaceDataBackUp = data;
-
+data;
 var filteredTmapData = {
 
   Chemical_Space: {
@@ -30,22 +29,11 @@ var filteredTmapData = {
     y: [],
     z: [],
     labels: [],
-    colors: [{
+    colors: {
         r: [],
         g: [],
         b: [],
-    }, {
-      r: [],
-      g: [],
-      b: [],
-  },
-  {
-    r: [],
-    g: [],
-    b: [],
-}
-  ],
-   
+    }[2]
 },
 Chemical_Space_tree: {
     x: [],
@@ -84,11 +72,11 @@ function convertToJSON(){
        //   groupBySuperClass();
 
 
-      
+       
           visualizeData();
           filterFromTmap(); 
       console.log(data);
-    //  initTMap(); 
+      initTMap(); 
       
       }
    })
@@ -116,74 +104,36 @@ if(dataLoaded == true){
 })
 
 function  filterFromTmap(){
-TMapData = ChemicalSpaceDataBackUp; 
-console.log(TMapData);
-
-var tempdata = [];
-
-//Achtung: könnte bei doppelaufrufen zu doppelten/dreifachen... tree führen 
-filteredTmapData.Chemical_Space_tree
-=  TMapData.Chemical_Space_tree;
-
-console.log(ChemicalSpaceDataBackUp);
-// Check if the Labels of the filteredCSDataSet are found in the chemical_space of the TMap
+TMapData = data; 
+console.log(TMapData.Chemical_Space);
+  
 for(var i = 0; i < TMapData.Chemical_Space.labels.length; i++){
  for(var j = 0; j < filteredCSdataSet.length; j++){
 
-  //
+ 
+  //color the Data that is found in the TMap
+  if(TMapData.Chemical_Space.labels[i] === filteredCSdataSet[j].Smiles_GNPS_results)
+{
+
+TMapData.Chemical_Space.colors[0].r[i] = 255;
+TMapData.Chemical_Space.colors[0].g[i] = 0;
+TMapData.Chemical_Space.colors[0].b[i] = 255;
+//console.log(TMapData.Chemical_Space.labels[i]);
+
+//filteredTmapData.Chemical_Space.colors[0].r[i] = 
+//TMapData.Chemical_Space.colors[0].r[i];
+
+
+
+}
+
+
 
  
-//filter out by smiles that are found in both filteredCSData and in TMap-Chemical-Space
-  if(TMapData.Chemical_Space.labels[i] ===  filteredCSdataSet[j].Smiles_GNPS_results){
-
-
-  //COLOR the Data that is found in the TMap
-  /*
-  TMapData.Chemical_Space.colors[0].r[i] = 255;
-  TMapData.Chemical_Space.colors[0].g[i] = 0;
-  TMapData.Chemical_Space.colors[0].b[i] = 255;
-*/
-
-//push the filtered Data into the yet empty  filteredtmapdata-structure
-filteredTmapData.Chemical_Space.x.push(
-  TMapData.Chemical_Space.x[i]);
-filteredTmapData.Chemical_Space.y.push(
-  TMapData.Chemical_Space.y[i]);
-filteredTmapData.Chemical_Space.z.push(
-  TMapData.Chemical_Space.z[i]);
-filteredTmapData.Chemical_Space.labels.push(
-  TMapData.Chemical_Space.labels[i]);
-filteredTmapData.Chemical_Space.colors[0].r.push(TMapData.Chemical_Space.colors[0].r[i]);
-filteredTmapData.Chemical_Space.colors[0].g.push(TMapData.Chemical_Space.colors[0].g[i]);
-filteredTmapData.Chemical_Space.colors[0].b.push(TMapData.Chemical_Space.colors[0].b[i]);
-
-
-tempdata.push(
-  
-  // TMapData.Chemical_Space.x[i],
-  // TMapData.Chemical_Space.y[i],
-  // TMapData.Chemical_Space.z[i],
-
-
-  TMapData.Chemical_Space.labels[i],
-  // TMapData.Chemical_Space.colors[0].r[i],
-  // TMapData.Chemical_Space.colors[0].g[i],
-  // TMapData.Chemical_Space.colors[0].b[i], 
-  
-  );
-
-
-
-//filteredTmapData.Chemical_Space.colors[0].r[i] = TMapData.Chemical_Space.colors[0].r[i];
-}
+//console.log(TMapData.Chemical_Space.labels[i])
  }
 }
-console.log(tempdata);
-// filteredTmapData = tempdata;
-console.log(filteredTmapData);
-
-//data = TMapData; 
-data = filteredTmapData;
+data = TMapData; 
 initTMap();
 }
 
@@ -291,7 +241,7 @@ for(var i = 0; i < filteredCSdataSet.length; i++){
    "clustered_spectra_FractionProfiling_RPOS_ToF10_PreCheck_LTR_01_DDA_Filtered_merged.csv"
 */
 
-// Sunburst Diagram Visuals 
+
 function visualizeData(){
 
 //console.log(hierarchy);
