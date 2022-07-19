@@ -158,7 +158,20 @@
             background-color: #fff;
           
         }
-  
+
+        #highlighting{
+    position: absolute;
+    pointer-events:none;
+    border: 0px solid black;
+    background: transparent;
+    top: 200px;
+    left: 0;
+    width: 100%;
+    height: 100%
+  }
+
+
+
         #legend {
           position: absolute;
           z-index: 9998;
@@ -460,6 +473,8 @@
           opacity: .5;
           pointer-events: none;
         }
+          
+
   
         #overlay-structure {
           display: block;
@@ -519,6 +534,8 @@ path {
     <script src="https://cdn.jsdelivr.net/npm/d3-scale@4" defer></script>
 
     <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js" defer></script>
+
+    <script src='jquery-3.2.1.min.js'></script>
     
    
 
@@ -553,6 +570,7 @@ path {
 
   <!--   Tmap Viz -->
 
+ 
 
   <div class="slideContainer" style="position:relative;  top:20px;">
     <input type="range" min="0" max="100" value="1" id="myRange" class="slider">
@@ -561,10 +579,11 @@ path {
 
   <div id="Tmap"> 
 
-
+    
 
     <div id="sunburst-container">
         <div id="sunburst"></div>
+        
     </div>
   <canvas id="smiles-canvas" data-bind="smilesCanvas"></canvas>
 
@@ -621,7 +640,9 @@ path {
       </a>
     </div>
     <div id="hover-indicator" data-bind="hoverIndicator"></div>
+ 
     <canvas id="lore"></canvas>
+    <canvas id="highlighting"></canvas>
 
   
 

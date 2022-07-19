@@ -87,14 +87,28 @@ function convertToJSON(){
       
           visualizeData();
           filterFromTmap(); 
+          
       console.log(data);
-    //  initTMap(); 
+
       
       }
    })
 
 
 }
+
+
+
+const HLcanvas = document.getElementById("highlighting");
+const ctx = HLcanvas.getContext("2d");
+HLcanvas.width = window.innerWidth;
+HLcanvas.height = window.innerHeight;
+
+ctx.fillStyle = "red";
+ctx.beginPath();
+ctx.arc(200,200,50,0,Math.PI * 2);
+ctx.closePath();
+ctx.fill();
 
 
 
