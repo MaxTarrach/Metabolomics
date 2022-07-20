@@ -15,16 +15,7 @@ body {
     color: white;
 */
 }
-  
-#highlighting{
-    position: absolute;
-    border: 2px solid black;
-    background: blue;
-    top: 200px;
-    left: 0;
-    width: 100%;
-    height: 100%
-  }
+
 
 p{
     margin-top: 20px;

@@ -110,7 +110,23 @@ function initTMap(){
                         data[s.name]['colors'][0].r, data[s.name]['colors'][0].g, 
                         data[s.name]['colors'][0].b, data[s.name]['s'] ? data[s.name]['s'][0] : 1.0);
 
-          ph.setPointScale(s.point_scale);
+        //ph.setPointScale(s.point_scale);
+
+        //MODIFIED: Make Filtered Data bigger
+      
+  
+          if(data[s.name].dataFiltered == true)
+          {
+            console.log(data[s.name].dataFiltered);
+            
+            ph.setPointScale(s.point_scale + 500);
+          }else{
+            ph.setPointScale(s.point_scale);
+          }
+          console.log();
+
+
+          // MOD END
           ph.setFog([this.clearColor.components[0], this.clearColor.components[1],
                      this.clearColor.components[2], this.clearColor.components[3]],
                     s.fog_intensity)
@@ -136,6 +152,19 @@ function initTMap(){
             this.ohIndexToPhIndex.push(this.phIndexMap[s.name]);
           }
         });
+/*
+        //highlight filtered Data
+        for(var i = 0; i < TMapData.Chemical_Space.labels.length; i++){
+         
+          let ph = new Lore.Helpers.PointHelper(
+            this.lore, s.name, s.shader, { maxPointSize: s.max_point_size }
+          );
+
+
+          ph.setPointScale(s.point_scale);
+        }
+*/
+        
       }
 
       initCoords() {
@@ -739,7 +768,7 @@ function initTMap(){
           let halfPointSize = pointSize / 2.0;
           indicator.element.style.left = (screenPosition[0] - halfPointSize) + 'px';
 
-          // ADDED +181 to adjust position
+          // MODIFIED +181 to adjust position
           indicator.element.style.top = (screenPosition[1] - halfPointSize + 181) + 'px';
           indicator.element.style.width = pointSize + 'px';
           indicator.element.style.height = pointSize + 'px';

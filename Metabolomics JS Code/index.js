@@ -45,6 +45,7 @@ var filteredTmapData = {
     b: [],
 }
   ],
+   dataFiltered:[],
    
 },
 Chemical_Space_tree: {
@@ -104,9 +105,9 @@ const ctx = HLcanvas.getContext("2d");
 HLcanvas.width = window.innerWidth;
 HLcanvas.height = window.innerHeight;
 
-ctx.fillStyle = "red";
+ctx.fillStyle = "yellow";
 ctx.beginPath();
-ctx.arc(200,200,50,0,Math.PI * 2);
+ctx.arc(20,20,10,0,Math.PI * 2);
 ctx.closePath();
 ctx.fill();
 
@@ -142,13 +143,25 @@ filteredTmapData.Chemical_Space_tree
 console.log(ChemicalSpaceDataBackUp);
 // Check if the Labels of the filteredCSDataSet are found in the chemical_space of the TMap
 for(var i = 0; i < TMapData.Chemical_Space.labels.length; i++){
+
+
+//Assign a false boolean to all (40k+) datapoints
+TMapData.Chemical_Space.dataFiltered[i] = false;
+
+
+
  for(var j = 0; j < filteredCSdataSet.length; j++){
 
-  //
+
+
 
  
 //filter out by smiles that are found in both filteredCSData and in TMap-Chemical-Space
   if(TMapData.Chemical_Space.labels[i] ===  filteredCSdataSet[j].Smiles_GNPS_results){
+
+  //Change Booleans to true for filtered Data for later highlighting in TMapCode.js 
+  TMapData.Chemical_Space.dataFiltered[i] = true;
+
 
 
   //COLOR the Data that is found in the TMap
@@ -195,9 +208,10 @@ tempdata.push(
 console.log(tempdata);
 // filteredTmapData = tempdata;
 console.log(filteredTmapData);
+console.log(TMapData.Chemical_Space.dataFiltered);
 
-//data = TMapData; 
-data = filteredTmapData;
+data = TMapData; 
+//data = filteredTmapData;
 initTMap();
 }
 
