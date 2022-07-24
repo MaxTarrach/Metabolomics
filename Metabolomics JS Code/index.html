@@ -6,6 +6,515 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metabolomics App</title>
     <link href="styles.css" type="text/css" rel="stylesheet">
+    <link rel="shortcut icon" href="data:image/vnd.microsoft.icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA25g0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAERAAAAAAAAAREAAAAAAAABEQAAAAAAAAERAAAAAAAAARERERAAAAABEREREAAAAAEREREQAAAAAREAAAAAAAABEQAAAAAAAAEREREQAAAAARERERAAAAABEREREAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAPH/AADx/wAA8f8AAPH/AADwDwAA8A8AAPAPAADx/wAA8f8AAPAPAADwDwAA8A8AAP//AAD//wAA" />
+    <script src="https://unpkg.com/lore-engine@1.1.10/dist/lore.min.js"></script>
+    <script src="https://unpkg.com/smiles-drawer@1.2.0/dist/smiles-drawer.min.js"></script>
+    <link 
+      rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" 
+      integrity="sha256-piqEf7Ap7CMps8krDQsSOTZgF+MU/0MPyPW2enj5I40=" 
+      crossorigin="anonymous" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400,600"
+      rel="stylesheet"
+    />
+    <style>
+        body {
+          margin: 0px;
+          padding: 0px;
+          height: 100%;
+          user-select: none;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+  
+        #lore {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+        }
+  
+        #title {
+          position: absolute;
+          z-index: 9999;
+          pointer-events: none;
+          text-height: 1;
+          opacity: 0.0;
+          transition: opacity 0.5s ease-in;
+          
+            padding-bottom: 20px;
+          
+            font-size: 1.0em;
+          
+            color: #888888;
+          
+            font-family: 'Open Sans';
+          
+        }
+  
+        #x-axis {
+          position: absolute;
+          z-index: 9999;
+          pointer-events: none;
+          text-height: 1;
+          opacity: 0.0;
+          transition: opacity 0.5s ease-in;
+          
+            padding-top: 20px;
+          
+            font-size: 0.7em;
+          
+            color: #888888;
+          
+            font-family: 'Open Sans';
+          
+        }
+  
+        #y-axis {
+          position: absolute;
+          z-index: 9999;
+          pointer-events: none;
+          text-height: 1;
+          transition: opacity 0.5s ease-in;
+          
+            padding-bottom: 20px;
+          
+            font-size: 0.7em;
+          
+            color: #888888;
+          
+            font-family: 'Open Sans';
+          
+            transform: rotate(-90deg);
+          
+        }
+  
+        #tip {
+          position: absolute;
+          z-index: 9999;
+          padding: 5px;
+          font-family: 'Open Sans';
+          background-color: rgba(255, 255, 255, 1.0);
+          border-radius: 2px;
+          border-left: 5px solid #000;
+          pointer-events: none;
+          opacity: 0.0;
+          transition: opacity 0.1s ease-out;
+          filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 1.0));
+        }
+  
+        #tip.show {
+          opacity: 1.0;
+          transition: opacity 0.1s ease-out;
+        }
+  
+        #tip-text {
+          position: relative;
+          max-width: 250px;
+          font-size: 0.8em;
+          font-weight: bold;
+          white-space: normal;
+          line-break: normal;
+        }
+  
+        #hover-indicator {
+          display: none;
+          position: absolute;
+          z-index: 999;
+          border: 1px solid #fff;
+          background-color: rgba(255, 255, 255, 0.25);
+          border-radius: 50%;
+          pointer-events: none;
+        }
+  
+        #hover-indicator.show {
+          display: block !important
+        }
+  
+        .selected-indicator {
+          position: absolute;
+          z-index: 999;
+          pointer-events: none;
+        }
+  
+        .selected-indicator .crosshair-x {
+          position: absolute;
+          top: 0; left: 0; bottom: 0; right: 0;
+          height: 2px;
+          width: 100%;
+          margin: auto;
+          
+            background-color: #fff;
+          
+        }
+  
+        .selected-indicator .crosshair-y {
+          position: absolute;
+          top: 0; left: 0; bottom: 0; right: 0;
+          width: 2px;
+          height: 100%;
+          margin: auto;
+          
+            background-color: #fff;
+          
+        }
+
+        #highlighting{
+    position: absolute;
+    pointer-events:none;
+    border: 0px solid black;
+    background: transparent;
+    top: 200px;
+    left: 0;
+    width: 100%;
+    height: 100%
+  }
+
+
+
+        #legend {
+          position: absolute;
+          z-index: 9998;
+          
+            bottom: 10px;
+          
+            right: 10px;
+          
+            padding: 10px;
+          
+            border: 1px solid #262626;
+          
+            border-radius: 2px;
+          
+            background-color: #111111;
+          
+            filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+          
+            color: #eeeeee;
+          
+            font-family: 'Open Sans';
+          
+        }
+        
+        #legend .container {
+          display: flex;
+          flex: auto;
+          align-items: flex-start;
+          
+          flex-direction: column;
+          
+        }
+  
+        #legend .legend-section {
+          width:100%;
+        }
+  
+        #legend .legend-section:not(:first-child) {
+          
+        }
+  
+        #legend h2 {
+          font-size: 1em;
+          font-weight: 600;
+          padding-top: 0;
+          margin-top: 0;
+          margin-bottom: 5px;
+          text-align: center;
+          max-width: 250px;
+          white-space: normal;
+        }
+  
+        #legend h3 {
+          font-size: 0.8em;
+          margin-top: 10px;
+          margin-bottom: 0px;
+          max-width: 250px;
+          white-space: normal;
+        }
+  
+        #legend select {
+          width: 100%;
+          margin-bottom: 5px;
+          background: transparent;
+          color: #fff;
+          border-radius: 2px;
+          font-size: 0.75em;
+        }
+  
+        #legend select option {
+          background: #000;
+        }
+  
+        #legend .legend-element, #legend .legend-element-range {
+          position: relative;
+          display: flex;
+          flex: auto;
+          align-items: flex-start;
+          padding-bottom: 2px;
+          padding-top: 2px;
+        }
+  
+        #legend .legend-element {
+          align-items: flex-start;
+        }
+  
+        #legend .legend-element-range {
+          flex-direction: column;
+        }
+  
+        #legend .color-box {
+          
+            width: 15px;
+          
+            height: 15px;
+          
+            border: solid 0px;
+          
+        }
+  
+        #legend .color-stripe {
+          
+            width: 15px;
+          
+            height: 1px;
+          
+            border: solid 0px;
+          
+        }
+  
+        #legend .legend-label {
+          height: 15px;
+          font-size: 0.7em;
+          padding-left: 5px;
+        }
+  
+        #legend .legend-label.max {
+          position: absolute;
+          top: 0px;
+          margin-left: 15px;
+        }
+  
+        #legend .legend-label.min {
+          position: absolute;
+          bottom: 2px;
+          margin-left: 15px;
+        }
+  
+        #selected {
+          position: absolute;
+          display: none;
+          z-index: 9998;
+          width: 250px;
+          
+            bottom: 10px;
+          
+            left: 10px;
+          
+            padding: 0px;
+          
+            border: 1px solid #262626;
+          
+            border-radius: 2px;
+          
+            background-color: #111111;
+          
+            filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+          
+            color: #eeeeee;
+          
+            font-family: 'Open Sans';
+          
+        }
+  
+        #selected #selected-controls {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          padding: 5px 10px;
+          border-bottom: 1px solid #262626;
+          font-size: 0.8em;
+          font-weight: bold;
+        }
+  
+        #selected #selected-controls * {
+          display: inline-block;
+        }
+  
+        #selected #selected-controls #selected-title {
+          flex-grow: 1;
+          white-space: nowrap; 
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: #aaa;
+        }
+  
+        #selected #selected-controls a {
+          margin: 0px 2px;
+          font-size: 1.5em;
+          color: #fff;
+          opacity: 0.75;
+          transition: 0.2s;
+        }
+  
+        #selected #selected-controls a:hover {
+          opacity: 1.0;
+        }
+  
+        #selected #selected-controls a#selected-remove {
+          position: absolute;
+          right: 10px;
+          top: 42px;
+          color: #e74c3c;
+        }
+  
+        #selected #selected-container {
+          padding: 10px;
+          font-size: 0.8em;
+        }
+  
+        #selected #selected-container img {
+          margin-left: -10px;
+        }
+  
+        #selected #selected-container .label {
+          font-weight: bold;
+          color: #aaa;
+          font-size: 0.7em;
+        }
+  
+        #selected #selected-container .label:not(:first-child) {
+          margin-top: 2px;
+        }
+  
+        #selected #selected-container .content {
+          white-space: nowrap; 
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+  
+        #selected #selected-container .content a {
+          text-decoration: none;
+          color: #3498db;
+        }
+  
+        #controls {
+          position: absolute;
+          z-index: 9998;
+          
+            top: 10px;
+          
+            right: 10px;
+          
+            padding: 2px;
+          
+            border: 1px solid #262626;
+          
+            border-radius: 2px;
+          
+            background-color: #111111;
+          
+            filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+          
+            color: #eeeeee;
+          
+            font-family: 'Open Sans';
+          
+        }
+  
+        #controls a {
+          display: inline-block;
+          padding: 5px 10px;
+          font-size: 1.2em;
+          color: #fff;
+          opacity: 0.75;
+          transition: 0.2s;
+        }
+  
+        #controls a:hover {
+          opacity: 1.0;
+        }
+  
+        #controls #more-controls {
+          display: inline-block;
+        }
+  
+        #impress {
+          position: absolute;
+          z-index: 9999;
+          top: 10px;
+          left: 10px;
+          font-size: 0.7em;
+          color: #eee;
+        }
+  
+        #impress a {
+          color: #3498db;
+          text-decoration: none;
+        }
+  
+        #smiles-canvas {
+          position: absolute;
+          z-index: 9999;
+          left: -999px;
+          top: -999px;
+          width: 250px;
+          height: 250px;
+        }
+  
+  
+  
+        #overlay-structure-container {
+          position: absolute;
+          z-index: 9999;
+          top: 50px;
+          left: 275px;
+          right: 100px;
+          bottom: 10px;
+          opacity: .5;
+          pointer-events: none;
+        }
+          
+
+  
+        #overlay-structure {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          margin-top: auto;
+          margin-bottom: auto;
+        }
+  
+  
+  
+  
+  
+        .show {
+          opacity: 1.0 !important;
+        }
+  
+        .hide {
+          display: none !important;
+        }
+  
+        @media only screen and (max-width: 600px) {
+          #selected {
+            position: absolute;
+            display: none;
+            z-index: 9998;
+            width: 125px;
+            opacity: 0.8;
+            background-filter: blur(10px);
+          }
+  
+          #selected img {
+            width: 125px;
+          }
+  
+          #tip {
+            display: none;
+          }
+        }
+      </style>
 </head>
 <body>
     <h1>Metabolomics</h1>
@@ -15,9 +524,19 @@ path {
 }
     </style>
    
+   <script src="TmapData.js" defer></script> 
+    
+   <script src="TmapCode.js" defer></script>
+
+
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale@4" defer></script>
+
+    <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js" defer></script>
+
+    <!-- <script src='jquery-3.2.1.min.js'></script> -->
+    
    
 
     <input type="file" id="uploadfile" accept=".csv">
@@ -36,7 +555,9 @@ path {
     
     <!--     <script src="testGroup.js" defer></script>  -->  
    <!--   <script src="clusteredDataSampleGroup.js" defer></script> -->
-    <div id="dataviz"></div>
+
+
+   
 
     <!-- Alt + Z für Zeilenumbruch-->  
 
@@ -46,10 +567,92 @@ path {
     </div>
    
  
- <script>
-
-
-    </script>
     
-</body>
+
+
+  <!--   Tmap Viz -->
+
+ 
+
+  <div class="slideContainer" style="position:relative;  top:20px;">
+    <input type="range" min="0" max="100" value="1" id="myRange" class="slider">
+    <p>Prediction-Value(%): <span id="value"> </span></p>
+</div>
+
+  <div id="Tmap"> 
+
+    
+
+    <div id="sunburst-container">
+        <div id="sunburst"></div>
+        
+    </div>
+  <canvas id="smiles-canvas" data-bind="smilesCanvas"></canvas>
+
+    <div id="overlay-structure-container" data-binding-id="overlayStructureContainer" class="">
+      <canvas id="overlay-structure" data-binding-id="overlayStructure" width="450" height="687">
+
+      </canvas></div>
+  
+   
+    <div id="tip" data-bind="tip">
+      <div id="tip-text" data-bind="tipText"></div>
+    </div>
+    <div id="selected" data-bind="selected">
+      <div id="selected-controls" data-bind="selectedControls">
+        <a id="selected-toggle" data-bind="selectedToggle" href="#">
+          <i class="fas fa-toggle-on"></i>
+        </a>
+        <span>&nbsp;&nbsp;</span>
+        <span id="selected-title" data-bind="selectedTitle"></span>
+        <span>&nbsp;&nbsp;</span>
+        <span id="selected-current" data-bind="selectedCurrent" data-bind="selectedCurrent">0</span><span> / </span><span id="selected-total" data-bind="selectedTotal">0</span>
+        <span>&nbsp;&nbsp;</span>
+        <a id="selected-prev" data-bind="selectedPrev" href="#">
+          <i class="fas fa-angle-left"></i>
+        </a>
+        <span>&nbsp;</span>
+        <a id="selected-next" data-bind="selectedNext" href="#">
+          <i class="fas fa-angle-right"></i>
+        </a>
+        <a id="selected-remove" data-bind="selectedRemove" href="#">
+          <i class="fas fa-times"></i>
+        </a>
+      </div>
+      <div id="selected-container" data-bind="selectedContainer">
+      </div>
+    </div>
+    <div id="controls" data-bind="controls">
+      <div id="more-controls" data-bind="moreControls" class="hide">
+        <a id="search" data-bind="search" href="#">
+          <i class="fas fa-search"></i>
+        </a>
+        <a id="download" data-bind="download" href="#">
+          <i class="fas fa-download"></i>
+        </a>
+        <a id="export" data-bind="export" href="#">
+          <i class="fas fa-camera"></i>
+        </a>
+        <a id="largepreview" data-bind="largepreview" href="#">
+          <i class="fas fa-expand"></i>
+        </a>
+      </div>
+      <a id="show-controls" data-bind="showControls" href="#">
+        <i class="fas fa-bars"></i>
+      </a>
+    </div>
+    <div id="hover-indicator" data-bind="hoverIndicator"></div>
+ 
+    <canvas id="lore"></canvas>
+    <canvas id="highlighting"></canvas>
+
+  
+
+
+
+</div>
+
+  </body>
+    
+
 </html>

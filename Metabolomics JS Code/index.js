@@ -20,6 +20,42 @@ let hierarchicalDataGroup;
 let nestedData;
 let hierarchy; 
 var dataLoaded; 
+var TMapData;
+var ChemicalSpaceDataBackUp = data;
+
+var filteredTmapData = {
+
+  Chemical_Space: {
+    x: [],
+    y: [],
+    z: [],
+    labels: [],
+    colors: [{
+        r: [],
+        g: [],
+        b: [],
+    }, {
+      r: [],
+      g: [],
+      b: [],
+  },
+  {
+    r: [],
+    g: [],
+    b: [],
+}
+  ],
+   dataFiltered:[],
+   
+},
+Chemical_Space_tree: {
+    x: [],
+    y: [],
+    z: [],
+}
+
+};
+
 const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
   convertToJSON();
@@ -49,16 +85,33 @@ function convertToJSON(){
        //   groupBySuperClass();
 
 
-       
-          visualizeData();
-
       
+          visualizeData();
+          filterFromTmap(); 
+          
+      console.log(data);
+
       
       }
    })
 
 
 }
+
+
+
+const HLcanvas = document.getElementById("highlighting");
+const ctx = HLcanvas.getContext("2d");
+HLcanvas.width = window.innerWidth;
+HLcanvas.height = window.innerHeight;
+
+ctx.fillStyle = "yellow";
+ctx.beginPath();
+ctx.arc(20,20,10,0,Math.PI * 2);
+ctx.closePath();
+ctx.fill();
+
+
 
 output.innerHTML = slider.value;
 slider.oninput = function() {
@@ -76,6 +129,93 @@ if(dataLoaded == true){
   visualizeData();
 }
 })
+
+function  filterFromTmap(){
+TMapData = ChemicalSpaceDataBackUp; 
+console.log(TMapData);
+
+var tempdata = [];
+
+//Achtung: könnte bei doppelaufrufen zu doppelten/dreifachen... tree führen 
+filteredTmapData.Chemical_Space_tree
+=  TMapData.Chemical_Space_tree;
+
+console.log(ChemicalSpaceDataBackUp);
+// Check if the Labels of the filteredCSDataSet are found in the chemical_space of the TMap
+for(var i = 0; i < TMapData.Chemical_Space.labels.length; i++){
+
+
+//Assign a false boolean to all (40k+) datapoints
+TMapData.Chemical_Space.dataFiltered[i] = false;
+
+
+
+ for(var j = 0; j < filteredCSdataSet.length; j++){
+
+
+
+
+ 
+//filter out by smiles that are found in both filteredCSData and in TMap-Chemical-Space
+  if(TMapData.Chemical_Space.labels[i] ===  filteredCSdataSet[j].Smiles_GNPS_results){
+
+  //Change Booleans to true for filtered Data for later highlighting in TMapCode.js 
+  TMapData.Chemical_Space.dataFiltered[i] = true;
+
+
+
+  //COLOR the Data that is found in the TMap
+  /*
+  TMapData.Chemical_Space.colors[0].r[i] = 255;
+  TMapData.Chemical_Space.colors[0].g[i] = 0;
+  TMapData.Chemical_Space.colors[0].b[i] = 255;
+*/
+
+//push the filtered Data into the yet empty  filteredtmapdata-structure
+filteredTmapData.Chemical_Space.x.push(
+  TMapData.Chemical_Space.x[i]);
+filteredTmapData.Chemical_Space.y.push(
+  TMapData.Chemical_Space.y[i]);
+filteredTmapData.Chemical_Space.z.push(
+  TMapData.Chemical_Space.z[i]);
+filteredTmapData.Chemical_Space.labels.push(
+  TMapData.Chemical_Space.labels[i]);
+filteredTmapData.Chemical_Space.colors[0].r.push(TMapData.Chemical_Space.colors[0].r[i]);
+filteredTmapData.Chemical_Space.colors[0].g.push(TMapData.Chemical_Space.colors[0].g[i]);
+filteredTmapData.Chemical_Space.colors[0].b.push(TMapData.Chemical_Space.colors[0].b[i]);
+
+
+tempdata.push(
+  
+  // TMapData.Chemical_Space.x[i],
+  // TMapData.Chemical_Space.y[i],
+  // TMapData.Chemical_Space.z[i],
+
+
+  TMapData.Chemical_Space.labels[i],
+  // TMapData.Chemical_Space.colors[0].r[i],
+  // TMapData.Chemical_Space.colors[0].g[i],
+  // TMapData.Chemical_Space.colors[0].b[i], 
+  
+  );
+
+
+
+//filteredTmapData.Chemical_Space.colors[0].r[i] = TMapData.Chemical_Space.colors[0].r[i];
+}
+ }
+}
+console.log(tempdata);
+// filteredTmapData = tempdata;
+console.log(filteredTmapData);
+console.log(TMapData.Chemical_Space.dataFiltered);
+
+data = TMapData; 
+//data = filteredTmapData;
+initTMap();
+}
+
+
 
 function sumMassOfSubClasses(group){
 
@@ -144,7 +284,6 @@ console.log(hierarchy);
 }
 
 function removeDoubleValues(){
-
   filteredCSdataSet = filteredCSdataSet.filter((value, index, self) =>
   index === self.findIndex((t) => (
     t.query_spectrum_nr === value.query_spectrum_nr
@@ -154,7 +293,6 @@ function removeDoubleValues(){
 }
 
 function filterByPredictionValue(){
-
 
 console.log(sliderValue);
 
@@ -181,14 +319,15 @@ for(var i = 0; i < filteredCSdataSet.length; i++){
    "clustered_spectra_FractionProfiling_RPOS_ToF10_PreCheck_LTR_01_DDA_Filtered_merged.csv"
 */
 
-
+// Sunburst Diagram Visuals 
 function visualizeData(){
 
 //console.log(hierarchy);
 //console.log(nestedData[0]);
 
-  var width = 960,
-  height = 700,
+//w 480, height 350
+  var width = 300,
+  height = 300,
   radius = (Math.min(width, height) / 2) - 10;
 
 var formatNumber = d3.format(",d");
@@ -210,11 +349,11 @@ var arc = d3.arc()
   .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
 
-  //remove exsisting svg in case of reloading 
+  //remove existing svg in case of reloading 
   d3.select("svg").remove();
 
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#sunburst").append("svg")
   .attr("width", width)
   .attr("height", height)
 .append("g")
@@ -280,6 +419,8 @@ svg.selectAll("path")
 
 
 }
+
+
 //standard Sunburst Code 
  /* 
 function visualizeData(){ 
