@@ -20,7 +20,7 @@ let hierarchicalDataGroup;
 let nestedData;
 let hierarchy; 
 var dataLoaded; 
-var TMapData;
+var TMapData = data;
 var ChemicalSpaceDataBackUp = data;
 
 var filteredTmapData = {
@@ -80,15 +80,17 @@ function convertToJSON(){
           //console.log(massDiffData);
           console.log(CSdataSet);
           dataLoaded = true; 
-          nestBySuperClass();
+      
           //hierachyBySuperClass();
        //   groupBySuperClass();
 
 
       
-          visualizeData();
+         // visualizeData();
+         nestBySuperClass();
           filterFromTmap(); 
-          
+          initTMap();
+ //         animate();
       console.log(data);
 
       
@@ -100,18 +102,88 @@ function convertToJSON(){
 
 
 
-const HLcanvas = document.getElementById("highlighting");
+const   HLcanvas = document.getElementById("highlighting");
 const ctx = HLcanvas.getContext("2d");
 HLcanvas.width = window.innerWidth;
 HLcanvas.height = window.innerHeight;
-
-ctx.fillStyle = "yellow";
-ctx.beginPath();
-ctx.arc(20,20,10,0,Math.PI * 2);
-ctx.closePath();
-ctx.fill();
+//HLcanvas.width = window.innerWidth;
+//HLcanvas.height = window.innerHeight;
 
 
+
+window.onresize = function(){
+resizeCanvas();
+}
+
+function resizeCanvas(){
+  HLcanvas.width = window.innerWidth;
+HLcanvas.height = window.innerHeight;
+}
+
+let dataPointSize; 
+let dataPosX; 
+let dataPosY;
+
+
+function drawPoint(dataPosX, dataPosY, dataPointSize, r, g, b, dataPointStrokeStyle, lineWidth){
+
+  ctx.fillStyle = "rgb("+r+","+g+","+ b +")";
+  ctx.strokeStyle = dataPointStrokeStyle; 
+  ctx.lineWidth = lineWidth;
+  ctx.beginPath();
+  ctx.arc(dataPosX,dataPosY,dataPointSize,0,Math.PI * 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  
+}
+
+function scatterPoints(){
+ 
+  let lineWidth = 1 ;
+  let stroke; 
+ // drawPoint(30,30,5,100,200,100);   
+  for(let i = 0; i < TMapData.Chemical_Space.x.length; i++){
+ 
+    if(TMapData.Chemical_Space.dataFiltered[i] == false){
+      stroke = "black";
+      lineWidth = 1;
+      dataPointSize = 3;
+    }
+
+
+
+    drawPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
+   // console.log(TMapData.Chemical_Space.x[i]); 
+   // drawPoint(i,i,5);   
+  }
+}
+function scatterFilteredPoints(){
+  for(let i = 0; i < TMapData.Chemical_Space.x.length; i++){
+    
+    if(TMapData.Chemical_Space.dataFiltered[i] == true){
+      stroke = "yellow"
+      lineWidth = 2;
+      dataPointSize = 6;
+    
+
+    drawPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
+    }
+  }
+}
+//console.log(TMapData.Chemical_Space.x[5]);
+
+function animate(){
+//draw each Frame
+
+//Remove current drawing 
+ ctx.clearRect(0,0, HLcanvas.width, HLcanvas.height);
+scatterPoints();
+scatterFilteredPoints();
+
+requestAnimationFrame(animate);
+}
+animate();
 
 output.innerHTML = slider.value;
 slider.oninput = function() {
@@ -122,7 +194,9 @@ slider.addEventListener("input", function(){
   sliderValue = slider.value;
   var color = "linear-gradient(90deg, rgb(117,252,117)" + sliderValue + "%, rgb(214,214,214)" + sliderValue + "%";
   slider.style.background = color;
-  console.log("Slider Value: "+ sliderValue)
+  console.log("Slider Value: "+ sliderValue);
+  
+
 
 if(dataLoaded == true){
   nestBySuperClass();
@@ -131,7 +205,7 @@ if(dataLoaded == true){
 })
 
 function  filterFromTmap(){
-TMapData = ChemicalSpaceDataBackUp; 
+//TMapData = ChemicalSpaceDataBackUp; 
 console.log(TMapData);
 
 var tempdata = [];
@@ -157,19 +231,12 @@ TMapData.Chemical_Space.dataFiltered[i] = false;
 
  
 //filter out by smiles that are found in both filteredCSData and in TMap-Chemical-Space
+
   if(TMapData.Chemical_Space.labels[i] ===  filteredCSdataSet[j].Smiles_GNPS_results){
 
   //Change Booleans to true for filtered Data for later highlighting in TMapCode.js 
   TMapData.Chemical_Space.dataFiltered[i] = true;
 
-
-
-  //COLOR the Data that is found in the TMap
-  /*
-  TMapData.Chemical_Space.colors[0].r[i] = 255;
-  TMapData.Chemical_Space.colors[0].g[i] = 0;
-  TMapData.Chemical_Space.colors[0].b[i] = 255;
-*/
 
 //push the filtered Data into the yet empty  filteredtmapdata-structure
 filteredTmapData.Chemical_Space.x.push(
@@ -185,25 +252,12 @@ filteredTmapData.Chemical_Space.colors[0].g.push(TMapData.Chemical_Space.colors[
 filteredTmapData.Chemical_Space.colors[0].b.push(TMapData.Chemical_Space.colors[0].b[i]);
 
 
-tempdata.push(
-  
-  // TMapData.Chemical_Space.x[i],
-  // TMapData.Chemical_Space.y[i],
-  // TMapData.Chemical_Space.z[i],
+tempdata.push(TMapData.Chemical_Space.labels[i]);
 
-
-  TMapData.Chemical_Space.labels[i],
-  // TMapData.Chemical_Space.colors[0].r[i],
-  // TMapData.Chemical_Space.colors[0].g[i],
-  // TMapData.Chemical_Space.colors[0].b[i], 
-  
-  );
-
-
-
-//filteredTmapData.Chemical_Space.colors[0].r[i] = TMapData.Chemical_Space.colors[0].r[i];
 }
  }
+ //console.log(TMapData.Chemical_Space.dataFiltered[i]);
+
 }
 console.log(tempdata);
 // filteredTmapData = tempdata;
@@ -212,7 +266,8 @@ console.log(TMapData.Chemical_Space.dataFiltered);
 
 data = TMapData; 
 //data = filteredTmapData;
-initTMap();
+
+
 }
 
 
@@ -253,13 +308,7 @@ console.log(hierarchicalDataGroup);
 function nestBySuperClass(){
 
 filterByPredictionValue();
-//console.log(CSdataSet);
-//console.log(filteredCSdataSet);
-
 //remove double entries so Dataset doesnt get double nested/added 
-
-
-
 removeDoubleValues(); 
 
 
@@ -301,6 +350,7 @@ for(var i = 0; i < CSdataSet.length; i++){
   if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100)){
     filteredCSdataSet.push(CSdataSet[i]);
     removeDoubleValues();
+
     }
 }
 
@@ -308,9 +358,11 @@ for(var i = 0; i < filteredCSdataSet.length; i++){
 
   if (filteredCSdataSet[i].ms2query_model_prediction_ms2query_results < (sliderValue / 100)){
     filteredCSdataSet.splice(i, 1);
-    }
-}
 
+  
+  }
+}
+filterFromTmap();
  console.log(filteredCSdataSet);
 }
    

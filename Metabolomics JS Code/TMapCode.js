@@ -119,7 +119,7 @@ function initTMap(){
         ph.setPointScale(s.point_scale);
 
 //MODIFIED: Make Filtered Data bigger
-ph.setPointSize(20);
+
         console.log(data[s.name]["dataFiltered"]);
        
         let filteredData = data[s.name]["dataFiltered"];
