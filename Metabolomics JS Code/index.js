@@ -91,7 +91,7 @@ function convertToJSON(){
          nestBySuperClass();
           filterFromTmap();
           visualizeData(); 
-       //   initTMap();
+          initTMap();
 
       console.log(data);
 
@@ -115,10 +115,10 @@ HLcanvas.height = window.innerHeight;
 
 let cameraOffset = { x: window.innerWidth/2, y: window.innerHeight/2 }
 let cameraZoom = 1
-let MAX_ZOOM = 5
+let MAX_ZOOM = 15
 let MIN_ZOOM = 0.1
-let SCROLL_SENSITIVITY = 0.0005
-
+let SCROLL_SENSITIVITY = 0.0015
+let zoomAmount; 
 
 
 
@@ -175,6 +175,16 @@ function handleTouch(e, singleTouchHandler)
     }
 }
 
+function clickPoint(xmouse, ymouse){
+console.log("x: " + xmouse + "y: "+ ymouse);
+//pythagoran theorem
+const distance = 
+Math.sqrt(
+((xmouse - dataPosX)*(xmouse - dataPosX)) + ((ymouse - dataPosY)* (ymouse - dataPosY))
+);
+console.log(); 
+}
+
 let initialPinchDistance = null
 let lastZoom = cameraZoom
 
@@ -215,7 +225,7 @@ function adjustZoom(zoomAmount, zoomFactor)
         cameraZoom = Math.min( cameraZoom, MAX_ZOOM )
         cameraZoom = Math.max( cameraZoom, MIN_ZOOM )
         
-        console.log(zoomAmount)
+      //  console.log(cameraZoom)
     }
 }
 
@@ -227,8 +237,15 @@ HLcanvas.addEventListener('touchend',  (e) => handleTouch(e, onPointerUp));
 HLcanvas.addEventListener('mousemove', onPointerMove);
 HLcanvas.addEventListener('touchmove', (e) => handleTouch(e, onPointerMove));
 HLcanvas.addEventListener( 'wheel', (e) => adjustZoom(e.deltaY*SCROLL_SENSITIVITY));
-HLcanvas.addEventListener('click', () => {
-//console.log("clicked canvas");
+HLcanvas.addEventListener('click', (event) => {
+console.log(event);
+
+//show click-coordinates
+const rect = HLcanvas.getBoundingClientRect(); 
+const x = event.clientX - rect.left;
+const y = event.clientY - rect.top; 
+//console.log("x: "+x+"y: "+ y);
+clickPoint(x,y); 
 
 });
 
@@ -261,9 +278,9 @@ function drawPoint(dataPosX, dataPosY, dataPointSize, r, g, b, dataPointStrokeSt
 
   ctx.fillStyle = "rgb("+r+","+g+","+ b +")";
   ctx.strokeStyle = dataPointStrokeStyle; 
-  ctx.lineWidth = lineWidth;
+  ctx.lineWidth = lineWidth  / (0.7*cameraZoom);
   ctx.beginPath();
-  ctx.arc(dataPosX,dataPosY,dataPointSize,0,Math.PI * 2);
+  ctx.arc(dataPosX,dataPosY,dataPointSize / (0.7*cameraZoom) ,0,Math.PI * 2);
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
@@ -296,7 +313,7 @@ function scatterFilteredPoints(){
     if(TMapData.Chemical_Space.dataFiltered[i] == true){
       stroke = "yellow"
       lineWidth = 2;
-      dataPointSize = 6;
+      dataPointSize = 4;
     
 
     drawPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
