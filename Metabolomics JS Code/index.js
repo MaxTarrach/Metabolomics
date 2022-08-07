@@ -47,7 +47,7 @@ var filteredTmapData = {
 }
   ],
    dataFiltered:[],
-   
+   dataPoint: []
 },
 Chemical_Space_tree: {
     x: [],
@@ -108,18 +108,13 @@ let   HLcanvas = document.getElementById("highlighting");
 let ctx = HLcanvas.getContext("2d");
 HLcanvas.width = window.innerWidth;
 HLcanvas.height = window.innerHeight;
-
-
-
 //ZOOM-PAN-IMPLEMENTATION
-
 let cameraOffset = { x: window.innerWidth/2, y: window.innerHeight/2 }
 let cameraZoom = 1
 let MAX_ZOOM = 15
 let MIN_ZOOM = 0.1
 let SCROLL_SENSITIVITY = 0.0015
 let zoomAmount; 
-
 
 
 // Gets the relevant location from a mouse or single touch event
@@ -174,6 +169,8 @@ function handleTouch(e, singleTouchHandler)
         handlePinch(e)
     }
 }
+
+
 
 function clickPoint(xmouse, ymouse){
 console.log("x: " + xmouse + "y: "+ ymouse);
@@ -268,12 +265,41 @@ function resizeCanvas(){
   HLcanvas.width = window.innerWidth;
 HLcanvas.height = window.innerHeight;
 }
-
+let dataPoint; 
 let dataPointSize; 
 let dataPosX; 
 let dataPosY;
 
+class DataPoint {
 
+  constructor(x,y,dataPointSize,r,g,b, strokeStyle, lineWidth){
+    this.x = x;
+    this.y = y; 
+    this.dataPointSize = dataPointSize
+    this.r = r;
+    this.g = g;
+    this.b = b; 
+    this.lineWidth = lineWidth;
+    this.strokeStyle = strokeStyle; 
+    this.lineWidth = lineWidth; 
+ 
+  }
+
+  draw(){
+    ctx.fillStyle = "rgb("+this.r+","+this.g+","+ this.b +")";
+    ctx.strokeStyle = this.strokeStyle; 
+    ctx.lineWidth = this.lineWidth  / (0.7*cameraZoom);
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.dataPointSize / (0.7*cameraZoom) ,0,Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+
+
+}
+
+/*
 function drawPoint(dataPosX, dataPosY, dataPointSize, r, g, b, dataPointStrokeStyle, lineWidth){
 
   ctx.fillStyle = "rgb("+r+","+g+","+ b +")";
@@ -286,8 +312,14 @@ function drawPoint(dataPosX, dataPosY, dataPointSize, r, g, b, dataPointStrokeSt
   ctx.stroke();
   
 }
+*/ 
 
 function scatterPoints(){
+ //dataPoint = new DataPoint(); 
+
+
+
+
  
   let lineWidth = 1 ;
   let stroke; 
@@ -299,11 +331,19 @@ function scatterPoints(){
       lineWidth = 1;
       dataPointSize = 3;
     }
+    dataPoint = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
+    
+    // draw. methode müsste im besten Fall aus dem Datenpunktarray in der Drawklasse aufgerufen werden
+    dataPoint.draw(); 
 
 
 
+/*
     drawPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
-   // console.log(TMapData.Chemical_Space.x[i]); 
+  */ 
+    
+  
+    // console.log(TMapData.Chemical_Space.x[i]); 
    // drawPoint(i,i,5);   
   }
 }
@@ -315,10 +355,16 @@ function scatterFilteredPoints(){
       lineWidth = 2;
       dataPointSize = 4;
     
+      dataPoint = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
+      dataPoint.draw(); 
 
+
+/*
     drawPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
+    */
     }
   }
+//  console.log(TMapData.Chemical_Space);
 }
 //console.log(TMapData.Chemical_Space.x[5]);
 

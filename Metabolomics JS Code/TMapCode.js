@@ -120,17 +120,17 @@ function initTMap(){
 
 //MODIFIED: Make Filtered Data bigger
 
-        console.log(data[s.name]["dataFiltered"]);
+        //console.log(data[s.name]["dataFiltered"]);
        
         let filteredData = data[s.name]["dataFiltered"];
           if(filteredData === "true")
           {
-            console.log(data[s.name]["dataFiltered"]);
+       //     console.log(data[s.name]["dataFiltered"]);
             ph.setPointSize(20);
           //  ph.setPointScale(s.point_scale + 500);
           }else{
             ph.setPointScale(s.point_scale);
-            console.log(data[s.name]["dataFiltered"]);
+       //     console.log(data[s.name]["dataFiltered"]);
             console.log();
           }
          // ph.setPointSize(20);
