@@ -8,7 +8,8 @@
 // Append/Render the missing Paragraph as they are required
 // Set Text for every paragraph element. Data(dta) gives you Access to the Data for Each Datapoint in each Paragraph
 
-
+let clientX;
+let clientY;
 var slider = document.getElementById("myRange");
 var output = document.getElementById("value");
 var sliderValue = 1;
@@ -174,15 +175,7 @@ function handleTouch(e, singleTouchHandler)
 
 
 
-function clickPoint(xmouse, ymouse){
-console.log("x: " + xmouse + "y: "+ ymouse);
-//pythagoran theorem
-const distance = 
-Math.sqrt(
-((xmouse - dataPosX)*(xmouse - dataPosX)) + ((ymouse - dataPosY)* (ymouse - dataPosY))
-);
-console.log(); 
-}
+
 
 let initialPinchDistance = null
 let lastZoom = cameraZoom
@@ -241,12 +234,25 @@ console.log(event);
 
 //show click-coordinates
 const rect = HLcanvas.getBoundingClientRect(); 
-const x = event.clientX - rect.left;
-const y = event.clientY - rect.top; 
-//console.log("x: "+x+"y: "+ y);
-clickPoint(x,y); 
+clientX = event.clientX - rect.left;
+clientY = event.clientY - rect.top;
+
+
+//console.log(event.clientX);
+ clicked(clientX, clientY);
+sampleDataPoint.clicked();
+
 
 });
+
+function clicked(xmouse, ymouse){
+
+//  console.log("x: " + xmouse + "y: "+ ymouse);
+  //pythagoran theorem
+  
+  console.log(); 
+  
+}
 
 //ZOOM-PAN-IMPLEMENTATION END
 
@@ -300,6 +306,18 @@ class DataPoint {
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+  }
+  
+  clicked(){
+  //Calculate Distance(Pythagoras) between Center and Click, to check, if the mouse-click is in the radius
+  var a = clientX - this.x;
+  var b = clientY - this.y; 
+
+  let d = Math.sqrt(a*a + b*b);
+    console.log("ClientX: "+ clientX + " ClientY: "+ clientY + " d: " + d);
+  if (d < this.dataPointSize){
+      console.log("I got clicked"); 
+    }      
   }
 
   getFilterStatus(){
@@ -407,6 +425,7 @@ function drawFilteredDataPoints(){
     }
 }
 
+let sampleDataPoint = new DataPoint(20,20,5,200,10,250,"magenta",2,false);
 
 function animate(){
 //draw each Frame
@@ -414,12 +433,11 @@ function animate(){
 HLcanvas.width = window.innerWidth;
 HLcanvas.height = window.innerHeight; 
 
-
  zoomAndPan();
-
 //Remove current drawing 
  ctx.clearRect(0,0, HLcanvas.width, HLcanvas.height);
 
+sampleDataPoint.draw();
 drawDataPoints();
 drawFilteredDataPoints();
 //scatterPoints();
@@ -429,6 +447,9 @@ requestAnimationFrame(animate);
 
 }
 //animate();
+
+
+
 
 output.innerHTML = slider.value;
 slider.oninput = function() {
@@ -457,8 +478,7 @@ console.log(TMapData);
 var tempdata = [];
 
 //Achtung: könnte bei doppelaufrufen zu doppelten/dreifachen... tree führen 
-filteredTmapData.Chemical_Space_tree
-=  TMapData.Chemical_Space_tree;
+filteredTmapData.Chemical_Space_tree = TMapData.Chemical_Space_tree;
 
 console.log(ChemicalSpaceDataBackUp);
 // Check if the Labels of the filteredCSDataSet are found in the chemical_space of the TMap
