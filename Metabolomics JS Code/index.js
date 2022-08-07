@@ -90,6 +90,8 @@ function convertToJSON(){
          
          nestBySuperClass();
           filterFromTmap();
+          scatterPoints(); 
+          animate(); 
           visualizeData(); 
           initTMap();
 
@@ -266,13 +268,16 @@ function resizeCanvas(){
 HLcanvas.height = window.innerHeight;
 }
 let dataPoint; 
+let dataPoints = []; 
+let filteredDataPoints = []; 
+let isFiltered = false; 
 let dataPointSize; 
 let dataPosX; 
 let dataPosY;
 
 class DataPoint {
 
-  constructor(x,y,dataPointSize,r,g,b, strokeStyle, lineWidth){
+  constructor(x,y,dataPointSize,r,g,b, strokeStyle, lineWidth, isFiltered){
     this.x = x;
     this.y = y; 
     this.dataPointSize = dataPointSize
@@ -282,6 +287,7 @@ class DataPoint {
     this.lineWidth = lineWidth;
     this.strokeStyle = strokeStyle; 
     this.lineWidth = lineWidth; 
+    this.isFiltered = isFiltered; 
  
   }
 
@@ -296,7 +302,27 @@ class DataPoint {
     ctx.stroke();
   }
 
+  getFilterStatus(){
+    return this.isFiltered;
+  }
+  setFilterStatus(isFiltered){
+    this.isFiltered = isFiltered; 
+  }
+  setStrokeStyle(strokeStyle){
+    this.strokeStyle = strokeStyle; 
+  }
+  setLineWidth(lineWidth){
+    this.lineWidth = lineWidth; 
+  }
+  setPointSize(pointSize){
+    this.dataPointSize = pointSize; 
+  }
 
+/*
+  stroke = "black";
+  lineWidth = 1;
+  dataPointSize = 3;
+*/
 }
 
 /*
@@ -319,54 +345,68 @@ function scatterPoints(){
 
 
 
-
- 
+//init temp values 
+  let isFiltered = false; 
   let lineWidth = 1 ;
-  let stroke; 
+  let dataPointSize = 3;
+  let stroke = "black";
+
  // drawPoint(30,30,5,100,200,100);   
   for(let i = 0; i < TMapData.Chemical_Space.x.length; i++){
  
-    if(TMapData.Chemical_Space.dataFiltered[i] == false){
-      stroke = "black";
-      lineWidth = 1;
-      dataPointSize = 3;
-    }
-    dataPoint = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
+    //Fill Array with all Datapoints
+    dataPoints[i] = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth, isFiltered);
     
-    // draw. methode müsste im besten Fall aus dem Datenpunktarray in der Drawklasse aufgerufen werden
-    dataPoint.draw(); 
 
-
-
-/*
-    drawPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
-  */ 
-    
-  
-    // console.log(TMapData.Chemical_Space.x[i]); 
-   // drawPoint(i,i,5);   
-  }
-}
-function scatterFilteredPoints(){
-  for(let i = 0; i < TMapData.Chemical_Space.x.length; i++){
-    
+   
     if(TMapData.Chemical_Space.dataFiltered[i] == true){
-      stroke = "yellow"
-      lineWidth = 2;
-      dataPointSize = 4;
+      dataPoints[i].setLineWidth(1);
+      dataPoints[i].setPointSize(4);
+      dataPoints[i].setFilterStatus(true);
+      dataPoints[i].setStrokeStyle("yellow"); 
+      
     
-      dataPoint = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
-      dataPoint.draw(); 
+   //   filteredDataPoints.push(dataPoints[i]); 
 
 
-/*
-    drawPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth);
-    */
-    }
+    }else{
+    dataPoints[i].setLineWidth(1);
+    dataPoints[i].setPointSize(3);
+    dataPoints[i].setFilterStatus(false);
+    dataPoints[i].setStrokeStyle("black"); 
+
   }
-//  console.log(TMapData.Chemical_Space);
+ 
 }
+//remove filtered Datapoints with status changed to false 
+
+}
+
+
+
+
 //console.log(TMapData.Chemical_Space.x[5]);
+function drawDataPoints(){
+for(let i = 0; i< dataPoints.length; i++){
+ if(dataPoints[i].getFilterStatus() == false){
+  dataPoints[i].draw(); 
+  }
+ 
+}
+}
+function drawFilteredDataPoints(){
+ /* for(let i = 0; i< filteredDataPoints.length; i++){
+    
+     filteredDataPoints[i].draw(); 
+    }
+ */
+    for(let i = 0; i< dataPoints.length; i++){
+    if(dataPoints[i].getFilterStatus() == true){
+      dataPoints[i].draw(); 
+      }
+    }
+}
+
 
 function animate(){
 //draw each Frame
@@ -380,12 +420,15 @@ HLcanvas.height = window.innerHeight;
 //Remove current drawing 
  ctx.clearRect(0,0, HLcanvas.width, HLcanvas.height);
 
-scatterPoints();
-scatterFilteredPoints();
+drawDataPoints();
+drawFilteredDataPoints();
+//scatterPoints();
+//scatterFilteredPoints();
 
 requestAnimationFrame(animate);
+
 }
-animate();
+//animate();
 
 output.innerHTML = slider.value;
 slider.oninput = function() {
@@ -403,6 +446,7 @@ slider.addEventListener("input", function(){
 if(dataLoaded == true){
   nestBySuperClass();
   visualizeData();
+  scatterPoints();
 }
 })
 
@@ -566,6 +610,9 @@ for(var i = 0; i < filteredCSdataSet.length; i++){
 }
 filterFromTmap();
  console.log(filteredCSdataSet);
+
+
+
 }
    
 /*
