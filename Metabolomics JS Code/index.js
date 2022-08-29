@@ -108,12 +108,12 @@ function convertToJSON(){
 
 
 
-let   HLcanvas = document.getElementById("highlighting");
-let ctx = HLcanvas.getContext("2d");
+let mainCanvas = document.getElementById("mainCanvas");
+let ctx = mainCanvas.getContext("2d");
 
-//HLcanvas.width = window.innerWidth;
-//HLcanvas.height = window.innerHeight;
-const rect = HLcanvas.getBoundingClientRect(); 
+//mainCanvas.width = window.innerWidth;
+//mainCanvas.height = window.innerHeight;
+const rect = mainCanvas.getBoundingClientRect(); 
 let tipCanvas = document.getElementById("tip");
 let tipCtx = tipCanvas.getContext("2d");
 //ZOOM-PAN-IMPLEMENTATION
@@ -177,8 +177,8 @@ function onPointerMove(e)
 
 
   if(cameraZoom ==15){
-    clientX = clientX+739 ;
-    clientY = clientY+639;
+    clientX = clientX +739;
+    clientY = clientY +619;
   }
 
   /*
@@ -389,23 +389,23 @@ function adjustZoom(zoomAmount, zoomFactor)
 }
 
 
-HLcanvas.addEventListener('mousedown', onPointerDown);
-HLcanvas.addEventListener('touchstart', (e) => handleTouch(e, onPointerDown));
-HLcanvas.addEventListener('mouseup', onPointerUp);
-HLcanvas.addEventListener('touchend',  (e) => handleTouch(e, onPointerUp));
-HLcanvas.addEventListener('mousemove', onPointerMove);
-HLcanvas.addEventListener('touchmove', (e) => handleTouch(e, onPointerMove));
-HLcanvas.addEventListener( 'wheel', (e) => 
+mainCanvas.addEventListener('mousedown', onPointerDown);
+mainCanvas.addEventListener('touchstart', (e) => handleTouch(e, onPointerDown));
+mainCanvas.addEventListener('mouseup', onPointerUp);
+mainCanvas.addEventListener('touchend',  (e) => handleTouch(e, onPointerUp));
+mainCanvas.addEventListener('mousemove', onPointerMove);
+mainCanvas.addEventListener('touchmove', (e) => handleTouch(e, onPointerMove));
+mainCanvas.addEventListener( 'wheel', (e) => 
 
 adjustZoom(e.deltaY*SCROLL_SENSITIVITY));
 
 
-HLcanvas.addEventListener('click', (event) => {
+mainCanvas.addEventListener('click', (event) => {
 //console.log(event);
 
 //show click-coordinates including CameraZoomPanOffset
 /*
-const rect = HLcanvas.getBoundingClientRect(); 
+const rect = mainCanvas.getBoundingClientRect(); 
 clientX = (event.clientX/cameraZoom -cameraOffset.x) - rect.left;
 clientY = (event.clientY/cameraZoom -cameraOffset.y) - rect.top;
 */
@@ -415,14 +415,18 @@ clientY = (event.clientY/cameraZoom -cameraOffset.y) - rect.top;
 //console.log(event.clientX);
 
 sampleDataPoint.clicked();
+//click on a 
 
-//click on a datapoint
-for(let i = 0; i < dataPoints.length; i++){
-  dataPoints[i].clicked();
-}
 for(let i = 0; i < filteredDataPoints.length; i++){
+ 
   filteredDataPoints[i].clicked();
 }
+for(let i = 0; i < dataPoints.length; i++){
+  if(dataPoints[i].getFilterStatus() == false){
+  dataPoints[i].clicked();
+  }
+}
+
 /*
 //click for filtered datapoints only
 for(let i = 0; i < filteredDataPoints.length; i++){
@@ -449,8 +453,8 @@ function zoomAndPan(){
 }
 
 function resizeCanvas(){
-  HLcanvas.width = window.innerWidth;
-HLcanvas.height = window.innerHeight;
+  mainCanvas.width = window.innerWidth;
+mainCanvas.height = window.innerHeight;
 }
 
 let dataPoint; 
@@ -467,7 +471,7 @@ class DataPoint {
   constructor(x,y,dataPointSize,r,g,b, strokeStyle, lineWidth, isFiltered){
     this.x = x;
     this.y = y; 
-    this.dataPointSize = dataPointSize 
+    this.dataPointSize = dataPointSize;
     this.r = r;
     this.g = g;
     this.b = b; 
@@ -544,6 +548,7 @@ class DataPoint {
   setClickable(clickable){
     this.clickable = clickable; 
   }
+ 
 /*
   stroke = "black";
   lineWidth = 1;
@@ -591,7 +596,7 @@ function scatterPoints(){
     
     dataPoints[i].setSmiles(TMapData.Chemical_Space.labels[i]);
 
-   
+   //seperate Filtered Data from whole Dataset
     if(TMapData.Chemical_Space.dataFiltered[i] == true){
       dataPoints[i].setLineWidth(2);
       dataPoints[i].setPointSize(6);
@@ -599,8 +604,8 @@ function scatterPoints(){
       dataPoints[i].setStrokeStyle("black"); 
       dataPoints[i].setClickable(true);
     
-   //   filteredDataPoints.push(dataPoints[i]); 
-
+      filteredDataPoints.push(dataPoints[i]); 
+      
 
     }else{
     dataPoints[i].setLineWidth(0.1);
@@ -645,30 +650,35 @@ hideCheckBox.addEventListener('change', function() {
   if (this.checked) {
     console.log("Checkbox is checked..");
     dataBaseHidden = true; 
-    lockHiddenDataPoints(true); 
+    lockHiddenDataPoints(); 
   } else {
     console.log("Checkbox is not checked..");
     dataBaseHidden = false; 
-    lockHiddenDataPoints(false); 
+    lockHiddenDataPoints(); 
   }
 });
 
-function lockHiddenDataPoints(locked){
+function lockHiddenDataPoints(){
+
+
 
   for(let i =0; i< dataPoints.length; i++){
     
-    if(this.locked == true){
+    if(dataBaseHidden == true){
     dataPoints[i].setClickable(false);
+    
     }else{
       dataPoints[i].setClickable(true);
     }
   }
+  
+  console.log(filteredDataPoints.length);
   for(let i =0; i< filteredDataPoints.length; i++){
-    if(this.locked==true){
-    dataPoints[i].setClickable(true);
-    }else{
-      dataPoints[i].setClickable(false);
+    if(dataBaseHidden==true){
+      console.log("reached");
+    filteredDataPoints[i].setClickable(true);
     }
+ 
   }
 }
 
@@ -680,12 +690,12 @@ function animate(){
 //draw each Frame
 //
 
-HLcanvas.width = window.innerWidth;
-HLcanvas.height = window.innerHeight; 
+mainCanvas.width = window.innerWidth;
+mainCanvas.height = window.innerHeight; 
 
  zoomAndPan();
 //Remove current drawing 
- ctx.clearRect(0,0, HLcanvas.width, HLcanvas.height);
+ ctx.clearRect(0,0, mainCanvas.width, mainCanvas.height);
 
 sampleDataPoint.draw();
 zeroPoint.draw();
