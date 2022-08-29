@@ -168,6 +168,7 @@
     width: 100%;
     height: 100%
   }
+  #tip{background-color:white; border:1px solid blue; position:absolute; left:-200px; top:100px;}
 
 
 
@@ -185,7 +186,7 @@
           
             border-radius: 2px;
           
-            background-color: #111111;
+            background-color: #11111186;
           
             filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
           
@@ -522,7 +523,7 @@ path {
   stroke: #fff;
 }
     </style>
-   
+  
    <script src="TmapData.js" defer></script> 
     
    <script src="TmapCode.js" defer></script> 
@@ -555,20 +556,37 @@ path {
     <!--     <script src="testGroup.js" defer></script>  -->  
    <!--   <script src="clusteredDataSampleGroup.js" defer></script> -->
 
-
    
 
     <!-- Alt + Z für Zeilenumbruch-->  
   <!--   Tmap Viz -->
 
- 
-
   <div class="slideContainer" style="position:relative;  top:20px;">
     <input type="range" min="0" max="100" value="1" id="myRange" class="slider">
-    <p>Prediction-Value(%): <span id="value"> </span></p>
-</div>
+    <p>Prediction-Value(%): <span id="value"> </span> 
+      <label>Zoom-Amount:</label>
+      <input type="number" id="zoomAmount">
+      <button type="button" id="zoomAmountButton">enter</button> 
+      
+      <button type="button" id="centerView">center</button>
+      
+      <input type="checkbox" id="hide-checkbox"/>
+      <label for="hide-checkbox">Hide database</label>
+      <p>HideDataCollection</p>
+     
+    </p>
+   
+  </div>
+
+
+
+
+<div>
+ 
+  <div> <canvas id="tip" width=100 height=25></canvas></div>
 
   <div id="Tmap"> 
+ 
 
     
 
@@ -633,10 +651,17 @@ path {
     <div id="hover-indicator" data-bind="hoverIndicator"></div>
  
     <canvas id="lore"></canvas>
-
+    <canvas id="highlighting"></canvas>
+   
+    
+    
 </div>
-<canvas id="highlighting"></canvas>
-  </body>
+
+
+
+
+ 
+</body>
     
 
 </html>
