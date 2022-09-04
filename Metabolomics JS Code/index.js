@@ -10,6 +10,9 @@
 
 let clientX;
 let clientY;
+let mouseX;
+let mouseY;
+let toolTipActivated = false; 
 var slider = document.getElementById("myRange");
 var output = document.getElementById("value");
 var sliderValue = 1;
@@ -106,16 +109,35 @@ function convertToJSON(){
 
 }
 
-
-
 let mainCanvas = document.getElementById("mainCanvas");
 let ctx = mainCanvas.getContext("2d");
+
+let toolTipCanvas = document.getElementById("toolTipCanvas");
+let toolTipCtx = toolTipCanvas.getContext("2d");
+
+toolTipCanvas.width =window.innerWidth;;
+toolTipCanvas.height = window.innerHeight;
+
+
+
+
+
+/* //CANVAS LAYERS
+var canvasLayerStack = document.getElementById("canvasLayerStack")
+var canvasLayerStackCtx = canvasLayerStack.getContext("2d"); 
+canvasLayerStack.width = window.innerWidth;
+canvasLayerStack.height = window.innerHeight;
+
+var canvasStack = new CanvasStack("canvasLayerStack");
+var layer1 = canvasStack.createLayer();
+var layer1Ctx = document.getElementById(layer1).getContext("2d");
+layer1Ctx.fillRect(0,0,100,100);
+*/
 
 //mainCanvas.width = window.innerWidth;
 //mainCanvas.height = window.innerHeight;
 const rect = mainCanvas.getBoundingClientRect(); 
-let tipCanvas = document.getElementById("tip");
-let tipCtx = tipCanvas.getContext("2d");
+
 //ZOOM-PAN-IMPLEMENTATION
 //source: https://codepen.io/chengarda/pen/wRxoyB?editors=1111
 
@@ -170,8 +192,9 @@ function onPointerUp(e)
 
 function onPointerMove(e)
 {
-  //Getting the MousePosition in Space
+  //Getting the MousePosition in Space (named clientX/Y)
   //e.clientX
+
   clientX = (e.clientX)/cameraZoom - cameraOffset.x - rect.left;
   clientY =  (e.clientY)/cameraZoom - cameraOffset.y  - rect.top;
 
@@ -415,23 +438,24 @@ clientY = (event.clientY/cameraZoom -cameraOffset.y) - rect.top;
 //console.log(event.clientX);
 
 sampleDataPoint.clicked();
-//click on a 
 
+
+//check, if Datapoint got clicked
 for(let i = 0; i < filteredDataPoints.length; i++){
  
   filteredDataPoints[i].clicked();
+ 
 }
 for(let i = 0; i < dataPoints.length; i++){
   if(dataPoints[i].getFilterStatus() == false){
   dataPoints[i].clicked();
+
+
   }
 }
-
-/*
-//click for filtered datapoints only
-for(let i = 0; i < filteredDataPoints.length; i++){
-  filteredDataPoints[i].clicked();
-}*/
+//mouseY - 200 because the canvas is positioned -200px
+mouseX = getEventLocation(event).x;
+mouseY = getEventLocation(event).y - 200;
 
 });
 
@@ -484,6 +508,7 @@ class DataPoint {
     var b;
     var d;
     this.clickable = true; 
+    this.gotClicked = false; 
   }
 
   draw(){
@@ -508,19 +533,30 @@ class DataPoint {
   
 //if Point is Clicked
   if (d < this.dataPointSize  / (0.7*cameraZoom)  && this.clickable == true){
-      console.log("SMILES: "+ this.smiles);
+    this.gotClicked = true; 
+
+    console.log("SMILES: "+ this.smiles);
       console.log("ClientX: "+ clientX + " ClientY: "+ clientY + " d: " + d + " PointSize: " + this.dataPointSize);
+    
+      toolTipCtx.clearRect(0,0, mainCanvas.width, mainCanvas.height);
+     // drawToolTip();
+      
+    
+   
+   }else{
+    this.gotClicked = false; 
+   }     
+  }
 
+  drawToolTip(){
+     if(this.gotClicked == true){
+      //delete Previous Tooltip
+     
 
-      //TOOLTIP
-      tipCanvas.style.left = this.x + "px";
-      tipCanvas.style.top = (this.y - 40) + "px";
-      tipCtx.clearRect(0, 0, tipCanvas.width, tipCanvas.height);
-      tipCtx.fillText("This is a smile", 5, 15);
-      hit = true;
-
-    } 
-    if (!hit) { tipCanvas.style.left = "-200px"; }     
+      toolTipCtx.fillStyle = "white";
+      toolTipCtx.fillRect(mouseX,mouseY,100,100);
+       
+    }
   }
 
   getFilterStatus(){
@@ -547,6 +583,9 @@ class DataPoint {
   }
   setClickable(clickable){
     this.clickable = clickable; 
+  }
+  getClickStatus(){
+    return this.gotClicked; 
   }
  
 /*
@@ -620,6 +659,10 @@ function scatterPoints(){
 
 }
 
+function drawToolTip(){
+  toolTipCtx.fillStyle = "white";
+  toolTipCtx.fillRect(mouseX,mouseY,100,100);
+}
 
 
 
@@ -641,6 +684,8 @@ function drawFilteredDataPoints(){
     for(let i = 0; i< dataPoints.length; i++){
     if(dataPoints[i].getFilterStatus() == true){
       dataPoints[i].draw(); 
+      dataPoints[i].drawToolTip();
+      
       }
     }
 }
@@ -697,11 +742,16 @@ mainCanvas.height = window.innerHeight;
 //Remove current drawing 
  ctx.clearRect(0,0, mainCanvas.width, mainCanvas.height);
 
+
 sampleDataPoint.draw();
 zeroPoint.draw();
 drawDataPoints();
 drawFilteredDataPoints();
 drawPointCursor();
+
+if(toolTipActivated){
+//drawToolTip(); 
+}
 
 //scatterPoints();
 //scatterFilteredPoints();

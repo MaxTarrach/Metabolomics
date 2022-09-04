@@ -148,12 +148,17 @@
         // make it the same size as the background canvas
         newCvs.style.width = this.bkgCanvas.offsetWidth+'px';
         newCvs.style.height = this.bkgCanvas.offsetHeight+'px';
+
+        
+       // newCvs.style.pointerEvents = "none";
+
         let newL = new Layer(ovlId, newCvs);
         // save the ID in an array to facilitate removal
         this.bkgCanvas.layers.push(newL);
         
         return ovlId;    // return the new canvas id 
       }
+      
   
       deleteLayer(ovlyId){
         // check background canvas is still there
