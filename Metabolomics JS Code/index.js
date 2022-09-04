@@ -563,7 +563,7 @@ class DataPoint {
 
 printAt(toolTipCtx, this.smiles, mouseX + 5, mouseY + 20, 20, 140 );
 
-
+//Line-Break Function for Long Text/SMILES
 function printAt( context , text, x, y, lineHeight, fitWidth)
 {
     fitWidth = fitWidth || 0;
