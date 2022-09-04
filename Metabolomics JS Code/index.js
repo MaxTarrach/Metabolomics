@@ -554,8 +554,40 @@ class DataPoint {
      
 
       toolTipCtx.fillStyle = "white";
-      toolTipCtx.fillRect(mouseX,mouseY,100,100);
+      toolTipCtx.fillRect(mouseX,mouseY,150,150);
+
+      toolTipCtx.fillStyle = "black";
+      toolTipCtx.font = "12px Arial";
+      
+    //  var txt = 'this is a very long text to print';
+
+printAt(toolTipCtx, this.smiles, mouseX + 5, mouseY + 20, 20, 140 );
+
+
+function printAt( context , text, x, y, lineHeight, fitWidth)
+{
+    fitWidth = fitWidth || 0;
+    
+    if (fitWidth <= 0)
+    {
+         context.fillText( text, x, y );
+        return;
+    }
+    
+    for (var idx = 1; idx <= text.length; idx++)
+    {
+        var str = text.substr(0, idx);
        
+        if (context.measureText(str).width > fitWidth)
+        {
+            context.fillText( text.substr(0, idx-1), x, y );
+            printAt(context, text.substr(idx-1), x, y + lineHeight, lineHeight,  fitWidth);
+            return;
+        }
+    }
+    context.fillText( text, x, y );
+}
+      
     }
   }
 
