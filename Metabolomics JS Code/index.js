@@ -545,6 +545,7 @@ class DataPoint {
    
    }else{
     this.gotClicked = false; 
+    toolTipCtx.clearRect(0,0, mainCanvas.width, mainCanvas.height);
    }     
   }
 
