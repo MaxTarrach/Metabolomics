@@ -611,8 +611,8 @@ function printAt( context , text, x, y, lineHeight, fitWidth)
     let options = {  width: 150 / window.devicePixelRatio,
     height: 150 / window.devicePixelRatio}
     
-   smilesCanvas.style.top = this.y+200+"px";
-    smilesCanvas.style.left = this.x+"px";
+   smilesCanvas.style.top = mouseY +200 +"px";
+    smilesCanvas.style.left = mouseX+"px";
 
     let smilesDrawer = new SmilesDrawer.Drawer(options);
 
