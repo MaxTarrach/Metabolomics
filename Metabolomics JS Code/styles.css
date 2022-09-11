@@ -15,7 +15,11 @@ body {
     color: white;
 */
 }
-
+.canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 
 p{
     margin-top: 20px;

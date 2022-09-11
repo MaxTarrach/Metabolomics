@@ -4,11 +4,11 @@ function initTMap(){
     //status on whether to show or not the background canvas
     let FullMolinBkg = false;
 
-    let smilesDrawer = new SmilesDrawer.Drawer({
+  /*  let smilesDrawerOLD = new SmilesDrawer.Drawer({
       width: 250 / window.devicePixelRatio,
       height: 250 / window.devicePixelRatio,
       experimental: true
-    });
+    });*/
 
     class Faerun {
       constructor() {
@@ -305,27 +305,28 @@ console.log(this.pointHelpers.entries);
               var overlayStruc_Height = document.getElementById("overlay-structure-container").offsetHeight
 
               if (overlayStruc_Width > overlayStruc_Height) {overlayStruc_Width = overlayStruc_Height}
-
-              smilesDrawer = new SmilesDrawer.Drawer({
+/*
+              smilesDrawerOLD = new SmilesDrawer.Drawer({
                 width: overlayStruc_Width / window.devicePixelRatio,
                 height: overlayStruc_Width / window.devicePixelRatio,
                 bondThickness: 1.4,
                 experimental: true
               });
+*/
+      //        this.setTipContent();
 
-              this.setTipContent();
-
-
-              smilesDrawer = new SmilesDrawer.Drawer({
+/*
+              smilesDrawerOLD = new SmilesDrawer.Drawer({
                 width: 250 / window.devicePixelRatio,
                 height: 250 / window.devicePixelRatio,
                 bondThickness: 1.4,
                 experimental: true
               });
+              */
             } else {
 
               document.getElementById("overlay-structure-container").style.visibility = "hidden";
-              this.setTipContent__();
+            //  this.setTipContent__();
 
               this.el.tip.classList.add('show');
 
@@ -539,7 +540,7 @@ console.log(this.pointHelpers.entries);
 
       setTipContent__() {
         SmilesDrawer.parse(this.currentPoint.label, tree => {
-          smilesDrawer.draw(tree, 'smiles-canvas', 'light', false);
+          smilesDrawerOLD.draw(tree, 'smiles-canvas', 'light', false);
           let tipImage = Faerun.createElement('img');
           tipImage.src = this.el.smilesCanvas.toDataURL();
           this.el.tipText.innerHTML = '';
@@ -552,7 +553,7 @@ console.log(this.pointHelpers.entries);
 
       setTipContent() {
         SmilesDrawer.parse(this.currentPoint.label, tree => {
-          smilesDrawer.draw(tree, 'overlay-structure', 'dark', false);
+          smilesDrawerOLD.draw(tree, 'overlay-structure', 'dark', false);
           document.getElementById("tip").style.visibility = "hidden";
           //let tipImage = Faerun.createElement('img');
           //tipImage.src = this.el.smilesCanvas.toDataURL();
@@ -734,9 +735,9 @@ console.log(this.pointHelpers.entries);
         let labelIndex = meta.label_index[seriesState];
         let titleIndex = meta.title_index[seriesState];
         let selectedLabels = meta.selected_labels[seriesState];
-
+/*
         SmilesDrawer.parse(fullLabel[labelIndex], tree => {
-          smilesDrawer.draw(tree, 'smiles-canvas', 'dark', false);
+          smilesDrawerOLD.draw(tree, 'smiles-canvas', 'dark', false);
           let img = Faerun.createElement('img');
           img.src = this.el.smilesCanvas.toDataURL();
           
@@ -746,7 +747,7 @@ console.log(this.pointHelpers.entries);
 
           this.setSelectedContent(fullLabel, labelIndex, selectedLabels, img);
         }, err => { console.log(err); });
-
+*/
         // Remove all indicators
         this.selectedIndicators.forEach(indicator => {
           indicator.element.parentElement.removeChild(indicator.element);

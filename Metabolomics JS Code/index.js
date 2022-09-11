@@ -69,6 +69,8 @@ addEventListener('click', () => {
 })
 
 
+
+
 function convertToJSON(){
   Papa.parse(document.getElementById('uploadfile').files[0],
   {
@@ -99,7 +101,7 @@ function convertToJSON(){
           animate(); 
           visualizeData(); 
           initTMap();
-
+       
       console.log(data);
 
       
@@ -118,6 +120,9 @@ let toolTipCtx = toolTipCanvas.getContext("2d");
 toolTipCanvas.width =window.innerWidth;;
 toolTipCanvas.height = window.innerHeight;
 
+let smilesCanvas = document.getElementById("smilesCanvas");
+
+//let smilesCtx = smilesCanvas.getContext("2d");
 
 
 
@@ -479,6 +484,9 @@ function zoomAndPan(){
 function resizeCanvas(){
   mainCanvas.width = window.innerWidth;
 mainCanvas.height = window.innerHeight;
+
+toolTipCanvas.width =window.innerWidth;;
+toolTipCanvas.height = window.innerHeight;
 }
 
 let dataPoint; 
@@ -539,7 +547,7 @@ class DataPoint {
       console.log("ClientX: "+ clientX + " ClientY: "+ clientY + " d: " + d + " PointSize: " + this.dataPointSize);
     
       toolTipCtx.clearRect(0,0, mainCanvas.width, mainCanvas.height);
-     // drawToolTip();
+      drawToolTip();
       
     
    
@@ -552,14 +560,17 @@ class DataPoint {
   drawToolTip(){
      if(this.gotClicked == true){
       //delete Previous Tooltip
-     
+    
 
       toolTipCtx.fillStyle = "white";
       toolTipCtx.fillRect(mouseX,mouseY,150,150);
 
       toolTipCtx.fillStyle = "black";
       toolTipCtx.font = "12px Arial";
-      
+     this.drawSmiles();
+
+
+
     //  var txt = 'this is a very long text to print';
 
 printAt(toolTipCtx, this.smiles, mouseX + 5, mouseY + 20, 20, 140 );
@@ -592,6 +603,24 @@ function printAt( context , text, x, y, lineHeight, fitWidth)
     }
   }
 
+
+  drawSmiles(){
+    let options = {  width: 150 / window.devicePixelRatio,
+    height: 150 / window.devicePixelRatio}
+    
+   smilesCanvas.style.top = this.y+200+"px";
+    smilesCanvas.style.left = this.x+"px";
+
+    let smilesDrawer = new SmilesDrawer.Drawer(options);
+
+    SmilesDrawer.parse(this.smiles, function(tree) {
+      smilesDrawer.draw(tree, "smilesCanvas", 'light', false);
+  console.log("parsed.");
+    }, err => { console.log(err); });
+    
+  }
+  
+
   getFilterStatus(){
     return this.isFiltered;
   }
@@ -613,6 +642,9 @@ function printAt( context , text, x, y, lineHeight, fitWidth)
   }
   setSmiles(smiles){
     this.smiles = smiles; 
+  }
+  getSmiles(){
+    return this.smiles;
   }
   setClickable(clickable){
     this.clickable = clickable; 
@@ -759,10 +791,18 @@ function lockHiddenDataPoints(){
  
   }
 }
-
+/*
+function drawSmiles(){
+  SmilesDrawer.parse(sampleDataPoint.getSmiles(), function(tree) {
+    smilesDrawer.draw(tree, "smilesCanvas", 'light', false);
+console.log("parsed.");
+  }, err => { console.log(err); });
+  
+}
+*/
 
 let sampleDataPoint = new DataPoint(100,100,50,200,10,250,"magenta",2,false);
-
+sampleDataPoint.setSmiles("O=C1C2=C(N=CN2)N(C)C(N1C)=O");
 
 function animate(){
 //draw each Frame
@@ -781,7 +821,7 @@ zeroPoint.draw();
 drawDataPoints();
 drawFilteredDataPoints();
 drawPointCursor();
-
+//drawSmiles();
 if(toolTipActivated){
 //drawToolTip(); 
 }
@@ -818,6 +858,7 @@ if(dataLoaded == true){
 })
 
 function  filterFromTmap(){
+
 //TMapData = ChemicalSpaceDataBackUp; 
 console.log(TMapData);
 
@@ -864,7 +905,7 @@ filteredTmapData.Chemical_Space.colors[0].g.push(TMapData.Chemical_Space.colors[
 filteredTmapData.Chemical_Space.colors[0].b.push(TMapData.Chemical_Space.colors[0].b[i]);
 
 
-tempdata.push(TMapData.Chemical_Space.labels[i]);
+tempdata.push(filteredCSdataSet[j]);
 
 }
  }
