@@ -487,6 +487,9 @@ mainCanvas.height = window.innerHeight;
 
 toolTipCanvas.width =window.innerWidth;;
 toolTipCanvas.height = window.innerHeight;
+
+smilesCanvas.width =window.innerWidth;;
+smilesCanvas.height = window.innerHeight;
 }
 
 let dataPoint; 
