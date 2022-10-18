@@ -9,16 +9,24 @@
     <link rel="shortcut icon" href="data:image/vnd.microsoft.icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA25g0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAERAAAAAAAAAREAAAAAAAABEQAAAAAAAAERAAAAAAAAARERERAAAAABEREREAAAAAEREREQAAAAAREAAAAAAAABEQAAAAAAAAEREREQAAAAARERERAAAAABEREREAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAPH/AADx/wAA8f8AAPH/AADwDwAA8A8AAPAPAADx/wAA8f8AAPAPAADwDwAA8A8AAP//AAD//wAA" />
     <script src="https://unpkg.com/lore-engine@1.1.10/dist/lore.min.js"></script>
      <script src="https://unpkg.com/smiles-drawer@1.2.0/dist/smiles-drawer.min.js"></script> 
-
-    <link 
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.3.1/sigma.min.js" integrity="sha512-rU8OO+H1WUkbSf/0Enr4ZVFw2Kydx9kK0b805tWXgrcyyJu/S4YM09xxYlCeh/BHf2WqL89ioXIppy8ghHB1sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+     
+ 
+ 
+    <link
       rel="stylesheet" 
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" 
+
       integrity="sha256-piqEf7Ap7CMps8krDQsSOTZgF+MU/0MPyPW2enj5I40=" 
       crossorigin="anonymous" />
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans:400,600"
       rel="stylesheet"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.0/graphology.umd.min.js" integrity="sha512-N+WcElMiKUys+lyqZvhK5Svlmp1628tPbHWXgTROdVtWCoCWBSiLWliVLh3c7hEh6TgUA34gSYip2jinoHZGGA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> 
+
+
+
     <style>
         body {
           margin: 0px;
@@ -159,7 +167,11 @@
             background-color: #fff;
           
         }
-
+        #sigma-container{ 
+      width:1600px;
+      height:800px;
+     
+    }
         #mainCanvas{
     position: absolute;
     border: 0px solid black;
@@ -186,6 +198,9 @@
     left: 0;
   
      }
+
+    
+
 
        #canvasLayerStack{
     pointer-events: none;
@@ -690,17 +705,18 @@ path {
     <canvas id="lore"></canvas>
  
  <!-- <canvas id="canvasLayerStack"></canvas>-->  
-   
-    
     
 </div>
-<div>
+
+<div id="sigma-container">
 <canvas id="mainCanvas" class="canvas"></canvas>
 <canvas id="toolTipCanvas" class="canvas"></canvas>
 <canvas id="smilesCanvas" class="canvas"></canvas>
 </div>
-
-
+<script src="sigma.js"></script> 
+<!-- To use a Graph object -->
+<script src="graphology.min.js"></script>
+<!-- This exposes a global variable named "graphology" -->
 
  
 </body>

@@ -8,6 +8,7 @@
 // Append/Render the missing Paragraph as they are required
 // Set Text for every paragraph element. Data(dta) gives you Access to the Data for Each Datapoint in each Paragraph
 // testcommit
+
 let clientX;
 let clientY;
 let mouseX;
@@ -28,6 +29,7 @@ let dataBaseHidden = false;
 //var data; 
 var TMapData = data;
 var ChemicalSpaceDataBackUp = data;
+
 
 var filteredTmapData = {
 
@@ -61,6 +63,82 @@ Chemical_Space_tree: {
 }
 
 };
+
+/*
+var s = new sigma(
+  {
+    renderer: {
+      container: document.getElementById('sigma-container'),
+      type: 'canvas'
+    },
+    settings: {
+     minEdgeSize: 0.1,
+     maxEdgeSize: 2,
+     minNodeSize: 1,
+     maxNodeSize: 8,
+    }
+  }
+);
+
+// Create a graph object
+var graph = {
+  nodes: [
+    { id: "n0", label: "A node", x: 0, y: 0, size: 3, color: '#008cc2' },
+    { id: "n1", label: "Another node", x: 3, y: 1, size: 2, color: '#008cc2' },
+    { id: "n2", label: "And a last one", x: 1, y: 3, size: 1, color: '#E57821' }
+  ],
+  edges: [
+    { id: "e0", source: "n0", target: "n1", color: '#282c34', type:'line', size:0.5 },
+    { id: "e1", source: "n1", target: "n2", color: '#282c34', type:'curve', size:1},
+    { id: "e2", source: "n2", target: "n0", color: '#FF0000', type:'line', size:2}
+  ]
+}
+
+// Load the graph in sigma
+s.graph.read(graph);
+// Ask sigma to draw it
+s.refresh();
+*/
+
+function drawSigmaGraph(){
+  for(var i = 0; i < dataPoints.length; i++){
+
+    if(dataPoints[i].getFilterStatus() == false)
+    {
+    graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 3, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+    
+  }else{
+    graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 8, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+
+    }
+  }
+  graph.addNode("Origin", { x: 0, y: 0, size: 5, label: "Origin", color: "yellow" });
+  /*
+  graph.addNode("John", { x: 0, y: 10, size: 5, label: "John", color: "blue" });
+  graph.addNode("Mary", { x: 10, y: 0, size: 3, label: "Mary", color: "red" });
+  
+  graph.addEdge("John", "Mary");
+  */
+
+}
+
+const state = { searchQuery: "" };
+let hoveredNode; 
+const container = document.getElementById("sigma-container");
+
+const graph = new graphology.Graph();
+
+const {UndirectedGraph, DirectedGraph} = graphology;
+
+
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const renderer = new Sigma(graph, container, {
+
+  // Register event to manage state hoveredNode
+
+});
+
 
 const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
@@ -100,6 +178,7 @@ function convertToJSON(){
           scatterPoints(); 
           animate(); 
           visualizeData(); 
+          drawSigmaGraph();
           initTMap();
        
       console.log(data);
@@ -499,7 +578,7 @@ let isFiltered = false;
 let dataPointSize; 
 let dataPosX; 
 let dataPosY;
-
+let compoundName;
 
 class DataPoint {
 
@@ -520,6 +599,7 @@ class DataPoint {
     var d;
     this.clickable = true; 
     this.gotClicked = false; 
+    this.compoundName = compoundName; 
   }
 
   draw(){
@@ -655,7 +735,12 @@ function printAt( context , text, x, y, lineHeight, fitWidth)
   getClickStatus(){
     return this.gotClicked; 
   }
- 
+  setCompoundName(compoundName){
+    this.compoundName = compoundName; 
+  }
+  getCompoundName(){
+    return this.compoundName;
+  }
 /*
   stroke = "black";
   lineWidth = 1;
@@ -702,8 +787,11 @@ function scatterPoints(){
     dataPoints[i] = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth, isFiltered);
     
     dataPoints[i].setSmiles(TMapData.Chemical_Space.labels[i]);
-
+    dataPoints[i].setCompoundName("["+[i]+ "] " + TMapData.Chemical_Space.labels[i]);
+   // dataPoints[i].setCompoundName(TMapData.Chemical_Space[i].analog_compound_name_ms2query_results);
    //seperate Filtered Data from whole Dataset
+
+
     if(TMapData.Chemical_Space.dataFiltered[i] == true){
       dataPoints[i].setLineWidth(2);
       dataPoints[i].setPointSize(6);
@@ -819,11 +907,11 @@ mainCanvas.height = window.innerHeight;
  ctx.clearRect(0,0, mainCanvas.width, mainCanvas.height);
 
 
-sampleDataPoint.draw();
-zeroPoint.draw();
-drawDataPoints();
-drawFilteredDataPoints();
-drawPointCursor();
+//sampleDataPoint.draw();
+//zeroPoint.draw();
+//drawDataPoints();
+//drawFilteredDataPoints();
+//drawPointCursor();
 //drawSmiles();
 if(toolTipActivated){
 //drawToolTip(); 

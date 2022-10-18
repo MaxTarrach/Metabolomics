@@ -1,0 +1,9 @@
+src/graphology/dist
+src/graphology/specs
+src/library/dist
+benchmark
+experiments
+scripts
+
+# TEMPORARY
+src/communities-leiden
