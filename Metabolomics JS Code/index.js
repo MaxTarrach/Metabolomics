@@ -15,6 +15,7 @@ let mouseX;
 let mouseY;
 let toolTipActivated = false; 
 var slider = document.getElementById("myRange");
+var dataSlider = document.getElementById("dataRange");
 var output = document.getElementById("value");
 var sliderValue = 1;
 var filteredCSdataSet =[]; 
@@ -101,6 +102,8 @@ s.refresh();
 */
 
 function drawSigmaGraph(){
+  
+  
   for(var i = 0; i < dataPoints.length; i++){
 
     if(dataPoints[i].getFilterStatus() == false)
@@ -111,22 +114,67 @@ function drawSigmaGraph(){
     graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 8, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
 
     }
+   // graph.clear();
+   // graph.dropNode(i);
   }
   graph.addNode("Origin", { x: 0, y: 0, size: 5, label: "Origin", color: "yellow" });
+
+
   /*
   graph.addNode("John", { x: 0, y: 10, size: 5, label: "John", color: "blue" });
   graph.addNode("Mary", { x: 10, y: 0, size: 3, label: "Mary", color: "red" });
   
   graph.addEdge("John", "Mary");
   */
+// updateSigmaGraph();
 
 }
 
+function updateSigmaGraph(){
+  var colR;
+  var colG;
+  var colB
+  var colorBrightness = 0.2;
+  graph.clear(); 
+  for(var i = 0; i < dataPoints.length; i++){
+    if(dataPoints[i].getFilterStatus() == false){
+      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+
+
+      /* //Darker Colors
+      colR = Math.floor(dataPoints[i].r * colorBrightness);
+      colG = Math.floor(dataPoints[i].g * colorBrightness);
+      colB = Math.floor(dataPoints[i].b * colorBrightness);
+ 
+      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y , size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+colR+","+colG+","+ colB +")" });
+      */
+
+    }else{
+      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+    }
+  }
+
+ var kk = lookupNodeByKeyValue(renderer, 5);
+ console.log(kk);
+ // graph.dropNode(5);
+  console.log(graph);
+
+}
+
+function lookupNodesByKeyValue(sigmaInstance, key, value) {
+  return sigmaInstance.graph.nodes().filter(node => node[key] === value);
+}
+function lookupNodeByKeyValue(sigmaInstance, key, value) {
+  return lookupNodesByKeyValue(sigmaInstance, key, value).pop();
+}
+function lookupNodeById(sigmaInstance, value) {
+  return lookupNodeByKeyValue(sigmaInstance, 'id', value);
+}
 const state = { searchQuery: "" };
 let hoveredNode; 
 const container = document.getElementById("sigma-container");
 
-const graph = new graphology.Graph();
+var graph = new graphology.Graph();
 
 const {UndirectedGraph, DirectedGraph} = graphology;
 
@@ -852,6 +900,9 @@ hideCheckBox.addEventListener('change', function() {
     console.log("Checkbox is checked..");
     dataBaseHidden = true; 
     lockHiddenDataPoints(); 
+
+    //testing 
+    
   } else {
     console.log("Checkbox is not checked..");
     dataBaseHidden = false; 
@@ -945,8 +996,27 @@ if(dataLoaded == true){
   nestBySuperClass();
   visualizeData();
   scatterPoints();
+  updateSigmaGraph();
+    // Refresh rendering:
+    renderer.refresh();
+   
 }
 })
+
+dataSlider.oninput = function() {
+  output.innerHTML = this.value;
+}
+var dataSliderValue; 
+
+dataSlider.addEventListener("input", function(){
+  dataSliderValue = dataSlider.value;
+  var color = "linear-gradient(90deg, rgb(117,252,117)" + dataSliderValue + "%, rgb(214,214,214)" + dataSliderValue + "%";
+  dataSlider.style.background = color;
+  console.log("DataSlider Value: "+ dataSliderValue);
+  
+})
+
+var filteredAndFoundCSDataSet; 
 
 function  filterFromTmap(){
 
@@ -997,13 +1067,17 @@ filteredTmapData.Chemical_Space.colors[0].b.push(TMapData.Chemical_Space.colors[
 
 
 tempdata.push(filteredCSdataSet[j]);
-
+filteredAndFoundCSDataSet = tempdata;
+}
+else{
+//  tempdata.splice(j, 1);
 }
  }
  //console.log(TMapData.Chemical_Space.dataFiltered[i]);
 
 }
-console.log(tempdata);
+//console.log(tempdata);
+console.log(filteredAndFoundCSDataSet);
 // filteredTmapData = tempdata;
 console.log(filteredTmapData);
 console.log(TMapData.Chemical_Space.dataFiltered);
@@ -1014,7 +1088,7 @@ data = TMapData;
 
 }
 
-
+/*
 
 function sumMassOfSubClasses(group){
 
@@ -1037,6 +1111,8 @@ groupedData = d3.rollup(CSdataSet,
 //console.log(groupedData);
 //console.log(groupedData.get('Benzenoids'));
 }
+
+*/
 
 /*function hierachyBySuperClass(){
 hierarchicalDataGroup = d3.group(CSdataSet,
@@ -1066,7 +1142,9 @@ nestedData =  d3.nest()
 .key(function(d) {return d.cf_class_ms2query_results})
 .key(function(d) {return d.cf_subclass_ms2query_results})
 .key(function(d) {return d.analog_compound_name_ms2query_results})
-.entries(filteredCSdataSet);
+//insert Sunburstdata here: 
+.entries(filteredAndFoundCSDataSet);
+
 
 //console.log(nestedData[0]);
 

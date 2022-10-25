@@ -709,9 +709,14 @@ path {
 </div>
 
 <div id="sigma-container">
-<canvas id="mainCanvas" class="canvas"></canvas>
+  <canvas id="mainCanvas" class="canvas"></canvas>
 <canvas id="toolTipCanvas" class="canvas"></canvas>
 <canvas id="smilesCanvas" class="canvas"></canvas>
+
+</div>
+
+<div class="dataSlideContainer" style="position:absolute;  bottom:40px;">
+  <input type="range" min="0" max="5" value="1" id="dataRange" class="dataSlider">
 </div>
 <script src="sigma.js"></script> 
 <!-- To use a Graph object -->
