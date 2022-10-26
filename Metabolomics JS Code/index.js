@@ -102,7 +102,7 @@ s.refresh();
 */
 
 function drawSigmaGraph(){
-  
+  graph.clear(); 
   
   for(var i = 0; i < dataPoints.length; i++){
 
@@ -190,27 +190,37 @@ const renderer = new Sigma(graph, container, {
 
 const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
-  convertToJSON();
+  convertToJSON(0);
 
 })
 
 
 
 
-function convertToJSON(){
-  Papa.parse(document.getElementById('uploadfile').files[0],
+function convertToJSON(fileNumber){
+  var uploadedData = [];
+  CSdataSet = []; 
+  filteredCSdataSet = [];
+  filteredAndFoundCSDataSet = [];
+
+
+  Papa.parse(document.getElementById('uploadfile').files[fileNumber],
   {
+    
       download: true,
       header: true,
       skipEmptyLines: true,
       complete: function(results){
-        //
+        console.log(results);
+
+       
           for (i = 0; i < results.data.length; i++){
            //   results.data[i].MassDiff_GNPS_results;
-           massDiffData.push(results.data[i].MassDiff_GNPS_results);
-           CSdataSet.push(results.data[i]);
+          // massDiffData.push(results.data[i].MassDiff_GNPS_results);
+          
+           uploadedData.push(results.data[i]);
           }
-
+          CSdataSet = uploadedData; 
           //console.log(massDiffData);
           console.log(CSdataSet);
           dataLoaded = true; 
@@ -229,7 +239,7 @@ function convertToJSON(){
           drawSigmaGraph();
           initTMap();
        
-      console.log(data);
+    //  console.log(data);
 
       
       }
@@ -1012,8 +1022,13 @@ dataSlider.addEventListener("input", function(){
   dataSliderValue = dataSlider.value;
   var color = "linear-gradient(90deg, rgb(117,252,117)" + dataSliderValue + "%, rgb(214,214,214)" + dataSliderValue + "%";
   dataSlider.style.background = color;
+ // dataSlider.style.content = document.getElementById('uploadfile').files.length;
+
+
   console.log("DataSlider Value: "+ dataSliderValue);
   
+  convertToJSON(dataSliderValue);
+
 })
 
 var filteredAndFoundCSDataSet; 
@@ -1021,14 +1036,14 @@ var filteredAndFoundCSDataSet;
 function  filterFromTmap(){
 
 //TMapData = ChemicalSpaceDataBackUp; 
-console.log(TMapData);
+//console.log(TMapData);
 
 var tempdata = [];
 
 //Achtung: könnte bei doppelaufrufen zu doppelten/dreifachen... tree führen 
 filteredTmapData.Chemical_Space_tree = TMapData.Chemical_Space_tree;
 
-console.log(ChemicalSpaceDataBackUp);
+//console.log(ChemicalSpaceDataBackUp);
 // Check if the Labels of the filteredCSDataSet are found in the chemical_space of the TMap
 for(var i = 0; i < TMapData.Chemical_Space.labels.length; i++){
 
@@ -1080,7 +1095,7 @@ else{
 console.log(filteredAndFoundCSDataSet);
 // filteredTmapData = tempdata;
 console.log(filteredTmapData);
-console.log(TMapData.Chemical_Space.dataFiltered);
+//console.log(TMapData.Chemical_Space.dataFiltered);
 
 data = TMapData; 
 //data = filteredTmapData;
@@ -1134,7 +1149,6 @@ removeDoubleValues();
 
 
 
-console.log(filteredCSdataSet); 
 
 nestedData =  d3.nest()
 .key(function(d) {return d.cf_kingdom_ms2query_results})
@@ -1150,7 +1164,7 @@ nestedData =  d3.nest()
 
 hierarchy = d3.hierarchy(nestedData[0],function(d) { return d.values; });
 
-console.log(hierarchy);
+//console.log(hierarchy);
 
 }
 
@@ -1253,7 +1267,7 @@ hierarchy.count(value like Mass from the list, example: every Entry that has a m
 */
 
 hierarchy.count();
-console.log(hierarchy);
+//console.log(hierarchy);
 //hierarchy.sum(function(d) { return d.MassDiff_GNPS_results; });
 //hierarchy.sum(function(d) { return d.precursor_mz_query_spectrum; }); 
 

@@ -591,7 +591,7 @@ path {
     
    
 
-    <input type="file" id="uploadfile" accept=".csv">
+    <input type="file" multiple id="uploadfile" accept=".csv">
     <button id="uploadconfirm">Upload File</button>
 
 
@@ -715,8 +715,10 @@ path {
 
 </div>
 
-<div class="dataSlideContainer" style="position:absolute;  bottom:40px;">
-  <input type="range" min="0" max="5" value="1" id="dataRange" class="dataSlider">
+<div class="dataSlideContainer" style="position:absolute;  bottom:10px;">
+
+  <input type="range" min="0" max="5" value="0" id="dataRange" class="dataSlider">
+  <p>File No.: <span id="value"> </span> </p>
 </div>
 <script src="sigma.js"></script> 
 <!-- To use a Graph object -->
