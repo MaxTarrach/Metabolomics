@@ -101,6 +101,7 @@ s.graph.read(graph);
 s.refresh();
 */
 
+// Function drawSigmaGraph NO LONGER NEEDED -> updateSigmaGraph() 
 function drawSigmaGraph(){
   graph.clear(); 
   
@@ -138,16 +139,18 @@ function updateSigmaGraph(){
   graph.clear(); 
   for(var i = 0; i < dataPoints.length; i++){
     if(dataPoints[i].getFilterStatus() == false){
+     
+     if(dataBaseHidden == false){
+
       graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
-
-
-      /* //Darker Colors
+     }else{
+       //Darker Colors
       colR = Math.floor(dataPoints[i].r * colorBrightness);
       colG = Math.floor(dataPoints[i].g * colorBrightness);
       colB = Math.floor(dataPoints[i].b * colorBrightness);
  
       graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y , size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+colR+","+colG+","+ colB +")" });
-      */
+     }
 
     }else{
       graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
@@ -236,7 +239,8 @@ function convertToJSON(fileNumber){
           scatterPoints(); 
           animate(); 
           visualizeData(); 
-          drawSigmaGraph();
+          //drawSigmaGraph();
+          updateSigmaGraph();
           initTMap();
        
     //  console.log(data);
@@ -909,14 +913,15 @@ hideCheckBox.addEventListener('change', function() {
   if (this.checked) {
     console.log("Checkbox is checked..");
     dataBaseHidden = true; 
-    lockHiddenDataPoints(); 
-
+   // lockHiddenDataPoints(); 
+    updateSigmaGraph();
     //testing 
     
   } else {
     console.log("Checkbox is not checked..");
     dataBaseHidden = false; 
-    lockHiddenDataPoints(); 
+   // lockHiddenDataPoints(); 
+    updateSigmaGraph();
   }
 });
 
