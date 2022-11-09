@@ -640,11 +640,11 @@ path {
   <div id="Tmap"> 
  
 
-    
+  
 
     <div id="sunburst-container">
         <div id="sunburst"></div>
-        
+       
     </div>
   <canvas id="smiles-canvas" data-bind="smilesCanvas"></canvas>
 
@@ -705,28 +705,34 @@ path {
     <canvas id="lore"></canvas>
  
  <!-- <canvas id="canvasLayerStack"></canvas>-->  
-    
+
 </div>
 
+
+
+
 <div id="sigma-container">
+  
   <canvas id="mainCanvas" class="canvas"></canvas>
 <canvas id="toolTipCanvas" class="canvas"></canvas>
 <canvas id="smilesCanvas" class="canvas"></canvas>
 
 </div>
+<div id="plotly-container" style="position:absolute;  bottom:10px;" ></div>
 
 <div class="dataSlideContainer" style="position:absolute;  bottom:10px;">
 
   <input type="range" min="0" max="5" value="0" id="dataRange" class="dataSlider">
   <p>File No.: <span id="value"> </span> </p>
 </div>
+
 <script src="sigma.js"></script> 
 <!-- To use a Graph object -->
 <script src="graphology.min.js"></script>
 <!-- This exposes a global variable named "graphology" -->
-
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
  
 </body>
-    
+ 
 
 </html>

@@ -591,7 +591,7 @@ console.log(this.pointHelpers.entries);
 
         //MODIFIED get the sunburst to append it to the legend down under
         let sunburst = document.getElementById("sunburst");
-
+        let plotly = document.getElementById("plotly-container");
         let legend = document.getElementById('legend');
         
         if (legend) this.body.removeChild(legend);
@@ -667,8 +667,13 @@ console.log(this.pointHelpers.entries);
           //MODIFIED adding Sunburst
             container.appendChild(
                 sunburst
+                
             ); 
-
+           /* container.appendChild(
+              plotly
+              
+          ); */
+            
             container.appendChild(
               Faerun.createElement(
                 'div', { id: `legend-${s.name}`, 

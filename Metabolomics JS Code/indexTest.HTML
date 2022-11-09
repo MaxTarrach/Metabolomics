@@ -1,72 +1,103 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-path {
-  stroke: #fff;
-}
-</style>
+<head>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
 <body>
+  <script>
+    const CSV =
+    "https://raw.githubusercontent.com/chris3edwards3/exampledata/master/plotlyJS/dot.csv";
 
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script>
-
-var width = 960,
-    height = 700,
-    radius = (Math.min(width, height) / 2) - 10;
-
-var formatNumber = d3.format(",d");
-
-var x = d3.scaleLinear()
-    .range([0, 2 * Math.PI]);
-
-var y = d3.scaleSqrt()
-    .range([0, radius]);
-
-var color = d3.scaleOrdinal(d3.schemeCategory20);
-
-var partition = d3.partition();
-
-var arc = d3.arc()
-    .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
-    .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-    .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
-    .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
-
-
-//var svg = d3.select("body").append("svg")
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-  .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
-
-d3.json("https://gist.githubusercontent.com/mbostock/4348373/raw/85f18ac90409caa5529b32156aa6e71cf985263f/flare.json", function(error, root) {
-  if (error) throw error;
-  
-  root = d3.hierarchy(root);
-  root.sum(function(d) { return d.size; });
-  svg.selectAll("path")
-      .data(partition(root).descendants())
-    .enter().append("path")
-      .attr("d", arc)
-      .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
-      .on("click", click)
-    .append("title")
-      .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
-});
-
-function click(d) {
-  svg.transition()
-      .duration(750)
-      .tween("scale", function() {
-        var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
-            yd = d3.interpolate(y.domain(), [d.y0, 1]),
-            yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
-        return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
-      })
-    .selectAll("path")
-      .attrTween("d", function(d) { return function() { return arc(d); }; });
+function plotFromCSV() {
+    Plotly.d3.csv(CSV, function(err, rows) {
+        processData(rows);
+    });
 }
 
-d3.select(self.frameElement).style("height", height + "px");
-</script>
+function processData(allRows) {
+    let y = [];
+    let x1 = [];
+    let x2 = [];
+    let row;
+
+    let i = 0;
+    while (i < allRows.length) {
+        row = allRows[i];
+        y.push(row["Major"]);
+        x1.push(row["Sal1"]);
+        x2.push(row["Sal2"]);
+        i += 1;
+    }
+
+    makePlotly(y, x1, x2);
+}
+
+function makePlotly(y, x1, x2) {
+    let traces = [
+        {
+            x: x1,
+            y: y,
+            name: "0-5 yrs Experience",
+            mode: "markers",
+            marker: {
+                color: "#967e20",
+                line: {
+                    color: "#967e20",
+                    width: 1
+                },
+                size: 10,
+                symbol: "circle"
+            }
+        },
+        {
+            x: x2,
+            y: y,
+            name: "10+ yrs Experience",
+            mode: "markers",
+            marker: {
+                color: "#224a15",
+                line: {
+                    color: "#224a15",
+                    width: 1
+                },
+                size: 10,
+                symbol: "circle"
+            }
+        }
+    ];
+
+    let layout = {
+        title: "<b>Highest-Paying College Majors of 2019</b>",
+        font: {
+            color: "#2e3b2b"
+        },
+        hovermode: "closest",
+        legend: {
+            // x: 1,
+            // xanchor: "right",
+            // y: 1.175
+        },
+        paper_bgcolor: "#fffcf0",
+        plot_bgcolor: "#fffcf0",
+        xaxis: {
+            range: [0, 200000],
+            showgrid: false,
+            showline: true,
+            tickformat: "$,"
+        },
+        yaxis: {
+            automargin: true,
+            gridcolor: "#dbd6bf"
+        }
+    };
+
+    let config = { responsive: true, editable: true };
+
+    Plotly.newPlot("plot", traces, layout, config);
+}
+
+plotFromCSV();
+
+  </script>
+
+  <div id="plot"></div>
+</body>

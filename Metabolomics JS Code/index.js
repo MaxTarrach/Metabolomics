@@ -190,6 +190,106 @@ const renderer = new Sigma(graph, container, {
 
 });
 
+//Plotly Code START
+const CSV ="https://raw.githubusercontent.com/chris3edwards3/exampledata/master/plotlyJS/dot.csv";
+
+
+function plotFromCSV() {
+Plotly.d3.csv(CSV, function(err, rows) {
+    processData(rows);
+});
+}
+
+function processData(allRows) {
+let y = [];
+let x1 = [];
+let x2 = [];
+let row;
+
+let i = 0;
+while (i < allRows.length) {
+    row = allRows[i];
+    y.push(row["Major"]);
+    x1.push(row["Sal1"]);
+    x2.push(row["Sal2"]);
+    i += 1;
+}
+
+makePlotly(y, x1, x2);
+}
+
+function makePlotly(y, x1, x2) {
+let traces = [
+    {
+        x: x1,
+        y: y,
+        name: "0-5 yrs Experience",
+        mode: "markers",
+        marker: {
+            color: "#967e20",
+            line: {
+                color: "#967e20",
+                width: 1
+            },
+            size: 10,
+            symbol: "circle"
+        }
+    },
+    {
+        x: x2,
+        y: y,
+        name: "10+ yrs Experience",
+        mode: "markers",
+        marker: {
+            color: "#224a15",
+            line: {
+                color: "#224a15",
+                width: 1
+            },
+            size: 10,
+            symbol: "circle"
+        }
+    }
+];
+
+let layout = {
+    title: "<b>Metabolomics</b>",
+    font: {
+        color: "#2e3b2b"
+    },
+    hovermode: "closest",
+    legend: {
+        // x: 1,
+        // xanchor: "right",
+        // y: 1.175
+    },
+    paper_bgcolor: "#fffcf0",
+    plot_bgcolor: "#fffcf0",
+    xaxis: {
+        range: [0, 200000],
+        showgrid: false,
+        showline: true,
+        tickformat: "$,"
+    },
+    yaxis: {
+        automargin: true,
+        gridcolor: "#dbd6bf"
+    }
+};
+
+let config = { responsive: true, editable: true };
+
+//Plotly.newPlot("plotly-container", traces, layout, config);
+}
+
+//plotFromCSV();
+
+//Plotly Code END
+
+
+
+
+
 
 const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
@@ -242,7 +342,7 @@ function convertToJSON(fileNumber){
           //drawSigmaGraph();
           updateSigmaGraph();
           initTMap();
-       
+          plotFromCSV();
     //  console.log(data);
 
       
