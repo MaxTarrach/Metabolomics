@@ -100,7 +100,7 @@ s.graph.read(graph);
 // Ask sigma to draw it
 s.refresh();
 */
-
+/*
 // Function drawSigmaGraph NO LONGER NEEDED -> updateSigmaGraph() 
 function drawSigmaGraph(){
   graph.clear(); 
@@ -121,16 +121,15 @@ function drawSigmaGraph(){
   graph.addNode("Origin", { x: 0, y: 0, size: 5, label: "Origin", color: "yellow" });
 
 
-  /*
-  graph.addNode("John", { x: 0, y: 10, size: 5, label: "John", color: "blue" });
-  graph.addNode("Mary", { x: 10, y: 0, size: 3, label: "Mary", color: "red" });
+  
+  //graph.addNode("John", { x: 0, y: 10, size: 5, label: "John", color: "blue" });
+ // graph.addNode("Mary", { x: 10, y: 0, size: 3, label: "Mary", color: "red" });
   
   graph.addEdge("John", "Mary");
-  */
+  
 // updateSigmaGraph();
 
-}
-
+} */
 function updateSigmaGraph(){
   var colR;
   var colG;
@@ -163,6 +162,54 @@ function updateSigmaGraph(){
   console.log(graph);
 
 }
+var heatMapActive = false; 
+
+function showHeatMap(){
+  heatMapActive = true; 
+  var uploadedData = [];
+  filteredCSdataSet = [];
+  filteredAndFoundCSDataSet = [];
+  CSdataSet = dataCollector;
+  countSimilarObjectsInArray();
+
+  nestBySuperClass();
+  filterFromTmap();
+  scatterPoints(); 
+  animate(); 
+  visualizeData(); 
+  updateSigmaGraph();
+  initTMap();
+
+  console.log(CSdataSet);
+  console.log(filteredDataPoints);
+
+  for(var i = 0; i<filteredDataPoints.length;i++){
+    console.log(filteredDataPoints[i].fileName);
+  }
+}
+
+function countSimilarObjectsInArray(){
+
+
+ let result = [];
+  CSdataSet.forEach(function(a) {
+      if (!this[a.Smiles_GNPS_results]) {
+          this[a.Smiles_GNPS_results] = {
+            Smiles_GNPS_results: a.Smiles_GNPS_results,
+            Smiles_GNPS_results: 0
+          };
+          result.push(this[a.Smiles_GNPS_results]);
+      }
+      this[a.Smiles_GNPS_results].Smiles_GNPS_results += a.Smiles_GNPS_results;
+  }, Object.create(null));
+  let val = JSON.stringify(result);
+  console.log(result);
+  console.log(val);
+
+}
+
+
+
 
 function lookupNodesByKeyValue(sigmaInstance, key, value) {
   return sigmaInstance.graph.nodes().filter(node => node[key] === value);
@@ -295,14 +342,32 @@ const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
   convertToJSON(0);
 
+ for(var i = 0; i<document.getElementById('uploadfile').files.length;i++){
+  fileNumber = i;   
+  convertToJSON(i);
+  console.log(fileNumber);
+  
+ }
+ console.log(dataCollector);
+        /*
+          nestBySuperClass();
+          filterFromTmap();
+          scatterPoints(); 
+          animate(); 
+          visualizeData(); 
+          updateSigmaGraph();
+          initTMap();
+         */
+
 })
 
 
 
+var dataCollector = []; 
 
 function convertToJSON(fileNumber){
   var uploadedData = [];
-  CSdataSet = []; 
+
   filteredCSdataSet = [];
   filteredAndFoundCSDataSet = [];
 
@@ -320,33 +385,35 @@ function convertToJSON(fileNumber){
           for (i = 0; i < results.data.length; i++){
            //   results.data[i].MassDiff_GNPS_results;
           // massDiffData.push(results.data[i].MassDiff_GNPS_results);
-          
+         
            uploadedData.push(results.data[i]);
+           dataCollector.push(results.data[i]);
+         //  CSdataSet.push(results.data[i]);
           }
-          CSdataSet = uploadedData; 
-          //console.log(massDiffData);
+          CSdataSet = uploadedData;
+    
           console.log(CSdataSet);
           dataLoaded = true; 
       
-          //hierachyBySuperClass();
-       //   groupBySuperClass();
+  
 
 
       
-         
+    // CODE INIT Moved to uploadconfirm
+        
          nestBySuperClass();
           filterFromTmap();
           scatterPoints(); 
           animate(); 
           visualizeData(); 
-          //drawSigmaGraph();
           updateSigmaGraph();
           initTMap();
-          plotFromCSV();
-    //  console.log(data);
+        //  plotFromCSV();
+    
 
       
       }
+     
    })
 
 
@@ -395,9 +462,9 @@ let MIN_ZOOM = 0.1
 let SCROLL_SENSITIVITY = 0.003;
 let zoomAmount; 
 
-document.getElementById("zoomAmountButton").onclick = function(){
- 
-  cameraZoom = document.getElementById("zoomAmount").value;
+document.getElementById("heatMap").onclick = function(){
+  showHeatMap();
+ // cameraZoom = document.getElementById("zoomAmount").value;
 }
 document.getElementById("centerView").onclick = function(){
  cameraOffset.x = 0;
@@ -741,6 +808,8 @@ let dataPointSize;
 let dataPosX; 
 let dataPosY;
 let compoundName;
+let fileNumber;
+let fileName = ""; 
 
 class DataPoint {
 
@@ -762,6 +831,8 @@ class DataPoint {
     this.clickable = true; 
     this.gotClicked = false; 
     this.compoundName = compoundName; 
+    this.fileNumber = fileNumber;
+    this.fileName = fileName;
   }
 
   draw(){
@@ -903,6 +974,19 @@ function printAt( context , text, x, y, lineHeight, fitWidth)
   getCompoundName(){
     return this.compoundName;
   }
+  setFileNumber(fileNumber){
+    this.fileNumber = fileNumber; 
+  }
+  getFileNumber(){
+    return this.fileNumber;
+  }
+
+  setFileName(fileName){
+    this.fileName = fileName; 
+  }
+  getFileName(){
+    return this.fileName;
+  }
 /*
   stroke = "black";
   lineWidth = 1;
@@ -942,6 +1026,7 @@ function scatterPoints(){
   let dataPointSize = 3;
   let stroke = "black";
 
+
  // drawPoint(30,30,5,100,200,100);   
   for(let i = 0; i < TMapData.Chemical_Space.x.length; i++){
  
@@ -950,6 +1035,7 @@ function scatterPoints(){
     
     dataPoints[i].setSmiles(TMapData.Chemical_Space.labels[i]);
     dataPoints[i].setCompoundName("["+[i]+ "] " + TMapData.Chemical_Space.labels[i]);
+
    // dataPoints[i].setCompoundName(TMapData.Chemical_Space[i].analog_compound_name_ms2query_results);
    //seperate Filtered Data from whole Dataset
 
@@ -960,7 +1046,12 @@ function scatterPoints(){
       dataPoints[i].setFilterStatus(true);
       dataPoints[i].setStrokeStyle("black"); 
       dataPoints[i].setClickable(true);
-    
+      
+      //DataPoints should be labeled with the fileNumber only once at the beginning: 
+      if(heatMapActive == false){
+      dataPoints[i].setFileName("File: " + fileNumber);
+      }  
+
       filteredDataPoints.push(dataPoints[i]); 
       
 
@@ -1131,7 +1222,8 @@ dataSlider.addEventListener("input", function(){
 
 
   console.log("DataSlider Value: "+ dataSliderValue);
-  
+
+ 
   convertToJSON(dataSliderValue);
 
 })
@@ -1248,7 +1340,8 @@ console.log(hierarchicalDataGroup);
 function nestBySuperClass(){
 
 filterByPredictionValue();
-//remove double entries so Dataset doesnt get double nested/added 
+
+//remove double entries so Dataset doesnt get double nested/added: 
 removeDoubleValues(); 
 
 
