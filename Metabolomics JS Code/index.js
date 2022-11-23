@@ -136,14 +136,16 @@ function updateSigmaGraph(){
   var colB
   var colorBrightness = 0.2;
   graph.clear(); 
+
   for(var i = 0; i < dataPoints.length; i++){
+
     if(dataPoints[i].getFilterStatus() == false){
      
      if(dataBaseHidden == false){
 
       graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
      }else{
-       //Darker Colors
+       //Darker Colors for "hidden" Objects (chemical data space) 
       colR = Math.floor(dataPoints[i].r * colorBrightness);
       colG = Math.floor(dataPoints[i].g * colorBrightness);
       colB = Math.floor(dataPoints[i].b * colorBrightness);
@@ -151,8 +153,29 @@ function updateSigmaGraph(){
       graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y , size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+colR+","+colG+","+ colB +")" });
      }
 
+     //Following Else for found datasamples (if Datapoints filtered = true)
     }else{
+      //Highlight found samples
+      if(heatMapActive == false){
+      //Class-Colors
       graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+      
+      }else{
+        //heatmap colorization of found samples
+        // Search for double+ Entries
+        graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+        
+        
+        /*for(var i=0; i<hierarchy.length;i++)
+        {
+          if(dataPoints[i].getSmiles() === ){
+
+          }
+        }
+        */
+
+
+      }
     }
   }
 
@@ -166,15 +189,15 @@ var heatMapActive = false;
 
 function showHeatMap(){
   heatMapActive = true; 
-  var uploadedData = [];
+  uploadedData = [];
   filteredCSdataSet = [];
   filteredAndFoundCSDataSet = [];
   CSdataSet = dataCollector;
   countSimilarObjectsInArray();
 
   nestBySuperClass();
-  filterFromTmap();
-  scatterPoints(); 
+ 
+ // scatterPoints(); 
   animate(); 
   visualizeData(); 
   updateSigmaGraph();
@@ -182,7 +205,7 @@ function showHeatMap(){
 
   console.log(CSdataSet);
   console.log(filteredDataPoints);
-
+console.log(filteredAndFoundCSDataSet);
   for(var i = 0; i<filteredDataPoints.length;i++){
     console.log(filteredDataPoints[i].fileName);
   }
@@ -402,8 +425,8 @@ function convertToJSON(fileNumber){
     // CODE INIT Moved to uploadconfirm
         
          nestBySuperClass();
-          filterFromTmap();
-          scatterPoints(); 
+    //      filterFromTmap();
+     //     scatterPoints(); 
           animate(); 
           visualizeData(); 
           updateSigmaGraph();
@@ -1041,6 +1064,7 @@ function scatterPoints(){
 
 
     if(TMapData.Chemical_Space.dataFiltered[i] == true){
+
       dataPoints[i].setLineWidth(2);
       dataPoints[i].setPointSize(6);
       dataPoints[i].setFilterStatus(true);
@@ -1201,7 +1225,8 @@ slider.addEventListener("input", function(){
 if(dataLoaded == true){
   nestBySuperClass();
   visualizeData();
-  scatterPoints();
+// filterFromTmap();
+  // scatterPoints();
   updateSigmaGraph();
     // Refresh rendering:
     renderer.refresh();
@@ -1248,12 +1273,30 @@ for(var i = 0; i < TMapData.Chemical_Space.labels.length; i++){
 //Assign a false boolean to all (40k+) datapoints
 TMapData.Chemical_Space.dataFiltered[i] = false;
 
+//init temp values (only for CanvasMode, not for SigmaGraph. Delete from Datapoint class, if unused)
+let isFiltered = false; 
+let lineWidth = 0 ;
+let dataPointSize = 3;
+let stroke = "black";
+
+
+
+ //Fill Array with all Datapoints
+ dataPoints[i] = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth, isFiltered);
+    
+ dataPoints[i].setSmiles(TMapData.Chemical_Space.labels[i]);
+ dataPoints[i].setCompoundName("["+[i]+ "] " + TMapData.Chemical_Space.labels[i]);
+
+ if(heatMapActive == false){
+  dataPoints[i].setFileName("File: " + fileNumber);
+  }  
+
 
 
  for(var j = 0; j < filteredCSdataSet.length; j++){
 
 
-
+  
 
  
 //filter out by smiles that are found in both filteredCSData and in TMap-Chemical-Space
@@ -1262,7 +1305,7 @@ TMapData.Chemical_Space.dataFiltered[i] = false;
 
   //Change Booleans to true for filtered Data for later highlighting in TMapCode.js 
   TMapData.Chemical_Space.dataFiltered[i] = true;
-
+  dataPoints[i].setFilterStatus(true);
 
 //push the filtered Data into the yet empty  filteredtmapdata-structure
 filteredTmapData.Chemical_Space.x.push(
@@ -1280,6 +1323,9 @@ filteredTmapData.Chemical_Space.colors[0].b.push(TMapData.Chemical_Space.colors[
 
 tempdata.push(filteredCSdataSet[j]);
 filteredAndFoundCSDataSet = tempdata;
+
+
+
 }
 else{
 //  tempdata.splice(j, 1);
@@ -1397,7 +1443,7 @@ for(var i = 0; i < filteredCSdataSet.length; i++){
   }
 }
 filterFromTmap();
- console.log(filteredCSdataSet);
+// console.log(filteredCSdataSet);
 
 
 
