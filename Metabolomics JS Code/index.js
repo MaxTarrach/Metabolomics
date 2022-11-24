@@ -1365,7 +1365,7 @@ dataSlider.addEventListener("input", function(){
 
   console.log("DataSlider Value: "+ dataSliderValue);
 
- 
+  heatMapActive = false;
   convertToJSON(dataSliderValue);
 
 })
