@@ -25,7 +25,8 @@ let groupedData;
 let hierarchicalDataGroup;
 let nestedData;
 let hierarchy; 
-var dataLoaded; 
+var dataCollector = []; 
+var dataLoaded = false; 
 let dataBaseHidden = false; 
 //var data; 
 var TMapData = data;
@@ -138,7 +139,7 @@ function updateSigmaGraph(){
   graph.clear(); 
 
   for(var i = 0; i < dataPoints.length; i++){
-
+    // Datapoints with false Filterstatus => all Datapoints from the chemical space that are not found in the loaded samples
     if(dataPoints[i].getFilterStatus() == false){
      
      if(dataBaseHidden == false){
@@ -153,18 +154,51 @@ function updateSigmaGraph(){
       graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y , size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+colR+","+colG+","+ colB +")" });
      }
 
-     //Following Else for found datasamples (if Datapoints filtered = true)
+     //Highlight all DataSamples that are in the chemical space: 
     }else{
-      //Highlight found samples
+
+      //Default Highlight found samples
       if(heatMapActive == false){
       //Class-Colors
       graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
       
-      }else{
-        //heatmap colorization of found samples
-        // Search for double+ Entries
-        graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+      }
+
+      if(heatMapActive == true){
+        //heatmap colorization
+      
         
+       // get the max, min SmilesCount value
+        var smilesCounts = filteredAndFoundDataPoints.map(object => { return object.SMILEScount; });
+        console.log(smilesCounts);
+        
+        var highestSmilesCount= Math.max(...smilesCounts); 
+        var lowestSmilesCount = Math.min(...smilesCounts); 
+ 
+        // Using 4 colors: Green, yellow, orange, red
+    
+        //green 
+        if(dataPoints[i].getSmilesCount() <= (highestSmilesCount/4)){
+
+        graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb(0,250,0)" });
+        }
+         //yellow 
+       else if(dataPoints[i].getSmilesCount() <= (highestSmilesCount/4 *2)){
+
+        graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb(255,255,0)" });
+        }
+       //orange
+       else if(dataPoints[i].getSmilesCount() <= (highestSmilesCount/4 *3)){
+
+         graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb(255,140,0)" });
+    }
+
+        //red 
+       else if(dataPoints[i].getSmilesCount() <= (highestSmilesCount)){
+
+          graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb(250,0,0)" });
+          }
+
         
         /*for(var i=0; i<hierarchy.length;i++)
         {
@@ -182,7 +216,7 @@ function updateSigmaGraph(){
  var kk = lookupNodeByKeyValue(renderer, 5);
  console.log(kk);
  // graph.dropNode(5);
-  console.log(graph);
+
 
 }
 var heatMapActive = false; 
@@ -192,28 +226,78 @@ function showHeatMap(){
   uploadedData = [];
   filteredCSdataSet = [];
   filteredAndFoundCSDataSet = [];
-  CSdataSet = dataCollector;
-  countSimilarObjectsInArray();
+  filteredAndFoundDataPoints = [];
+  console.log(dataCollector);
+  CSdataSet = []; 
+  for(var i = 0; i<dataCollector.length; i++){
+    for(var j = 0; j<dataCollector[i].length;j++){
+      CSdataSet.push(dataCollector[i][j]);
+    }
+  
+}
 
-  nestBySuperClass();
+console.log(CSdataSet);
+//  countSimilarObjectsInArray();
+//  nestBySuperClass();
+filterFromTmap(); 
+nestBySuperClass();
+visualizeData(); 
  
- // scatterPoints(); 
-  animate(); 
-  visualizeData(); 
-  updateSigmaGraph();
-  initTMap();
+ // initTMap();
 
   console.log(CSdataSet);
-  console.log(filteredDataPoints);
-console.log(filteredAndFoundCSDataSet);
-  for(var i = 0; i<filteredDataPoints.length;i++){
-    console.log(filteredDataPoints[i].fileName);
+  console.log(filteredAndFoundDataPoints);
+  console.log(filteredAndFoundCSDataSet);
+  var countedDataPoints = [];
+  
+  var countedSmiles = {};
+  var foundSmiles = []; 
+
+
+
+
+
+  //Find similar SMILES in the DataPoint-List and count them
+  for(var i = 0; i<filteredAndFoundDataPoints.length;i++){
+      foundSmiles.push(filteredAndFoundDataPoints[i].getSmiles());
   }
+console.log(foundSmiles);
+
+
+//Count Smiles and store them in "countedSmiles"
+foundSmiles.forEach(val => countedSmiles[val] = (countedSmiles[val] || 0)+1);
+
+console.log(countedSmiles);
+console.log(Object.keys(countedSmiles).length);
+
+
+
+for(var i = 0; i<filteredAndFoundDataPoints.length;i++){
+  for(var j = 0; j<Object.keys(countedSmiles).length;j++){
+   
+    if(filteredAndFoundDataPoints[i].getSmiles() == Object.keys(countedSmiles)[j]){
+
+      filteredAndFoundDataPoints[i].setSmilesCount(Object.values(countedSmiles)[j]);
+      
+    }
+  }
+
+}  
+console.log(filteredAndFoundDataPoints);
+
+updateSigmaGraph();
+
+//console.log(countedDataPoints);
+
+/*  for(var i = 0; i<filteredAndFoundDataPoints.length;i++){
+   console.log(filteredAndFoundDataPoints[i].fileName);
+  }
+  */
 }
 
 function countSimilarObjectsInArray(){
 
-
+/*
  let result = [];
   CSdataSet.forEach(function(a) {
       if (!this[a.Smiles_GNPS_results]) {
@@ -228,7 +312,7 @@ function countSimilarObjectsInArray(){
   let val = JSON.stringify(result);
   console.log(result);
   console.log(val);
-
+*/
 }
 
 
@@ -363,14 +447,25 @@ let config = { responsive: true, editable: true };
 
 const uploadconfirm = document.getElementById('uploadconfirm').
 addEventListener('click', () => {
-  convertToJSON(0);
-
+  
+//convert and save all data in one array(datacollector)
  for(var i = 0; i<document.getElementById('uploadfile').files.length;i++){
   fileNumber = i;   
   convertToJSON(i);
   console.log(fileNumber);
   
+
+  
  }
+ dataLoaded = true; 
+ console.log(dataCollector);
+
+
+//Show first uploaded Dataset, once all files got converted/stored
+
+
+//convertToJSON(0);
+
  console.log(dataCollector);
         /*
           nestBySuperClass();
@@ -382,11 +477,14 @@ addEventListener('click', () => {
           initTMap();
          */
 
-})
+}
+
+
+)
 
 
 
-var dataCollector = []; 
+
 
 function convertToJSON(fileNumber){
   var uploadedData = [];
@@ -404,38 +502,46 @@ function convertToJSON(fileNumber){
       complete: function(results){
         console.log(results);
 
-       
+        console.log(dataLoaded);
           for (i = 0; i < results.data.length; i++){
            //   results.data[i].MassDiff_GNPS_results;
           // massDiffData.push(results.data[i].MassDiff_GNPS_results);
          
            uploadedData.push(results.data[i]);
-           dataCollector.push(results.data[i]);
+          
+          
+       //    dataCollector.push(results.data[i]);
+          
          //  CSdataSet.push(results.data[i]);
           }
+
+        
+          dataCollector.push(uploadedData);
+         
+
           CSdataSet = uploadedData;
     
           console.log(CSdataSet);
-          dataLoaded = true; 
-      
+        
+          
   
 
 
-      
-    // CODE INIT Moved to uploadconfirm
-        
-         nestBySuperClass();
-    //      filterFromTmap();
-     //     scatterPoints(); 
-          animate(); 
-          visualizeData(); 
-          updateSigmaGraph();
-          initTMap();
-        //  plotFromCSV();
+       // CODE INIT Moved to uploadconfirm
+          nestBySuperClass();
+          filterFromTmap();
+      //     scatterPoints(); 
+           animate(); 
+           visualizeData(); 
+           updateSigmaGraph();
+           initTMap();
+         //  plotFromCSV();
     
 
       
       }
+       
+        
      
    })
 
@@ -777,9 +883,9 @@ sampleDataPoint.clicked();
 
 
 //check, if Datapoint got clicked
-for(let i = 0; i < filteredDataPoints.length; i++){
+for(let i = 0; i < filteredAndFoundDataPoints.length; i++){
  
-  filteredDataPoints[i].clicked();
+  filteredAndFoundDataPoints[i].clicked();
  
 }
 for(let i = 0; i < dataPoints.length; i++){
@@ -825,7 +931,7 @@ smilesCanvas.height = window.innerHeight;
 
 let dataPoint; 
 let dataPoints = []; 
-let filteredDataPoints = []; 
+let filteredAndFoundDataPoints = []; 
 let isFiltered = false; 
 let dataPointSize; 
 let dataPosX; 
@@ -856,6 +962,7 @@ class DataPoint {
     this.compoundName = compoundName; 
     this.fileNumber = fileNumber;
     this.fileName = fileName;
+    this.SMILEScount = 1; 
   }
 
   draw(){
@@ -963,7 +1070,7 @@ function printAt( context , text, x, y, lineHeight, fitWidth)
   getFilterStatus(){
     return this.isFiltered;
   }
-  setFilterStatus(isFiltered){
+  setFoundInTmap(isFiltered){
     this.isFiltered = isFiltered; 
   }
   setStrokeStyle(strokeStyle){
@@ -984,6 +1091,15 @@ function printAt( context , text, x, y, lineHeight, fitWidth)
   }
   getSmiles(){
     return this.smiles;
+  }
+  setSmilesCount(SMILEScount){
+    this.SMILEScount = SMILEScount; 
+  }
+  countSMILE(){
+    this.SMILEScount += this.SMILEScount;
+  }
+  getSmilesCount(){
+    return this.SMILEScount;
   }
   setClickable(clickable){
     this.clickable = clickable; 
@@ -1067,7 +1183,7 @@ function scatterPoints(){
 
       dataPoints[i].setLineWidth(2);
       dataPoints[i].setPointSize(6);
-      dataPoints[i].setFilterStatus(true);
+      dataPoints[i].setFoundInTmap(true);
       dataPoints[i].setStrokeStyle("black"); 
       dataPoints[i].setClickable(true);
       
@@ -1076,13 +1192,13 @@ function scatterPoints(){
       dataPoints[i].setFileName("File: " + fileNumber);
       }  
 
-      filteredDataPoints.push(dataPoints[i]); 
+      filteredAndFoundDataPoints.push(dataPoints[i]); 
       
 
     }else{
     dataPoints[i].setLineWidth(0.1);
     dataPoints[i].setPointSize(3);
-    dataPoints[i].setFilterStatus(false);
+    dataPoints[i].setFoundInTmap(false);
     dataPoints[i].setStrokeStyle("black"); 
 
   }
@@ -1108,10 +1224,10 @@ for(let i = 0; i< dataPoints.length; i++){
  
 }
 }
-function drawFilteredDataPoints(){
- /* for(let i = 0; i< filteredDataPoints.length; i++){
+function drawfilteredAndFoundDataPoints(){
+ /* for(let i = 0; i< filteredAndFoundDataPoints.length; i++){
     
-     filteredDataPoints[i].draw(); 
+     filteredAndFoundDataPoints[i].draw(); 
     }
  */
     for(let i = 0; i< dataPoints.length; i++){
@@ -1154,11 +1270,11 @@ function lockHiddenDataPoints(){
     }
   }
   
-  console.log(filteredDataPoints.length);
-  for(let i =0; i< filteredDataPoints.length; i++){
+  console.log(filteredAndFoundDataPoints.length);
+  for(let i =0; i< filteredAndFoundDataPoints.length; i++){
     if(dataBaseHidden==true){
       console.log("reached");
-    filteredDataPoints[i].setClickable(true);
+    filteredAndFoundDataPoints[i].setClickable(true);
     }
  
   }
@@ -1191,7 +1307,7 @@ mainCanvas.height = window.innerHeight;
 //sampleDataPoint.draw();
 //zeroPoint.draw();
 //drawDataPoints();
-//drawFilteredDataPoints();
+//drawfilteredAndFoundDataPoints();
 //drawPointCursor();
 //drawSmiles();
 if(toolTipActivated){
@@ -1224,8 +1340,9 @@ slider.addEventListener("input", function(){
 
 if(dataLoaded == true){
   nestBySuperClass();
+  filterFromTmap();
   visualizeData();
-// filterFromTmap();
+
   // scatterPoints();
   updateSigmaGraph();
     // Refresh rendering:
@@ -1259,7 +1376,7 @@ function  filterFromTmap(){
 
 //TMapData = ChemicalSpaceDataBackUp; 
 //console.log(TMapData);
-
+filteredAndFoundDataPoints = [];
 var tempdata = [];
 
 //Achtung: könnte bei doppelaufrufen zu doppelten/dreifachen... tree führen 
@@ -1305,7 +1422,12 @@ let stroke = "black";
 
   //Change Booleans to true for filtered Data for later highlighting in TMapCode.js 
   TMapData.Chemical_Space.dataFiltered[i] = true;
-  dataPoints[i].setFilterStatus(true);
+  dataPoints[i].setFoundInTmap(true);
+  filteredAndFoundDataPoints.push(dataPoints[i]); 
+
+
+  //Count how many Datapoints with same SMILES/Label there are
+
 
 //push the filtered Data into the yet empty  filteredtmapdata-structure
 filteredTmapData.Chemical_Space.x.push(
@@ -1322,6 +1444,7 @@ filteredTmapData.Chemical_Space.colors[0].b.push(TMapData.Chemical_Space.colors[
 
 
 tempdata.push(filteredCSdataSet[j]);
+
 filteredAndFoundCSDataSet = tempdata;
 
 
@@ -1334,14 +1457,18 @@ else{
  //console.log(TMapData.Chemical_Space.dataFiltered[i]);
 
 }
+
+
 //console.log(tempdata);
 console.log(filteredAndFoundCSDataSet);
+console.log(filteredAndFoundDataPoints);
 // filteredTmapData = tempdata;
 console.log(filteredTmapData);
 //console.log(TMapData.Chemical_Space.dataFiltered);
 
 data = TMapData; 
-//data = filteredTmapData;
+
+
 
 
 }
@@ -1387,8 +1514,6 @@ function nestBySuperClass(){
 
 filterByPredictionValue();
 
-//remove double entries so Dataset doesnt get double nested/added: 
-removeDoubleValues(); 
 
 
 
@@ -1405,10 +1530,10 @@ nestedData =  d3.nest()
 
 
 //console.log(nestedData[0]);
-
+console.log(hierarchy);
 hierarchy = d3.hierarchy(nestedData[0],function(d) { return d.values; });
 
-//console.log(hierarchy);
+console.log(hierarchy);
 
 }
 
@@ -1424,24 +1549,28 @@ function removeDoubleValues(){
 function filterByPredictionValue(){
 
 console.log(sliderValue);
-
+filteredCSdataSet = []; 
 for(var i = 0; i < CSdataSet.length; i++){
 
-  if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100)){
+ 
+ 
+if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100)){
     filteredCSdataSet.push(CSdataSet[i]);
-    removeDoubleValues();
+   // console.log(filteredCSdataSet);
+   // removeDoubleValues();
+   // console.log(filteredCSdataSet);
 
     }
 }
-
+/*
 for(var i = 0; i < filteredCSdataSet.length; i++){
 
   if (filteredCSdataSet[i].ms2query_model_prediction_ms2query_results < (sliderValue / 100)){
     filteredCSdataSet.splice(i, 1);
-
+   
   
   }
-}
+}*/
 filterFromTmap();
 // console.log(filteredCSdataSet);
 
