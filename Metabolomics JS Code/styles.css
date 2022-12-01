@@ -21,18 +21,19 @@ body {
     left: 0;
 }
 
+
 p{
-    margin-top: 20px;
+    margin-top: 28px;
     opacity: 1;
     font-family: Arial, Helvetica, sans-serif;
-    color: rgb(34, 34, 34);
+    color: rgb(255, 255, 255);
     
 }
 
 .slider::after {
     content: "100";
-    color: black;
-    font-size: 2rem;
+    color: rgb(255, 255, 255);
+    font-size: 18pt;
     position: absolute;
     left: 92%;
     top: 26%;
@@ -41,8 +42,8 @@ p{
 
 .slider::before {
     content: "0";
-    color: black;
-    font-size: 2rem;
+    color: rgb(255, 255, 255);
+    font-size: 18pt;
     position: absolute;
     left: 1%;
     top: 26%;
@@ -154,3 +155,45 @@ opacity: 1;
     border-radius: 50%;
     cursor: pointer;
 }
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+  
+  /* Style the buttons that are used to open the tab content */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+  }
+  
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+  
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    animation: fadeEffect 0.5s; /* Fading effect takes 1 second */
+  }
+  /* Go from zero to full opacity */
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }

@@ -167,7 +167,8 @@
             background-color: #fff;
           
         }
-        #sigma-container{ 
+      #sigma-container{ 
+      
       width:1600px;
       height:800px;
      
@@ -613,27 +614,33 @@ path {
     <!-- Alt + Z für Zeilenumbruch-->  
   <!--   Tmap Viz -->
 
-  <div class="slideContainer" style="position:relative;  top:20px;">
-    <input type="range" min="0" max="100" value="1" id="myRange" class="slider">
-    <p>Prediction-Value(%): <span id="value"> </span> 
-      <label>Zoom-Amount:</label>
-      <input type="number" id="zoomAmount">
-      <button type="button" id="heatMap">heatMap</button> 
-      
-      <button type="button" id="centerView">center</button>
-      
-      <input type="checkbox" id="hide-checkbox"/>
-      <label for="hide-checkbox">Hide database</label>
-      <p>HideDataCollection</p>
-     
-    </p>
-   
-  </div>
+
+<script src="sigma.js"></script> 
+<!-- To use a Graph object -->
+<script src="graphology.min.js"></script>
+<!-- This exposes a global variable named "graphology" -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+
+<!-- Tab links -->
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'T-Map')"id="defaultOpen">T-Map</button>
+  <button class="tablinks" onclick="openCity(event, 'Alignment Chart')">Alignment Chart</button>
+  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+</div>
+
+<!-- Tab content -->
+<div id="T-Map" class="tabcontent" >
+  <h3>T-Map</h3>
+  
 
 
 
 
-<div>
+
+
+
  
   <div> <canvas id="tip" width=100 height=25></canvas></div>
 
@@ -642,10 +649,7 @@ path {
 
   
 
-    <div id="sunburst-container">
-        <div id="sunburst"></div>
-       
-    </div>
+    
   <canvas id="smiles-canvas" data-bind="smilesCanvas"></canvas>
 
     <div id="overlay-structure-container" data-binding-id="overlayStructureContainer" class="">
@@ -718,20 +722,50 @@ path {
 <canvas id="smilesCanvas" class="canvas"></canvas>
 
 </div>
-<div id="plotly-container" style="position:absolute;  bottom:10px;" ></div>
+<!-- <div id="plotly-container" style="position:absolute;  bottom:10px;" ></div> -->
 
 <div class="dataSlideContainer" style="position:absolute;  bottom:10px;">
 
   <input type="range" min="0" max="5" value="0" id="dataRange" class="dataSlider">
-  <p>File No.: <span id="value"> </span> </p>
+  <p>File No.: <span id="fvalue"> </span> </p>
 </div>
 
-<script src="sigma.js"></script> 
-<!-- To use a Graph object -->
-<script src="graphology.min.js"></script>
-<!-- This exposes a global variable named "graphology" -->
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<div class="slideContainer" style="position:absolute;  top:220px;">
+  <input type="range" min="0" max="100" value="1" id="myRange" class="slider">
+  <p>Prediction-Value(%): <span id="value"> </span> 
+  <!--   <label>Zoom-Amount:</label> -->
+   <!-- <input type="number" id="zoomAmount"> -->
+
+
+   
+  </p>
+  <button type="button" id="heatMap">heatMap</button> 
+    
+  <button type="button" id="centerView">.</button> 
+
+<input type="checkbox" id="hide-checkbox"/>
+<label for="hide-checkbox">Hide database</label>
+</div>
+<div id="sunburst-container" style="position: absolute;">
+  <div id="sunburst"></div>
  
+</div>
+
+
+</div>
+
+<div id="Alignment Chart" class="tabcontent">
+  <h3>Alignment Chart</h3>
+  <button type="button" id="plotlyButton">Show Graph</button> 
+  <div id='plotlyDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+</div>
+
+<div id="Empty" class="tabcontent">
+  <h3>Empty Tab</h3>
+
+</div>
+
+
 </body>
  
 

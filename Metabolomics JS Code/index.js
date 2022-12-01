@@ -222,6 +222,7 @@ function updateSigmaGraph(){
 var heatMapActive = false; 
 
 function showHeatMap(){
+  
   heatMapActive = true; 
   uploadedData = [];
   filteredCSdataSet = [];
@@ -241,7 +242,7 @@ console.log(CSdataSet);
 //  nestBySuperClass();
 filterFromTmap(); 
 nestBySuperClass();
-visualizeData(); 
+visualizeSunburst(); 
  
  // initTMap();
 
@@ -339,7 +340,9 @@ const {UndirectedGraph, DirectedGraph} = graphology;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const renderer = new Sigma(graph, container, {
-
+ 
+     allowInvalidContainer: true
+  
   // Register event to manage state hoveredNode
 
 });
@@ -472,7 +475,7 @@ addEventListener('click', () => {
           filterFromTmap();
           scatterPoints(); 
           animate(); 
-          visualizeData(); 
+          visualizeSunburst(); 
           updateSigmaGraph();
           initTMap();
          */
@@ -532,9 +535,10 @@ function convertToJSON(fileNumber){
           filterFromTmap();
       //     scatterPoints(); 
            animate(); 
-           visualizeData(); 
+        
            updateSigmaGraph();
            initTMap();
+           visualizeSunburst(); 
          //  plotFromCSV();
     
 
@@ -1247,6 +1251,7 @@ hideCheckBox.addEventListener('change', function() {
    // lockHiddenDataPoints(); 
     updateSigmaGraph();
     //testing 
+   
     
   } else {
     console.log("Checkbox is not checked..");
@@ -1339,15 +1344,20 @@ slider.addEventListener("input", function(){
 
 
 if(dataLoaded == true){
+
+  if(heatMapActive){
+    showHeatMap();
+  }else{
   nestBySuperClass();
   filterFromTmap();
-  visualizeData();
+  visualizeSunburst();
 
   // scatterPoints();
   updateSigmaGraph();
     // Refresh rendering:
     renderer.refresh();
    
+  }
 }
 })
 
@@ -1358,7 +1368,7 @@ var dataSliderValue;
 
 dataSlider.addEventListener("input", function(){
   dataSliderValue = dataSlider.value;
-  var color = "linear-gradient(90deg, rgb(117,252,117)" + dataSliderValue + "%, rgb(214,214,214)" + dataSliderValue + "%";
+  var color = "linear-gradient(90deg, rgb(117,252,117)" + dataSliderValue + "%, rgb(214,214,214)" + dataSliderValue;
   dataSlider.style.background = color;
  // dataSlider.style.content = document.getElementById('uploadfile').files.length;
 
@@ -1556,7 +1566,7 @@ for(var i = 0; i < CSdataSet.length; i++){
  
 if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100)){
     filteredCSdataSet.push(CSdataSet[i]);
-   // console.log(filteredCSdataSet);
+   // console.log(filteredCSdataSet);slider
    // removeDoubleValues();
    // console.log(filteredCSdataSet);
 
@@ -1584,8 +1594,9 @@ filterFromTmap();
 */
 
 // Sunburst Diagram Visuals 
-function visualizeData(){
-
+function visualizeSunburst(){
+//remove existing svg in case of reloading 
+d3.select("svg").remove();
 //console.log(hierarchy);
 //console.log(nestedData[0]);
 
@@ -1613,8 +1624,7 @@ var arc = d3.arc()
   .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
 
-  //remove existing svg in case of reloading 
-  d3.select("svg").remove();
+  
 
 
 var svg = d3.select("#sunburst").append("svg")
@@ -1684,129 +1694,79 @@ svg.selectAll("path")
 
 }
 
+//===== TABS Code ======
+function openCity(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
 
-//standard Sunburst Code 
- /* 
-function visualizeData(){ 
-  var width = 960,
-  height = 700,
-  radius = (Math.min(width, height) / 2) - 10;
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
 
-var formatNumber = d3.format(",d");
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
 
-var x = d3.scaleLinear()
-  .range([0, 2 * Math.PI]);
-
-var y = d3.scaleSqrt()
-  .range([0, radius]);
-
-var color = d3.scaleOrdinal(d3.schemeCategory20);
-
-var partition = d3.partition();
-
-var arc = d3.arc()
-  .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
-  .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-  .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
-  .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
-
-
-var svg = d3.select("body").append("svg")
-  .attr("width", width)
-  .attr("height", height)
-.append("g")
-  .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
-
-d3.json(
-  "https://gist.githubusercontent.com/mbostock/4348373/raw/85f18ac90409caa5529b32156aa6e71cf985263f/flare.json"
-
-  , function(error, root) {
-if (error) throw error;
-
-root = d3.hierarchy(root);
-root.sum(function(d) { return d.size; });
-svg.selectAll("path")
-    .data(partition(root).descendants())
-  .enter().append("path")
-    .attr("d", arc)
-    .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
-    .on("click", click)
-  .append("title")
-    .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
-console.log(root);
-
-    function click(d) {
-      svg.transition()
-          .duration(750)
-          .tween("scale", function() {
-            var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
-                yd = d3.interpolate(y.domain(), [d.y0, 1]),
-                yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
-            return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
-          })
-        .selectAll("path")
-          .attrTween("d", function(d) { return function() { return arc(d); }; });
-      }
-
-
-    d3.select(self.frameElement).style("height", height + "px");
-    console.log(groupedData);
-
-});
-
-
-
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
 }
 
+//open first Tab by default
+document.getElementById("defaultOpen").click();
+//===== TABS Code END ======
 
-*/ 
 
+//===== Alignment Chart Code ======
 
+/*
+var xValue = ['Product A', 'Product B', 'Product C'];
+var yValue = [20, 14, 23];
+*/
+var xValue = [];
+var yValue = [];
 
-// ----------- Old Treemap VisualizeCode -------------
-  /*
-//d3.json oder d3.csv
-d3.csv(groupedData).then(function(groupedData)
-
-  { 
-    console.log(groupedData);
-    console.log(data)
-      // Give the data to this cluster layout:
-      const root = d3.hierarchy(groupedData).sum(function(d){ return d.value}) // Here the size of each leave is given in the 'value' field in input data
-      
-      // Then d3.treemap computes the position of each element of the hierarchy
-      d3.treemap()
-        .size([width, height])
-        .padding(2)
-        (root)
-     console.log(root);
-      // use this information to add rectangles:
-      svg
-        .selectAll("rect")
-        .data(root.leaves())
-        .join("rect")
-          .attr('x', function (d) { return d.x0; })
-          .attr('y', function (d) { return d.y0; })
-          .attr('width', function (d) { return d.x1 - d.x0; })
-          .attr('height', function (d) { return d.y1 - d.y0; })
-          .style("stroke", "black")
-          .style("fill", "slateblue")
-    
-      // and to add the text labels
-      svg
-        .selectAll("text")
-        .data(root.leaves())
-        .join("text")
-          .attr("x", function(d){ return d.x0+5})    // +10 to adjust position (more right)
-          .attr("y", function(d){ return d.y0+20})    // +20 to adjust position (lower)
-          .text(function(d){ return d.data.name })
-          .attr("font-size", "15px")
-          .attr("fill", "white")
-   
-          console.log(groupedData);
+var trace1 = {
+  x: xValue,
+  y: yValue,
+  type: 'bar',
+  text: yValue,
+  textposition: 'auto',
+  hoverinfo: 'none',
+  marker: {
+    color: 'rgb(158,202,225)',
+    opacity: 0.6,
+    line: {
+      color: 'rgb(8,48,107)',
+      width: 1.5
     }
-    )
+  }
+};
 
-  */
+var plotlyData = [trace1];
 
+var plotlyLayout = {
+  title: 'Alignment Chart',
+  barmode: 'stack'
+};
+
+document.getElementById("plotlyButton").onclick = function(){
+
+  for(var i = 0; i<filteredAndFoundDataPoints.length;i++){
+    xValue.push(filteredAndFoundDataPoints[i].getSmiles());
+    yValue.push(filteredAndFoundDataPoints[i].getSmilesCount());
+  }
+
+
+  Plotly.newPlot('plotlyDiv', plotlyData, plotlyLayout);
  
+}
+//Plotly.newPlot('plotlyDiv', plotlyData, plotlyLayout);
+
+
+
+//===== Alignment Chart Code END ======
