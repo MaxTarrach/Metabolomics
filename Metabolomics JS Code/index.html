@@ -10,7 +10,7 @@
     <script src="https://unpkg.com/lore-engine@1.1.10/dist/lore.min.js"></script>
      <script src="https://unpkg.com/smiles-drawer@1.2.0/dist/smiles-drawer.min.js"></script> 
      <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.3.1/sigma.min.js" integrity="sha512-rU8OO+H1WUkbSf/0Enr4ZVFw2Kydx9kK0b805tWXgrcyyJu/S4YM09xxYlCeh/BHf2WqL89ioXIppy8ghHB1sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-     
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
  
  
     <link
@@ -627,7 +627,7 @@ path {
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'T-Map')"id="defaultOpen">T-Map</button>
   <button class="tablinks" onclick="openCity(event, 'Alignment Chart')">Alignment Chart</button>
-  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+  <button class="tablinks" onclick="openCity(event, 'Empty')">Empty Tab</button>
 </div>
 
 <!-- Tab content -->
@@ -756,8 +756,14 @@ path {
 
 <div id="Alignment Chart" class="tabcontent">
   <h3>Alignment Chart</h3>
-  <button type="button" id="plotlyButton">Show Graph</button> 
-  <div id='plotlyDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+  <button type="button" id="ShowGraphButton">Show Graph</button>
+  <input type="button" value="Generate a table" onclick="generateTable()" />
+
+  <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+    <canvas id="chartJS" style="height:500px; width: 500px"></canvas>
+</div>
+
+
 </div>
 
 <div id="Empty" class="tabcontent">
@@ -765,7 +771,7 @@ path {
 
 </div>
 
-
+<div id='plotlyDiv'><!-- Plotly chart will be drawn inside this DIV. MOVE THIS INTO Alignment Chart--></div>
 </body>
  
 

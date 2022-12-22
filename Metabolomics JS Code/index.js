@@ -1,13 +1,6 @@
-/*with d3 u can select und manipulate all Objects at the same time. To have this Data-Binding and make sure, we react to changes, we need 3D.jS. This code snippet will render the Paragraphs for a div
-*/
-//https://www.youtube.com/watch?v=TOJ9yjvlapY 
-//first div on the page
-//select all Paragraphs
-//Bind data to that Paragraph
-// Give me all the Missing Elements
-// Append/Render the missing Paragraph as they are required
-// Set Text for every paragraph element. Data(dta) gives you Access to the Data for Each Datapoint in each Paragraph
-// testcommit
+// Author: David Kosel  
+// Metabolomics is the scientific study of chemical processes involving metabolites
+// This is the code to visualize and analyze organic samples and its chemical compounds .
 
 let clientX;
 let clientY;
@@ -66,71 +59,6 @@ Chemical_Space_tree: {
 
 };
 
-/*
-var s = new sigma(
-  {
-    renderer: {
-      container: document.getElementById('sigma-container'),
-      type: 'canvas'
-    },
-    settings: {
-     minEdgeSize: 0.1,
-     maxEdgeSize: 2,
-     minNodeSize: 1,
-     maxNodeSize: 8,
-    }
-  }
-);
-
-// Create a graph object
-var graph = {
-  nodes: [
-    { id: "n0", label: "A node", x: 0, y: 0, size: 3, color: '#008cc2' },
-    { id: "n1", label: "Another node", x: 3, y: 1, size: 2, color: '#008cc2' },
-    { id: "n2", label: "And a last one", x: 1, y: 3, size: 1, color: '#E57821' }
-  ],
-  edges: [
-    { id: "e0", source: "n0", target: "n1", color: '#282c34', type:'line', size:0.5 },
-    { id: "e1", source: "n1", target: "n2", color: '#282c34', type:'curve', size:1},
-    { id: "e2", source: "n2", target: "n0", color: '#FF0000', type:'line', size:2}
-  ]
-}
-
-// Load the graph in sigma
-s.graph.read(graph);
-// Ask sigma to draw it
-s.refresh();
-*/
-/*
-// Function drawSigmaGraph NO LONGER NEEDED -> updateSigmaGraph() 
-function drawSigmaGraph(){
-  graph.clear(); 
-  
-  for(var i = 0; i < dataPoints.length; i++){
-
-    if(dataPoints[i].getFilterStatus() == false)
-    {
-    graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 3, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
-    
-  }else{
-    graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 8, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
-
-    }
-   // graph.clear();
-   // graph.dropNode(i);
-  }
-  graph.addNode("Origin", { x: 0, y: 0, size: 5, label: "Origin", color: "yellow" });
-
-
-  
-  //graph.addNode("John", { x: 0, y: 10, size: 5, label: "John", color: "blue" });
- // graph.addNode("Mary", { x: 10, y: 0, size: 3, label: "Mary", color: "red" });
-  
-  graph.addEdge("John", "Mary");
-  
-// updateSigmaGraph();
-
-} */
 function updateSigmaGraph(){
   var colR;
   var colG;
@@ -220,6 +148,8 @@ function updateSigmaGraph(){
 
 }
 var heatMapActive = false; 
+var countedSmiles = {};
+var foundSmiles = []; 
 
 function showHeatMap(){
   
@@ -251,8 +181,8 @@ visualizeSunburst();
   console.log(filteredAndFoundCSDataSet);
   var countedDataPoints = [];
   
-  var countedSmiles = {};
-  var foundSmiles = []; 
+  countedSmiles = {};
+  foundSmiles = []; 
 
 
 
@@ -296,25 +226,7 @@ updateSigmaGraph();
   */
 }
 
-function countSimilarObjectsInArray(){
 
-/*
- let result = [];
-  CSdataSet.forEach(function(a) {
-      if (!this[a.Smiles_GNPS_results]) {
-          this[a.Smiles_GNPS_results] = {
-            Smiles_GNPS_results: a.Smiles_GNPS_results,
-            Smiles_GNPS_results: 0
-          };
-          result.push(this[a.Smiles_GNPS_results]);
-      }
-      this[a.Smiles_GNPS_results].Smiles_GNPS_results += a.Smiles_GNPS_results;
-  }, Object.create(null));
-  let val = JSON.stringify(result);
-  console.log(result);
-  console.log(val);
-*/
-}
 
 
 
@@ -347,10 +259,10 @@ const renderer = new Sigma(graph, container, {
 
 });
 
-//Plotly Code START
-const CSV ="https://raw.githubusercontent.com/chris3edwards3/exampledata/master/plotlyJS/dot.csv";
+//Plotly SAMPLE Code START
+// const CSV ="https://raw.githubusercontent.com/chris3edwards3/exampledata/master/plotlyJS/dot.csv";
 
-
+/*
 function plotFromCSV() {
 Plotly.d3.csv(CSV, function(err, rows) {
     processData(rows);
@@ -445,7 +357,7 @@ let config = { responsive: true, editable: true };
 
 
 
-
+*/
 
 
 const uploadconfirm = document.getElementById('uploadconfirm').
@@ -1596,6 +1508,7 @@ filterFromTmap();
 // Sunburst Diagram Visuals 
 function visualizeSunburst(){
 //remove existing svg in case of reloading 
+
 d3.select("svg").remove();
 //console.log(hierarchy);
 //console.log(nestedData[0]);
@@ -1754,19 +1667,177 @@ var plotlyLayout = {
   barmode: 'stack'
 };
 
-document.getElementById("plotlyButton").onclick = function(){
-
+document.getElementById("ShowGraphButton").onclick = function(){
+  //Start Plotly Visualization
+  /*
   for(var i = 0; i<filteredAndFoundDataPoints.length;i++){
     xValue.push(filteredAndFoundDataPoints[i].getSmiles());
     yValue.push(filteredAndFoundDataPoints[i].getSmilesCount());
   }
+Plotly.newPlot('plotlyDiv', plotlyData, plotlyLayout);
+ */
 
 
-  Plotly.newPlot('plotlyDiv', plotlyData, plotlyLayout);
- 
+updateJSChartContent(); 
 }
-//Plotly.newPlot('plotlyDiv', plotlyData, plotlyLayout);
 
 
 
 //===== Alignment Chart Code END ======
+
+
+// ============= Chart JS Test Code ======
+
+var chartJSObject = document.getElementById("chartJS");
+
+
+var chartLabels = [""]; 
+var chartCountData  = []; 
+
+var JSChart = new Chart(chartJSObject, {
+  type: "bar",
+  data: {
+    labels: chartLabels,
+    datasets: [{
+      label: "Counted Dataset",
+      backgroundColor: 'rgba(65,105,225,0.4)',
+      barPercentage: 1,
+      data: chartCountData, 
+
+    },
+   /* {
+      label: "Datensatz Nr2",
+      backgroundColor: 'rgba(255,255,0,0.4)',
+   //   borderColor: 'rgba(255,0,0,1)',
+      data: [3,7,5]
+
+    }*/
+  ],
+
+  },
+  options: {
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }],
+
+    },
+    maintainAspectRatio: false,
+  }
+
+
+});
+function sortDataPointsByCount(){
+//Sort Data descending from highest count to lowest SmileCount 
+let sortedDataPoints = filteredAndFoundDataPoints.sort(
+  (p1, p2) => (p1.getSmilesCount() < p2.getSmilesCount()) ? 1 : (p1.getSmilesCount() > p2.getSmilesCount()) ? -1 : 0);
+filteredAndFoundDataPoints = sortedDataPoints; 
+}
+
+function updateJSChartContent(){
+  
+  //sorting isnt necessary, may delete
+  sortDataPointsByCount(); 
+
+  //get the Smiles+count Data Object and map it into an array
+  let JSChartData = Object.keys(countedSmiles).map((key) => [String(key), countedSmiles[key]]);
+
+// Sort this Array by Smiles Count
+  let sortedJSChartData = JSChartData.sort(
+    (p1, p2) => (p1[1] < p2[1]) ? 1 : (p1[1] > p2[1]) ? -1 : 0);
+
+console.log(sortedJSChartData);
+// Fill X and Y-Values for the Chart 
+  for(var i = 0; i<sortedJSChartData.length;i++){
+    chartLabels.push(sortedJSChartData[i][0]);
+    chartCountData.push(sortedJSChartData[i][1]);
+  }
+
+//Sortr
+
+
+  //sorted, but double indices
+  /*
+  for(var i = 0; i<filteredAndFoundDataPoints.length;i++){
+    chartLabels.push(filteredAndFoundDataPoints[i].getSmiles());
+    chartCountData.push(filteredAndFoundDataPoints[i].getSmilesCount());
+  }
+*/
+
+
+console.log(countedSmiles);
+console.log(Object.keys(countedSmiles));
+console.log(Object.values(countedSmiles));  
+  JSChart.update(); 
+}
+
+
+
+function generateTable() {
+  // creates a <table> element and a <tbody> element
+  const tbl = document.createElement("table");
+  const tblBody = document.createElement("tbody");
+
+  // creating all cells
+  for (let i = 0; i < 5; i++) {
+    // creates a table row
+    const row = document.createElement("tr");
+
+    for (let j = 0; j < Object.keys(countedSmiles).length; j++) {
+      // Create a <td> element and a text node, make the text
+      // node the contents of the <td>, and put the <td> at
+      // the end of the table row
+      const cell = document.createElement("td");
+     cell.fitWidth = "25px";
+      const cellText = document.createTextNode(Object.keys(countedSmiles)[j]);
+      cell.appendChild(cellText);
+      row.appendChild(cell);
+    }
+
+    // add the row to the end of the table body
+    tblBody.appendChild(row);
+  }
+
+  // put the <tbody> in the <table>
+  tbl.appendChild(tblBody);
+  // appends <table> into <body>
+  document.body.appendChild(tbl);
+  // sets the border attribute of tbl to '2'
+  tbl.setAttribute("border", "2");
+}
+/*
+var JSChart = new Chart(chartJSObject, {
+  type: "bar",
+  data: {
+    labels: ["Januar", "Februar", "März"],
+    datasets: [{
+      label: "Datensatz Nr1",
+      backgroundColor: 'rgba(65,105,225,0.4)',
+      borderColor: 'rgba(65,105,225,1)',
+      data: [3,7,5]
+
+    },
+    {
+      label: "Datensatz Nr2",
+      backgroundColor: 'rgba(255,255,0,0.4)',
+      borderColor: 'rgba(255,0,0,1)',
+      data: [3,7,5]
+
+    }],
+
+  },
+  options: {
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
+  }
+
+
+});
+*/
