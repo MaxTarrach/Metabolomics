@@ -1679,6 +1679,7 @@ Plotly.newPlot('plotlyDiv', plotlyData, plotlyLayout);
 
 
 updateJSChartContent(); 
+generateTable(); 
 }
 
 
@@ -1773,12 +1774,14 @@ console.log(Object.values(countedSmiles));
   JSChart.update(); 
 }
 
-
+let tbl = document.createElement("table");
+let tblBody = document.createElement("tbody");
 
 function generateTable() {
+
   // creates a <table> element and a <tbody> element
-  const tbl = document.createElement("table");
-  const tblBody = document.createElement("tbody");
+  let tbl = document.createElement("table");
+  let tblBody = document.createElement("tbody");
 
   // creating all cells
   for (let i = 0; i < 5; i++) {
@@ -1791,7 +1794,7 @@ function generateTable() {
       // the end of the table row
       const cell = document.createElement("td");
      cell.fitWidth = "25px";
-      const cellText = document.createTextNode(Object.keys(countedSmiles)[j]);
+      const cellText = document.createTextNode(chartCountData[j]);
       cell.appendChild(cellText);
       row.appendChild(cell);
     }
@@ -1806,7 +1809,49 @@ function generateTable() {
   document.body.appendChild(tbl);
   // sets the border attribute of tbl to '2'
   tbl.setAttribute("border", "2");
+  tbl.style.marginTop = "50px";
 }
+
+// Set Range Slider
+let minCountRange = document.getElementById("minCount");
+let maxCountRange = document.getElementById("maxCount");
+
+
+document.getElementById("countRangeButton").onclick = function(){
+ 
+  setChartJSRange();
+  generateTable(); 
+ 
+}
+
+function setChartJSRange(){
+  for(var i = 0; i<chartCountData.length; i++){
+
+    if(chartCountData[i] > maxCountRange.value){
+      chartCountData.splice(i, 1);
+      chartLabels.splice(i,1);
+    }
+
+    if(chartCountData[i] < minCountRange.value){
+      console.log("reached"); 
+      chartCountData.splice(i, 1);
+     chartLabels.splice(i,1);
+    }
+    
+    JSChart.update();
+
+}
+  
+console.log("Min:"+minCountRange.value+" Max:"+maxCountRange.value);
+console.log(chartCountData);
+
+
+console.log("chart updated");
+}
+
+
+
+
 /*
 var JSChart = new Chart(chartJSObject, {
   type: "bar",
