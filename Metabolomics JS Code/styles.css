@@ -15,6 +15,7 @@ body {
     color: white;
 */
 }
+
 .canvas {
     position: absolute;
     top: 0;
@@ -29,6 +30,21 @@ p{
     color: rgb(255, 255, 255);
     
 }
+
+.tmapLegend{
+    position: absolute;
+  width: 300px;
+  height: 100px;
+  background-color: pink;
+  margin: 50px auto;
+  text-align: center;
+  font-size: 2em;
+  padding-top: 20px;
+  border-radius: 150px;
+  }
+
+
+
 
 .slider::after {
     content: "100";
@@ -197,3 +213,6 @@ opacity: 1;
     from {opacity: 0;}
     to {opacity: 1;}
   }
+
+
+  

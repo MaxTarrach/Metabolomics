@@ -1,6 +1,6 @@
 // Author: David Kosel  
 // Metabolomics is the scientific study of chemical processes involving metabolites
-// This is the code to visualize and analyze organic samples and its chemical compounds .
+
 
 let clientX;
 let clientY;
@@ -106,7 +106,7 @@ function updateSigmaGraph(){
         // Using 4 colors: Green, yellow, orange, red
     
         //green 
-        if(dataPoints[i].getSmilesCount() <= (highestSmilesCount/4)){
+     if(dataPoints[i].getSmilesCount() <= (highestSmilesCount/4)){
 
         graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb(0,250,0)" });
         }
@@ -127,23 +127,11 @@ function updateSigmaGraph(){
           graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb(250,0,0)" });
           }
 
-        
-        /*for(var i=0; i<hierarchy.length;i++)
-        {
-          if(dataPoints[i].getSmiles() === ){
-
-          }
-        }
-        */
-
-
       }
     }
   }
 
- var kk = lookupNodeByKeyValue(renderer, 5);
- console.log(kk);
- // graph.dropNode(5);
+
 
 
 }
@@ -167,26 +155,14 @@ function showHeatMap(){
   
 }
 
-console.log(CSdataSet);
-//  countSimilarObjectsInArray();
-//  nestBySuperClass();
 filterFromTmap(); 
 nestBySuperClass();
 visualizeSunburst(); 
- 
- // initTMap();
 
-  console.log(CSdataSet);
-  console.log(filteredAndFoundDataPoints);
-  console.log(filteredAndFoundCSDataSet);
   var countedDataPoints = [];
   
   countedSmiles = {};
   foundSmiles = []; 
-
-
-
-
 
   //Find similar SMILES in the DataPoint-List and count them
   for(var i = 0; i<filteredAndFoundDataPoints.length;i++){
@@ -218,12 +194,6 @@ console.log(filteredAndFoundDataPoints);
 
 updateSigmaGraph();
 
-//console.log(countedDataPoints);
-
-/*  for(var i = 0; i<filteredAndFoundDataPoints.length;i++){
-   console.log(filteredAndFoundDataPoints[i].fileName);
-  }
-  */
 }
 
 
@@ -249,115 +219,11 @@ var graph = new graphology.Graph();
 const {UndirectedGraph, DirectedGraph} = graphology;
 
 
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const renderer = new Sigma(graph, container, {
  
-     allowInvalidContainer: true
-  
-  // Register event to manage state hoveredNode
+     allowInvalidContainer: true 
 
 });
-
-//Plotly SAMPLE Code START
-// const CSV ="https://raw.githubusercontent.com/chris3edwards3/exampledata/master/plotlyJS/dot.csv";
-
-/*
-function plotFromCSV() {
-Plotly.d3.csv(CSV, function(err, rows) {
-    processData(rows);
-});
-}
-
-function processData(allRows) {
-let y = [];
-let x1 = [];
-let x2 = [];
-let row;
-
-let i = 0;
-while (i < allRows.length) {
-    row = allRows[i];
-    y.push(row["Major"]);
-    x1.push(row["Sal1"]);
-    x2.push(row["Sal2"]);
-    i += 1;
-}
-
-makePlotly(y, x1, x2);
-}
-
-function makePlotly(y, x1, x2) {
-let traces = [
-    {
-        x: x1,
-        y: y,
-        name: "0-5 yrs Experience",
-        mode: "markers",
-        marker: {
-            color: "#967e20",
-            line: {
-                color: "#967e20",
-                width: 1
-            },
-            size: 10,
-            symbol: "circle"
-        }
-    },
-    {
-        x: x2,
-        y: y,
-        name: "10+ yrs Experience",
-        mode: "markers",
-        marker: {
-            color: "#224a15",
-            line: {
-                color: "#224a15",
-                width: 1
-            },
-            size: 10,
-            symbol: "circle"
-        }
-    }
-];
-
-let layout = {
-    title: "<b>Metabolomics</b>",
-    font: {
-        color: "#2e3b2b"
-    },
-    hovermode: "closest",
-    legend: {
-        // x: 1,
-        // xanchor: "right",
-        // y: 1.175
-    },
-    paper_bgcolor: "#fffcf0",
-    plot_bgcolor: "#fffcf0",
-    xaxis: {
-        range: [0, 200000],
-        showgrid: false,
-        showline: true,
-        tickformat: "$,"
-    },
-    yaxis: {
-        automargin: true,
-        gridcolor: "#dbd6bf"
-    }
-};
-
-let config = { responsive: true, editable: true };
-
-//Plotly.newPlot("plotly-container", traces, layout, config);
-}
-
-//plotFromCSV();
-
-//Plotly Code END
-
-
-
-*/
 
 
 const uploadconfirm = document.getElementById('uploadconfirm').
@@ -451,6 +317,7 @@ function convertToJSON(fileNumber){
            updateSigmaGraph();
            initTMap();
            visualizeSunburst(); 
+           renderLegend();
          //  plotFromCSV();
     
 
@@ -1505,6 +1372,25 @@ filterFromTmap();
    "clustered_spectra_FractionProfiling_RPOS_ToF10_PreCheck_LTR_01_DDA_Filtered_merged.csv"
 */
 
+function renderLegend(){
+  
+ // var divLegend = document.getElementById("tmapLegend");
+ //Not in Use: 
+ let legendContainer = document.getElementById("legendContainer");
+ let sunburst = document.getElementById("sunburst");
+ legendContainer.appendChild(sunburst);
+/*
+  legend.style.width = "250px";
+  legend.style.height = "500px";
+  legend.style.left = "400px";
+  legend.style.top = "240px";
+  legend.style.borderRadius = "10px";
+
+  */
+}
+renderLegend();
+
+
 // Sunburst Diagram Visuals 
 function visualizeSunburst(){
 //remove existing svg in case of reloading 
@@ -1852,37 +1738,3 @@ console.log("chart updated");
 
 
 
-/*
-var JSChart = new Chart(chartJSObject, {
-  type: "bar",
-  data: {
-    labels: ["Januar", "Februar", "März"],
-    datasets: [{
-      label: "Datensatz Nr1",
-      backgroundColor: 'rgba(65,105,225,0.4)',
-      borderColor: 'rgba(65,105,225,1)',
-      data: [3,7,5]
-
-    },
-    {
-      label: "Datensatz Nr2",
-      backgroundColor: 'rgba(255,255,0,0.4)',
-      borderColor: 'rgba(255,0,0,1)',
-      data: [3,7,5]
-
-    }],
-
-  },
-  options: {
-    scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero: true
-        }
-      }]
-    }
-  }
-
-
-});
-*/
