@@ -1394,10 +1394,8 @@ renderLegend();
 // Sunburst Diagram Visuals 
 function visualizeSunburst(){
 //remove existing svg in case of reloading 
-
 d3.select("svg").remove();
-//console.log(hierarchy);
-//console.log(nestedData[0]);
+
 
 //w 480, height 350
   var width = 250,
@@ -1433,10 +1431,6 @@ var svg = d3.select("#sunburst").append("svg")
   .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
 
-
-//nestBySuperClass();
-
-
 /*  Setting up the size of each Pie-Slice/Subgroup on the Diagram:  
 
 hierarchy.sum(value) 
@@ -1449,11 +1443,7 @@ hierarchy.count(value like Mass from the list, example: every Entry that has a m
 */
 
 hierarchy.count();
-//console.log(hierarchy);
-//hierarchy.sum(function(d) { return d.MassDiff_GNPS_results; });
-//hierarchy.sum(function(d) { return d.precursor_mz_query_spectrum; }); 
-
-
+ 
 
 svg.selectAll("path")
     .data(partition(hierarchy).descendants())
@@ -1484,12 +1474,6 @@ svg.selectAll("path")
 
 
     d3.select(self.frameElement).style("height", height + "px");
-  
-
-
-
-
-
 
 }
 
@@ -1522,10 +1506,6 @@ document.getElementById("defaultOpen").click();
 
 //===== Alignment Chart Code ======
 
-/*
-var xValue = ['Product A', 'Product B', 'Product C'];
-var yValue = [20, 14, 23];
-*/
 var xValue = [];
 var yValue = [];
 
@@ -1592,15 +1572,7 @@ var JSChart = new Chart(chartJSObject, {
       data: chartCountData, 
 
     },
-   /* {
-      label: "Datensatz Nr2",
-      backgroundColor: 'rgba(255,255,0,0.4)',
-   //   borderColor: 'rgba(255,0,0,1)',
-      data: [3,7,5]
-
-    }*/
   ],
-
   },
   options: {
     scales: {
@@ -1642,16 +1614,6 @@ console.log(sortedJSChartData);
     chartCountData.push(sortedJSChartData[i][1]);
   }
 
-//Sortr
-
-
-  //sorted, but double indices
-  /*
-  for(var i = 0; i<filteredAndFoundDataPoints.length;i++){
-    chartLabels.push(filteredAndFoundDataPoints[i].getSmiles());
-    chartCountData.push(filteredAndFoundDataPoints[i].getSmilesCount());
-  }
-*/
 
 
 console.log(countedSmiles);
@@ -1730,8 +1692,6 @@ function setChartJSRange(){
   
 console.log("Min:"+minCountRange.value+" Max:"+maxCountRange.value);
 console.log(chartCountData);
-
-
 console.log("chart updated");
 }
 
