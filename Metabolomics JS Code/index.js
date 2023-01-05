@@ -196,11 +196,6 @@ updateSigmaGraph();
 
 }
 
-
-
-
-
-
 function lookupNodesByKeyValue(sigmaInstance, key, value) {
   return sigmaInstance.graph.nodes().filter(node => node[key] === value);
 }
@@ -239,37 +234,15 @@ addEventListener('click', () => {
   
  }
  dataLoaded = true; 
- console.log(dataCollector);
-
-
-//Show first uploaded Dataset, once all files got converted/stored
-
-
-//convertToJSON(0);
 
  console.log(dataCollector);
-        /*
-          nestBySuperClass();
-          filterFromTmap();
-          scatterPoints(); 
-          animate(); 
-          visualizeSunburst(); 
-          updateSigmaGraph();
-          initTMap();
-         */
-
+ 
 }
 
 
 )
-
-
-
-
-
 function convertToJSON(fileNumber){
   var uploadedData = [];
-
   filteredCSdataSet = [];
   filteredAndFoundCSDataSet = [];
 
@@ -282,18 +255,9 @@ function convertToJSON(fileNumber){
       skipEmptyLines: true,
       complete: function(results){
         console.log(results);
-
         console.log(dataLoaded);
           for (i = 0; i < results.data.length; i++){
-           //   results.data[i].MassDiff_GNPS_results;
-          // massDiffData.push(results.data[i].MassDiff_GNPS_results);
-         
-           uploadedData.push(results.data[i]);
-          
-          
-       //    dataCollector.push(results.data[i]);
-          
-         //  CSdataSet.push(results.data[i]);
+             uploadedData.push(results.data[i]);        
           }
 
         
@@ -303,25 +267,13 @@ function convertToJSON(fileNumber){
           CSdataSet = uploadedData;
     
           console.log(CSdataSet);
-        
-          
-  
-
-
-       // CODE INIT Moved to uploadconfirm
           nestBySuperClass();
-          filterFromTmap();
-      //     scatterPoints(); 
-           animate(); 
-        
+          filterFromTmap(); 
+           animate();
            updateSigmaGraph();
            initTMap();
            visualizeSunburst(); 
-           renderLegend();
-         //  plotFromCSV();
-    
-
-      
+           renderLegend();      
       }
        
         
@@ -342,25 +294,6 @@ toolTipCanvas.height = window.innerHeight;
 
 let smilesCanvas = document.getElementById("smilesCanvas");
 
-//let smilesCtx = smilesCanvas.getContext("2d");
-
-
-
-
-/* //CANVAS LAYERS
-var canvasLayerStack = document.getElementById("canvasLayerStack")
-var canvasLayerStackCtx = canvasLayerStack.getContext("2d"); 
-canvasLayerStack.width = window.innerWidth;
-canvasLayerStack.height = window.innerHeight;
-
-var canvasStack = new CanvasStack("canvasLayerStack");
-var layer1 = canvasStack.createLayer();
-var layer1Ctx = document.getElementById(layer1).getContext("2d");
-layer1Ctx.fillRect(0,0,100,100);
-*/
-
-//mainCanvas.width = window.innerWidth;
-//mainCanvas.height = window.innerHeight;
 const rect = mainCanvas.getBoundingClientRect(); 
 
 //ZOOM-PAN-IMPLEMENTATION
@@ -418,8 +351,6 @@ function onPointerUp(e)
 function onPointerMove(e)
 {
   //Getting the MousePosition in Space (named clientX/Y)
-  //e.clientX
-
   clientX = (e.clientX)/cameraZoom - cameraOffset.x - rect.left;
   clientY =  (e.clientY)/cameraZoom - cameraOffset.y  - rect.top;
 
@@ -428,132 +359,6 @@ function onPointerMove(e)
     clientX = clientX +739;
     clientY = clientY +619;
   }
-
-  /*
-  if(cameraZoom <= 1.31 && cameraZoom >= 1.29){
-    clientX = clientX +85 ;
-    clientY = clientY +111 ;
-  }
-  if(cameraZoom <= 1.61 && cameraZoom >= 1.59){
-    clientX = clientX +138;
-    clientY = clientY + 180;
-  }
-  if(cameraZoom <= 1.91 && cameraZoom >= 1.89){
-    clientX = clientX +175;
-    clientY = clientY +227;
-  }
-  if(cameraZoom <= 2.21 && cameraZoom >= 2.19){
-    clientX = clientX +201;
-    clientY = clientY + 261;
-  }
-  if(cameraZoom <= 2.51 && cameraZoom >= 2.49){
-    clientX = clientX +221;
-    clientY = clientY +288;
-  }
-  if(cameraZoom <= 2.81 && cameraZoom >= 2.79){
-    clientX = clientX+237;
-    clientY = clientY+308;
-  }
-  if(cameraZoom <= 3.11 && cameraZoom >= 3.09){
-    clientX = clientX+250;
-    clientY = clientY+325;
-  }
-  if(cameraZoom <= 3.41 && cameraZoom >= 3.39){
-    clientX = clientX+260;
-    clientY = clientY+339;
-  }
-  if(cameraZoom <= 3.71 && cameraZoom >= 3.69){
-    clientX = clientX+269;
-    clientY = clientY+350;
-  }
-  if(cameraZoom <= 4.01 && cameraZoom >= 3.99){
-    clientX = clientX+277;
-    clientY = clientY+360;
-  }
-  if(cameraZoom <= 4.31 && cameraZoom >= 4.29){
-    clientX = clientX+283;
-    clientY = clientY+368;
-  }
-  if(cameraZoom <= 4.61 && cameraZoom >= 4.59){
-    clientX = clientX+288;
-    clientY = clientY+375;
-  }
-  if(cameraZoom <= 4.91 && cameraZoom >= 4.89){
-    clientX = clientX+293;
-    clientY = clientY+381;
-  }
-  if(cameraZoom <= 5.21 && cameraZoom >= 5.19){
-    clientX = clientX+297;
-    clientY = clientY+387;
-  }
-  if(cameraZoom <= 6.41 && cameraZoom >= 6.39){
-    clientX = clientX+311;
-    clientY = clientY+404;
-  }
-  if(cameraZoom <= 7.01 && cameraZoom >= 6.99){
-    clientX = clientX+315;
-    clientY = clientY+411;
-  }
-  if(cameraZoom <= 7.61 && cameraZoom >= 7.59){
-    clientX = clientX+320;
-    clientY = clientY+416;
-  }
-  if(cameraZoom <= 8.21 && cameraZoom >= 8.19){
-    clientX = clientX+323;
-    clientY = clientY+420;
-  }
-  if(cameraZoom <= 9.41 && cameraZoom >= 9.39){
-    clientX = clientX+329;
-    clientY = clientY+428;
-  }
-  if(cameraZoom <= 10.61 && cameraZoom >= 10.59){
-    clientX = clientX+333;
-    clientY = clientY+434;
-  }
-  if(cameraZoom <= 11.81 && cameraZoom >= 11.79){
-    clientX = clientX+327;
-    clientY = clientY+438;
-  }
-  if(cameraZoom <= 13.01 && cameraZoom >= 12.99){
-    clientX = clientX+340;
-    clientY = clientY+442;
-  }
-  if(cameraZoom <= 14.21 && cameraZoom >= 14.19){
-    clientX = clientX+342;
-    clientY = clientY+445;
-  }
-  if(cameraZoom <= 15.41 && cameraZoom >= 15.39){
-    clientX = clientX+344;
-    clientY = clientY+448;
-  }
-   */
-
-/* 
-4,3 283 368
-4 276 359
-4,3 283 368
-4,6 288 375
-4,9 293 381
-5,2 297 387
-
-5,8 305 396
-6,4
-7
-7,6
-8,2
-8,8
-
-
-*/
- /*
-  clientX = (getEventLocation(e).x - rect.left)/cameraZoom - cameraOffset.x;
-  clientY =  (getEventLocation(e).y- rect.top)/cameraZoom  - cameraOffset.y;
-*/
-  // PointCursorEnd
-
-
-  //console.log(" CursorX: "+clientX + "\n CursorY: " +clientY + "\n Mouse X: "+ getEventLocation(e).x +"\n Mouse Y: " + getEventLocation(e).y + "\n Offset X: "+ cameraOffset.x +"\n Offset Y: " + cameraOffset.y + "\n Zoom: "+cameraZoom+ "\n RectLeft: "+rect.left + "\n RectTop: "+rect.top + "\n WindowsInnerWidth: "+window.innerWidth + "\n WindowsInnerHeight: "+window.innerHeight  );
-
 
     if (isDragging)
     {
@@ -649,15 +454,6 @@ adjustZoom(e.deltaY*SCROLL_SENSITIVITY));
 
 
 mainCanvas.addEventListener('click', (event) => {
-//console.log(event);
-
-//show click-coordinates including CameraZoomPanOffset
-/*
-const rect = mainCanvas.getBoundingClientRect(); 
-clientX = (event.clientX/cameraZoom -cameraOffset.x) - rect.left;
-clientY = (event.clientY/cameraZoom -cameraOffset.y) - rect.top;
-*/
-
 
   console.log(" CursorX: "+clientX + "\n CursorY: " +clientY + "\n Mouse X: "+ getEventLocation(event).x +"\n Mouse Y: " + getEventLocation(event).y + "\n Offset X: "+ cameraOffset.x +"\n Offset Y: " + cameraOffset.y + "\n Zoom: "+cameraZoom+ "\n RectLeft: "+rect.left + "\n RectTop: "+rect.top + "\n WindowsInnerWidth: "+window.innerWidth + "\n WindowsInnerHeight: "+window.innerHeight  );
 //console.log(event.clientX);
@@ -909,11 +705,6 @@ function printAt( context , text, x, y, lineHeight, fitWidth)
   getFileName(){
     return this.fileName;
   }
-/*
-  stroke = "black";
-  lineWidth = 1;
-  dataPointSize = 3;
-*/
 }
 let sampleDataPoint2 = new DataPoint(clientX,clientY,3,200,200,250,"black",2,false);
 let zeroPoint = new DataPoint(0,0,3,20,20,20,"yellow",1,false);
@@ -922,34 +713,15 @@ function drawPointCursor(){
   sampleDataPoint2.setPosition(clientX, clientY)
   sampleDataPoint2.draw();
 }
-/*
-function drawPoint(dataPosX, dataPosY, dataPointSize, r, g, b, dataPointStrokeStyle, lineWidth){
-
-  ctx.fillStyle = "rgb("+r+","+g+","+ b +")";
-  ctx.strokeStyle = dataPointStrokeStyle; 
-  ctx.lineWidth = lineWidth  / (0.7*cameraZoom);
-  ctx.beginPath();
-  ctx.arc(dataPosX,dataPosY,dataPointSize / (0.7*cameraZoom) ,0,Math.PI * 2);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-  
-}
-*/ 
 
 function scatterPoints(){
- //dataPoint = new DataPoint(); 
-
-
 
 //init temp values 
   let isFiltered = false; 
   let lineWidth = 0 ;
   let dataPointSize = 3;
   let stroke = "black";
-
-
- // drawPoint(30,30,5,100,200,100);   
+   
   for(let i = 0; i < TMapData.Chemical_Space.x.length; i++){
  
     //Fill Array with all Datapoints
@@ -1063,46 +835,21 @@ function lockHiddenDataPoints(){
  
   }
 }
-/*
-function drawSmiles(){
-  SmilesDrawer.parse(sampleDataPoint.getSmiles(), function(tree) {
-    smilesDrawer.draw(tree, "smilesCanvas", 'light', false);
-console.log("parsed.");
-  }, err => { console.log(err); });
-  
-}
-*/
+
 
 let sampleDataPoint = new DataPoint(100,100,50,200,10,250,"magenta",2,false);
 sampleDataPoint.setSmiles("O=C1C2=C(N=CN2)N(C)C(N1C)=O");
 
 function animate(){
 //draw each Frame
-//
-
 mainCanvas.width = window.innerWidth;
 mainCanvas.height = window.innerHeight; 
-
- zoomAndPan();
 //Remove current drawing 
  ctx.clearRect(0,0, mainCanvas.width, mainCanvas.height);
-
-
-//sampleDataPoint.draw();
-//zeroPoint.draw();
-//drawDataPoints();
-//drawfilteredAndFoundDataPoints();
-//drawPointCursor();
-//drawSmiles();
 if(toolTipActivated){
 //drawToolTip(); 
 }
-
-//scatterPoints();
-//scatterFilteredPoints();
-
 requestAnimationFrame(animate);
-
 }
 //animate();
 
@@ -1185,8 +932,6 @@ let lineWidth = 0 ;
 let dataPointSize = 3;
 let stroke = "black";
 
-
-
  //Fill Array with all Datapoints
  dataPoints[i] = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth, isFiltered);
     
@@ -1197,14 +942,8 @@ let stroke = "black";
   dataPoints[i].setFileName("File: " + fileNumber);
   }  
 
-
-
  for(var j = 0; j < filteredCSdataSet.length; j++){
 
-
-  
-
- 
 //filter out by smiles that are found in both filteredCSData and in TMap-Chemical-Space
 
   if(TMapData.Chemical_Space.labels[i] ===  filteredCSdataSet[j].Smiles_GNPS_results){
@@ -1236,11 +975,6 @@ tempdata.push(filteredCSdataSet[j]);
 
 filteredAndFoundCSDataSet = tempdata;
 
-
-
-}
-else{
-//  tempdata.splice(j, 1);
 }
  }
  //console.log(TMapData.Chemical_Space.dataFiltered[i]);
@@ -1256,57 +990,11 @@ console.log(filteredTmapData);
 //console.log(TMapData.Chemical_Space.dataFiltered);
 
 data = TMapData; 
-
-
-
-
 }
 
-/*
-
-function sumMassOfSubClasses(group){
-
-return d3.sum(group, function(d){
-  return d.MassDiff_GNPS_results;
-});
-}
-
-function groupBySuperClass(){
-
- // data = CSdataSet
-// console.log(CSdataSet);
-
-groupedData = d3.rollup(CSdataSet, 
- sumMassOfSubClasses,
-  function(d) {return d.cf_superclass_ms2query_results},
-  function(d) {return d.cf_class_ms2query_results},
-  function(d) {return d.cf_subclass_ms2query_results}
-);
-//console.log(groupedData);
-//console.log(groupedData.get('Benzenoids'));
-}
-
-*/
-
-/*function hierachyBySuperClass(){
-hierarchicalDataGroup = d3.group(CSdataSet,
-function(d) {return d.cf_superclass_ms2query_results},
-function(d) {return d.cf_class_ms2query_results},
-function(d) {return d.cf_subclass_ms2query_results},
-//function(d) {return d.cf_direct_parent_ms2query_results},
-//function(d) {return d.analog_compound_name_ms2query_results},
-)
-console.log(hierarchicalDataGroup);
-}
-*/
 function nestBySuperClass(){
 
 filterByPredictionValue();
-
-
-
-
-
 
 nestedData =  d3.nest()
 .key(function(d) {return d.cf_kingdom_ms2query_results})
@@ -1316,7 +1004,6 @@ nestedData =  d3.nest()
 .key(function(d) {return d.analog_compound_name_ms2query_results})
 //insert Sunburstdata here: 
 .entries(filteredAndFoundCSDataSet);
-
 
 //console.log(nestedData[0]);
 console.log(hierarchy);
@@ -1341,36 +1028,14 @@ console.log(sliderValue);
 filteredCSdataSet = []; 
 for(var i = 0; i < CSdataSet.length; i++){
 
- 
- 
 if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100)){
     filteredCSdataSet.push(CSdataSet[i]);
-   // console.log(filteredCSdataSet);slider
-   // removeDoubleValues();
-   // console.log(filteredCSdataSet);
-
     }
 }
-/*
-for(var i = 0; i < filteredCSdataSet.length; i++){
-
-  if (filteredCSdataSet[i].ms2query_model_prediction_ms2query_results < (sliderValue / 100)){
-    filteredCSdataSet.splice(i, 1);
-   
-  
-  }
-}*/
 filterFromTmap();
-// console.log(filteredCSdataSet);
-
-
 
 }
-   
-/*
-   d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_dendrogram_full.json").then(function(data)
-   "clustered_spectra_FractionProfiling_RPOS_ToF10_PreCheck_LTR_01_DDA_Filtered_merged.csv"
-*/
+
 
 function renderLegend(){
   
@@ -1379,14 +1044,6 @@ function renderLegend(){
  let legendContainer = document.getElementById("legendContainer");
  let sunburst = document.getElementById("sunburst");
  legendContainer.appendChild(sunburst);
-/*
-  legend.style.width = "250px";
-  legend.style.height = "500px";
-  legend.style.left = "400px";
-  legend.style.top = "240px";
-  legend.style.borderRadius = "10px";
-
-  */
 }
 renderLegend();
 
@@ -1534,16 +1191,6 @@ var plotlyLayout = {
 };
 
 document.getElementById("ShowGraphButton").onclick = function(){
-  //Start Plotly Visualization
-  /*
-  for(var i = 0; i<filteredAndFoundDataPoints.length;i++){
-    xValue.push(filteredAndFoundDataPoints[i].getSmiles());
-    yValue.push(filteredAndFoundDataPoints[i].getSmilesCount());
-  }
-Plotly.newPlot('plotlyDiv', plotlyData, plotlyLayout);
- */
-
-
 updateJSChartContent(); 
 generateTable(); 
 }
