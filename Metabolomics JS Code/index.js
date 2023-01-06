@@ -260,14 +260,17 @@ function convertToJSON(fileNumber){
              uploadedData.push(results.data[i]);        
           }
 
-        
+        // alle hochgeladenen Files 
           dataCollector.push(uploadedData);
          
-
+          // einzelne Files
           CSdataSet = uploadedData;
     
           console.log(CSdataSet);
+
+          // Hierarchien erstellen 
           nestBySuperClass();
+          // Vergleiche unsere Datensamples(195+ Stoffe) mit der Datenbank(20k Stoffe) 
           filterFromTmap(); 
            animate();
            updateSigmaGraph();
@@ -974,7 +977,6 @@ filteredTmapData.Chemical_Space.colors[0].b.push(TMapData.Chemical_Space.colors[
 tempdata.push(filteredCSdataSet[j]);
 
 filteredAndFoundCSDataSet = tempdata;
-
 }
  }
  //console.log(TMapData.Chemical_Space.dataFiltered[i]);
@@ -1003,7 +1005,7 @@ nestedData =  d3.nest()
 .key(function(d) {return d.cf_subclass_ms2query_results})
 .key(function(d) {return d.analog_compound_name_ms2query_results})
 //insert Sunburstdata here: 
-.entries(filteredAndFoundCSDataSet);
+.entries(CSdataSet);
 
 //console.log(nestedData[0]);
 console.log(hierarchy);
@@ -1029,6 +1031,7 @@ filteredCSdataSet = [];
 for(var i = 0; i < CSdataSet.length; i++){
 
 if (CSdataSet[i].ms2query_model_prediction_ms2query_results > (sliderValue / 100)){
+  //Rohdaten nach Prediction-Value  
     filteredCSdataSet.push(CSdataSet[i]);
     }
 }
