@@ -23,10 +23,11 @@ body {
 
 
 p{
-    margin-top: 28px;
-    opacity: 1;
-    font-family: Arial, Helvetica, sans-serif;
-    color: rgb(255, 255, 255);
+    grid-column: 2/3;
+        grid-row: 1;
+
+        font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+        color: dark grey;
     
 }
 
@@ -197,3 +198,181 @@ opacity: 1;
     from {opacity: 0;}
     to {opacity: 1;}
   }
+
+  .wrapper {
+    position: absolute; top:50px; left: 50px; right:50px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 50px;
+    grid-auto-rows: auto;
+  }
+  
+  .one {
+     
+  
+    background: white;
+    border: 1px solid white; 
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: black; 
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    
+  }
+
+  .custom-file-input {
+    grid-column:1;
+    grid-row:1;
+    color: transparent;
+  }
+  .custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+  .custom-file-input::before {
+    content: 'Select Samples';
+    background: #24a0ed;
+    border: 1px solid #24a0ed;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+  }
+  .custom-file-input:hover::before {
+    background-color: initial;
+    background-position: 0 0;
+    color: #24a0ed;
+  }
+  .custom-file-input:active {
+    outline: 0;
+  }
+  .custom-file-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9); 
+  }
+  
+  
+  .two {
+  
+    grid-column:4;
+    grid-row:1;
+  
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+  }
+  
+  .two:hover,
+  
+  .two:active {
+    background-color: initial;
+    background-position: 0 0;
+    color: #FF4742;
+  }
+  
+  .two:active {
+    opacity: .5;
+  }
+
+  .fileName {
+    grid-column: 2;
+    grid-row: 1;
+
+
+  }
+  
+  
+    table {
+          grid-column: 1/3;
+          grid-row: 2;
+          height: 800px;
+          position: absolute; top: 100px; left: 50px; right: 50px; 
+          display: block; 
+          overflow-x: auto; 
+          white-space: nowrap; 
+          border-collapse: collapse;
+          
+          margin-top: 50px;;
+        }
+    
+    td {
+          padding: 8px 16px;
+          border: 1px solid #ccc;
+          font-size: 16px;
+          font-family: ui-monospace;
+          width: 50px;
+        }
+
+    tr:first-child td {
+        
+        border: none;
+        font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+
+    }
+
+    th {
+
+        border: none;
+        font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+
+    }
+
+    table tr th:first-child {
+        position: sticky;
+        offset-inline-start: 0;
+    }
+
+      
+    

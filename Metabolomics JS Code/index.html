@@ -11,6 +11,10 @@
      <script src="https://unpkg.com/smiles-drawer@1.2.0/dist/smiles-drawer.min.js"></script> 
      <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.3.1/sigma.min.js" integrity="sha512-rU8OO+H1WUkbSf/0Enr4ZVFw2Kydx9kK0b805tWXgrcyyJu/S4YM09xxYlCeh/BHf2WqL89ioXIppy8ghHB1sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     
+
+     <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
+    <script src="d3.min.js?v=3.2.8"></script>
  
  
     <link
@@ -592,8 +596,7 @@ path {
     
    
 
-    <input type="file" multiple id="uploadfile" accept=".csv">
-    <button id="uploadconfirm">Upload File</button>
+    
 
 
     <!-- Papaparse CSV to JSON 
@@ -625,9 +628,9 @@ path {
 
 <!-- Tab links -->
 <div class="tab">
-  <button class="tablinks" onclick="openCity(event, 'T-Map')"id="defaultOpen">T-Map</button>
+  <button class="tablinks" onclick="openCity(event, 'datatable')"id="defaultOpen">Data</button>
+  <button class="tablinks" onclick="openCity(event, 'T-Map')">T-Map</button>
   <button class="tablinks" onclick="openCity(event, 'Alignment Chart')">Alignment Chart</button>
-  <button class="tablinks" onclick="openCity(event, 'Empty')">Empty Tab</button>
 </div>
 
 <!-- Tab content -->
@@ -754,6 +757,7 @@ path {
 
 </div>
 
+<!--Alignemmt Chart Tab Content-->
 <div id="Alignment Chart" class="tabcontent">
   <h3>Alignment Chart</h3>
   <button type="button" id="ShowGraphButton">Show Graph</button>
@@ -778,12 +782,16 @@ path {
 
 </div>
 
-<div id="Empty" class="tabcontent">
-  <h3>Empty Tab</h3>
 
-</div>
 
-<div id='plotlyDiv'><!-- Plotly chart will be drawn inside this DIV. MOVE THIS INTO Alignment Chart--></div>
+<!--Data Tab Content-->
+<div id="datatable" class="tabcontent">
+  
+  <h3>Data</h3>
+  
+  <input type="file" multiple id="uploadfile" accept=".csv">
+  <button id="uploadconfirm">Upload File</button>
+
 </body>
  
 
