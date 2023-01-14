@@ -235,7 +235,20 @@ addEventListener('click', () => {
  }
  dataLoaded = true; 
 
+ 
+
  console.log(dataCollector);
+ console.log(dataCollector.length);
+ console.log(CSdataSet);
+
+ createTable(CSdataSet);
+
+ dataSetTable();
+
+
+ testTable();
+
+ //showDataTable();
  
 }
 
@@ -267,6 +280,7 @@ function convertToJSON(fileNumber){
           CSdataSet = uploadedData;
     
           console.log(CSdataSet);
+          console.log(dataCollector)
 
           // Hierarchien erstellen 
           nestBySuperClass();
@@ -383,9 +397,6 @@ function handleTouch(e, singleTouchHandler)
         handlePinch(e)
     }
 }
-
-
-
 
 
 let initialPinchDistance = null
@@ -1339,12 +1350,59 @@ function setChartJSRange(){
     JSChart.update();
 
 }
-  
+
+
 console.log("Min:"+minCountRange.value+" Max:"+maxCountRange.value);
 console.log(chartCountData);
 console.log("chart updated");
 }
 
 
+// import datacollector array 
+function showDataTable(){
+
+  let table = document.getElementById('demo');
+
+  for (i = 0; i < dataCollector.length; i++) {
+
+     let tr = document.createElement('tr');
+
+     let td1 = document.createElement('td');
+     td1.textContent = dataCollector[i].Smiles_GNPS_results;
+     tr.appendChild(td1);
+
+     table.appendChild(tr);
 
 
+  }
+
+}
+
+function createTable(data) {
+  // Create table element
+  var table = document.createElement("table");
+
+  // Create table header row
+  var headerRow = document.createElement("tr");
+  var headers = Object.keys(data[0]);
+  headers.forEach(function(header) {
+    var th = document.createElement("th");
+    th.innerHTML = header;
+    headerRow.appendChild(th);
+  });
+  table.appendChild(headerRow);
+
+  // Create table rows for data
+  data.forEach(function(object) {
+    var row = document.createElement("tr");
+    headers.forEach(function(header) {
+      var td = document.createElement("td");
+      td.innerHTML = object[header];
+      row.appendChild(td);
+    });
+    table.appendChild(row);
+  });
+
+  // Append table to body
+  document.body.appendChild(table);
+}

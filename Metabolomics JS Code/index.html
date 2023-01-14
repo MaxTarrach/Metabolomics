@@ -594,21 +594,31 @@
 
     <!-- <script src='jquery-3.2.1.min.js'></script> -->
 
-    <input type="file" multiple id="uploadfile" accept=".csv" />
-    <button id="uploadconfirm">Upload File</button>
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
 
     <script src="index.js" defer></script>
+    <script src="table.js"></script> 
 
     <script src="sigma.js"></script>
     <!-- To use a Graph object -->
     <script src="graphology.min.js"></script>
     <!-- This exposes a global variable named "graphology" -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  
+
+
 
     <!-- Tab links -->
     <div class="tab">
+
+      <button 
+      class="tablinks" 
+      onclick="openCity(event, 'Data')"
+      id="defaultOpen"
+      >
+        Data
+      </button>
       <button
         class="tablinks"
         onclick="openCity(event, 'T-Map')"
@@ -619,10 +629,8 @@
       <button class="tablinks" onclick="openCity(event, 'Alignment Chart')">
         Alignment Chart
       </button>
-      <button class="tablinks" onclick="openCity(event, 'Empty')">
-        Empty Tab
-      </button>
     </div>
+
 
     <!-- Tab content -->
     <div id="T-Map" class="tabcontent">
@@ -786,12 +794,23 @@
       </div>
     </div>
 
-    <div id="Empty" class="tabcontent">
-      <h3>Empty Tab</h3>
+    <div id="Data" class="tabcontent">
+      <h3>Data</h3>
+
+    <input type="file" multiple id="uploadfile" accept=".csv" />
+    <button id="uploadconfirm">Upload File</button>
+
+      <div id="dataTable">
+        <!-- Plotly chart will be drawn inside this DIV. MOVE THIS INTO Alignment Chart-->
+ 
+        <div class="tableFixHead" >
+
+        </div>
+
+      </div>
+
     </div>
 
-    <div id="plotlyDiv">
-      <!-- Plotly chart will be drawn inside this DIV. MOVE THIS INTO Alignment Chart-->
-    </div>
+    
   </body>
 </html>
