@@ -200,29 +200,33 @@ p {
   }
 }
 
-.tableFixHead {
-  max-width: 100%;
-  overflow-x: scroll;
-  overflow-y: scroll; /* make the table scrollable if height is more than 200 px  */
-  height: 50px; /* gives an initial height of 200px to the table */
-}
-.tableFixHead thead th {
-  position: sticky; /* make the table heads sticky */
-  top: 0px; /* table head will be placed from the top of the table and sticks to it */
-}
-table {
-  border-collapse: collapse; /* make the table borders collapse to each other */
-  width: 100%;
 
+table {
+  margin-top: 20px;
+  display:block;
+  height: 600px;
+  overflow-x: auto;
+  overflow-y: auto; 
+  border: 1px solid gray;
 }
+
 th,
 td {
-  padding: 8px 16px;
-  border: 1px solid #ccc;
+  text-align: left;
   font-family: monospace;
+  overflow: hidden; 
+  padding-left: 8px;
 }
+
+td {
+  border-left: 1px solid gray; 
+  border-bottom: 1px solid gray;
+
+}
+
 th {
+  height: 30px;
   background: #eee;
+  position: sticky; /* make the table heads sticky */
+  border-bottom: 1px solid gray; 
 }
-
-

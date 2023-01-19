@@ -1358,25 +1358,9 @@ console.log("chart updated");
 }
 
 
-// import datacollector array 
-function showDataTable(){
+//===== Data Table Code START ======
 
-  let table = document.getElementById('demo');
-
-  for (i = 0; i < dataCollector.length; i++) {
-
-     let tr = document.createElement('tr');
-
-     let td1 = document.createElement('td');
-     td1.textContent = dataCollector[i].Smiles_GNPS_results;
-     tr.appendChild(td1);
-
-     table.appendChild(tr);
-
-
-  }
-
-}
+var datatable = document.getElementById('dataTable');
 
 function createTable(data) {
   // Create table element
@@ -1403,6 +1387,10 @@ function createTable(data) {
     table.appendChild(row);
   });
 
+  table.setAttribute('style', 'table-layout: fixed; width: 100%');
   // Append table to body
-  document.body.appendChild(table);
+  datatable.appendChild(table);
+  
 }
+
+//===== Data Table Code END ======
