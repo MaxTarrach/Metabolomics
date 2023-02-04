@@ -77,7 +77,7 @@ function updateSigmaGraph(){
       var blue = Math.round(dataPoints[i].b / 1.5);
 
       //graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b+")" });
-      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+red+","+green+","+blue+")"});
+      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 2, color: "rgb("+red+","+green+","+blue+")"});
     }else{
        //Darker Colors for "hidden" Objects (chemical data space) 
       colR = Math.floor(dataPoints[i].r * colorBrightness);
@@ -241,13 +241,6 @@ addEventListener('click', () => {
   
  }
  dataLoaded = true; 
-
- 
-
- console.log(dataCollector);
- console.log(dataCollector.length);
- console.log(CSdataSet);
-
 
  var tableData = appendDataCollector(dataCollector);
 
@@ -728,54 +721,6 @@ function drawPointCursor(){
   sampleDataPoint2.draw();
 }
 
-function scatterPoints(){
-
-//init temp values 
-  let isFiltered = false; 
-  let lineWidth = 0 ;
-  let dataPointSize = 3;
-  let stroke = "black";
-   
-  for(let i = 0; i < TMapData.Chemical_Space.x.length; i++){
- 
-    //Fill Array with all Datapoints
-    dataPoints[i] = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth, isFiltered);
-    
-    dataPoints[i].setSmiles(TMapData.Chemical_Space.labels[i]);
-    dataPoints[i].setCompoundName("["+[i]+ "] " + TMapData.Chemical_Space.labels[i]);
-
-   // dataPoints[i].setCompoundName(TMapData.Chemical_Space[i].analog_compound_name_ms2query_results);
-   //seperate Filtered Data from whole Dataset
-
-
-    if(TMapData.Chemical_Space.dataFiltered[i] == true){
-
-      dataPoints[i].setLineWidth(2);
-      dataPoints[i].setPointSize(6);
-      dataPoints[i].setFoundInTmap(true);
-      dataPoints[i].setStrokeStyle("black"); 
-      dataPoints[i].setClickable(true);
-      
-      //DataPoints should be labeled with the fileNumber only once at the beginning: 
-      if(heatMapActive == false){
-      dataPoints[i].setFileName("File: " + fileNumber);
-      }  
-
-      filteredAndFoundDataPoints.push(dataPoints[i]); 
-      
-
-    }else{
-    dataPoints[i].setLineWidth(0.1);
-    dataPoints[i].setPointSize(3);
-    dataPoints[i].setFoundInTmap(false);
-    dataPoints[i].setStrokeStyle("black"); 
-
-  }
- 
-}
-//remove filtered Datapoints with status changed to false 
-
-}
 
 function drawToolTip(){
   toolTipCtx.fillStyle = "white";
@@ -783,37 +728,11 @@ function drawToolTip(){
 }
 
 
-
-//console.log(TMapData.Chemical_Space.x[5]);
-function drawDataPoints(){
-for(let i = 0; i< dataPoints.length; i++){
- if(dataPoints[i].getFilterStatus() == false && dataBaseHidden != true){
-  dataPoints[i].draw(); 
-  }
- 
-}
-}
-function drawfilteredAndFoundDataPoints(){
- /* for(let i = 0; i< filteredAndFoundDataPoints.length; i++){
-    
-     filteredAndFoundDataPoints[i].draw(); 
-    }
- */
-    for(let i = 0; i< dataPoints.length; i++){
-    if(dataPoints[i].getFilterStatus() == true){
-      dataPoints[i].draw(); 
-      dataPoints[i].drawToolTip();
-      
-      }
-    }
-}
-
 let hideCheckBox = document.getElementById("hide-checkbox");
 hideCheckBox.addEventListener('change', function() {
   if (this.checked) {
     console.log("Checkbox is checked..");
     dataBaseHidden = true; 
-   // lockHiddenDataPoints(); 
     updateSigmaGraph();
     //testing 
    
@@ -821,34 +740,9 @@ hideCheckBox.addEventListener('change', function() {
   } else {
     console.log("Checkbox is not checked..");
     dataBaseHidden = false; 
-   // lockHiddenDataPoints(); 
     updateSigmaGraph();
   }
 });
-
-function lockHiddenDataPoints(){
-
-
-
-  for(let i =0; i< dataPoints.length; i++){
-    
-    if(dataBaseHidden == true){
-    dataPoints[i].setClickable(false);
-    
-    }else{
-      dataPoints[i].setClickable(true);
-    }
-  }
-  
-  console.log(filteredAndFoundDataPoints.length);
-  for(let i =0; i< filteredAndFoundDataPoints.length; i++){
-    if(dataBaseHidden==true){
-      console.log("reached");
-    filteredAndFoundDataPoints[i].setClickable(true);
-    }
- 
-  }
-}
 
 
 let sampleDataPoint = new DataPoint(100,100,50,200,10,250,"magenta",2,false);
@@ -1341,250 +1235,3 @@ console.log("Min:"+minCountRange.value+" Max:"+maxCountRange.value);
 console.log(chartCountData);
 console.log("chart updated");
 }
-
-
-
-//===== Data Table Code START ======
-
-var datatable = document.getElementById('dataTable');
-
-function createTable(data) {
-  // Create table element
-  var table = document.createElement("table");
-
-  // Create table header row
-  var headerRow = document.createElement("tr");
-  var headers = Object.keys(data[0]);
-  headers.forEach(function(header) {
-    var th = document.createElement("th");
-    th.innerHTML = header;
-    headerRow.appendChild(th);
-  });
-  table.appendChild(headerRow);
-
-  // Create table rows for data
-  data.forEach(function(object) {
-    var row = document.createElement("tr");
-    headers.forEach(function(header) {
-      var td = document.createElement("td");
-      td.innerHTML = object[header];
-      row.appendChild(td);
-    });
-    table.appendChild(row);
-  });
-
-  table.setAttribute('style', 'table-layout: fixed; width: 100%');
-  // Append table to body
-  datatable.appendChild(table);
-  
-}
-
-//===== Data Table Code END ======
-
-
-
-function rgb2hsv (r,g,b) {
-  var computedH = 0;
-  var computedS = 0;
-  var computedV = 0;
- 
-  //remove spaces from input RGB values, convert to int
-  var r = parseInt( (''+r).replace(/\s/g,''),10 ); 
-  var g = parseInt( (''+g).replace(/\s/g,''),10 ); 
-  var b = parseInt( (''+b).replace(/\s/g,''),10 ); 
- 
-  if ( r==null || g==null || b==null ||
-      isNaN(r) || isNaN(g)|| isNaN(b) ) {
-    alert ('Please enter numeric RGB values!');
-    return;
-  }
-  if (r<0 || g<0 || b<0 || r>255 || g>255 || b>255) {
-    alert ('RGB values must be in the range 0 to 255.');
-    return;
-  }
-  r=r/255; g=g/255; b=b/255;
-  var minRGB = Math.min(r,Math.min(g,b));
-  var maxRGB = Math.max(r,Math.max(g,b));
- 
-  // Black-gray-white
-  if (minRGB==maxRGB) {
-   computedV = minRGB;
-   return [0,0,computedV];
-  }
- 
-  // Colors other than black-gray-white:
-  var d = (r==minRGB) ? g-b : ((b==minRGB) ? r-g : b-r);
-  var h = (r==minRGB) ? 3 : ((b==minRGB) ? 1 : 5);
-  computedH = 60*(h - d/(maxRGB - minRGB));
-  computedS = (maxRGB - minRGB)/maxRGB;
-  computedV = maxRGB;
-  return [computedH,computedS,computedV];
- }
-
- function lessSat (h, s, l){
-
-  var computedH = 0; 
-  var computedS = 0; 
-  var computedL = 0; 
-
-  computedH = h; 
-  computedS = s * 0.3;
-  computedL = l
-
-  return [computedH, computedS, computedL];
- };
-
-
-
- function rgbToHsl(r, g, b) {
-  r /= 255, g /= 255, b /= 255;
-
-  var max = Math.max(r, g, b), min = Math.min(r, g, b);
-  var h, s, l = (max + min) / 2;
-
-  if (max == min) {
-    h = s = 0; // achromatic
-  } else {
-    var d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-    switch (max) {
-      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-      case g: h = (b - r) / d + 2; break;
-      case b: h = (r - g) / d + 4; break;
-    }
-
-    h /= 6;
-  }
-
-  return [ h, s, l ];
-}; 
-
-/*
-
-function hslToRgb(h, s, l) {
-  var r, g, b;
-
-  if (s == 0) {
-    r = g = b = l; // achromatic
-  } else {
-    function hue2rgb(p, q, t) {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1/6) return p + (q - p) * 6 * t;
-      if (t < 1/2) return q;
-      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-      return p;
-    }
-
-    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    var p = 2 * l - q;
-
-    r = hue2rgb(p, q, h + 1/3);
-    g = hue2rgb(p, q, h);
-    b = hue2rgb(p, q, h - 1/3);
-  }
-
-  return [ r * 255, g * 255, b * 255 ];
-}
-
-*/
-
-
-
- function hslToHex(h, s, l) {
-  l /= 100;
-  const a = s * Math.min(l, 1 - l) / 100;
-  const f = n => {
-    const k = (n + h / 30) % 12;
-    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-    return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
-  };
-  return `#${f(0)}${f(8)}${f(4)}`;
-}
-
-
-// input: h in [0,360] and s,v in [0,1] - output: r,g,b in [0,1]
-function hsl2rgb(h,s,l) 
-{
-  h = h * 360;
-  let a= s*Math.min(l,1-l);
-  let f= (n,k=(n+h/30)%12) => l - a*Math.max(Math.min(k-3,9-k,1),-1);
-  return [f(0),f(8),f(4)];
-}   
-
-
-function roundHue(h){
-
-  var h = h * 360; 
-
-  var h = Math.round(h);
-  return h; 
-
-
-};
-
-/**
- * Converts an HSL color value to RGB. Conversion formula
- * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
- * Assumes h, s, and l are contained in the set [0, 1] and
- * returns r, g, and b in the set [0, 255].
- *
- * @param   {number}  h       The hue
- * @param   {number}  s       The saturation
- * @param   {number}  l       The lightness
- * @return  {Array}           The RGB representation
- */
-function hslToRgb(h, s, l){
-  var r, g, b;
-
-  if(s == 0){
-      r = g = b = l; // achromatic
-  }else{
-      var hue2rgb = function hue2rgb(p, q, t){
-          if(t < 0) t += 1;
-          if(t > 1) t -= 1;
-          if(t < 1/6) return p + (q - p) * 6 * t;
-          if(t < 1/2) return q;
-          if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-          return p;
-      }
-
-      var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      var p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1/3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1/3);
-  }
-
-  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-}
-
-
-
-// Input: An Array containing Arrays with content of different Files 
-// Return: One Array with concatenated Arrays from Input
-
-function appendDataCollector(datacollector) {
-
-  var nr_files = datacollector.length;
-  var newArray = datacollector[0];
-
-  if (nr_files > 1){
-
-  for (let i = 1; i < nr_files; i++) {
-
-    newArray = newArray.concat(datacollector[i])
-
-  }
-
-  return newArray;
-
-  } 
-  else {
-
-    return newArray;
-
-  }
-
-}; 
