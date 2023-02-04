@@ -2,6 +2,7 @@
 /* CSS Document*/
 
 body {
+  
 }
 
 .tmapLegend {
@@ -47,8 +48,9 @@ p {
 }
 
 .slidecontainer {
+  color:black;
   width: 75%;
-  margin-top: 200px;
+  margin-top: 40px;
 }
 
 .slider {
@@ -111,7 +113,7 @@ p {
 
 .slidecontainer {
   width: 75%;
-  margin-top: 200px;
+  margin-top: 40px;
 }
 
 .dataSlider {
@@ -229,4 +231,33 @@ th {
   background: #eee;
   position: sticky; /* make the table heads sticky */
   border-bottom: 1px solid gray; 
+}
+
+.uiContainer {
+
+  position: absolute; 
+  top: 210px;
+  left: 10px; 
+  width: 400px; 
+  height: 700px;
+  background-color: #d3d3d3;
+  outline: solid 1px black;
+  display: flex; 
+  justify-content: center;
+
+
+}
+
+label {
+
+  font-family: Arial, Helvetica, sans-serif;
+  color: white; 
+
+}
+
+h1 {
+
+  left: 50px;
+  font-family: Arial, Helvetica, sans-serif;
+
 }

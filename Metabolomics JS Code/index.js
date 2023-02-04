@@ -63,7 +63,7 @@ function updateSigmaGraph(){
   var colR;
   var colG;
   var colB
-  var colorBrightness = 0.2;
+  var colorBrightness = 0.6;
   graph.clear(); 
 
   for(var i = 0; i < dataPoints.length; i++){
@@ -72,8 +72,13 @@ function updateSigmaGraph(){
      
      if(dataBaseHidden == false){
 
-      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
-     }else{
+      var red = Math.round(dataPoints[i].r / 1.5);
+      var green = Math.round(dataPoints[i].g / 1.5);
+      var blue = Math.round(dataPoints[i].b / 1.5);
+
+      //graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b+")" });
+      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 2, label: dataPoints[i].getCompoundName(), color: "rgb("+red+","+green+","+blue+")"});
+    }else{
        //Darker Colors for "hidden" Objects (chemical data space) 
       colR = Math.floor(dataPoints[i].r * colorBrightness);
       colG = Math.floor(dataPoints[i].g * colorBrightness);
@@ -88,9 +93,13 @@ function updateSigmaGraph(){
       //Default Highlight found samples
       if(heatMapActive == false){
       //Class-Colors
-      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
       
       }
+
+
+
+      // Heatmap colorization = Gradient and not just 4 colors 
 
       if(heatMapActive == true){
         //heatmap colorization
@@ -230,8 +239,6 @@ addEventListener('click', () => {
   convertToJSON(i);
   console.log(fileNumber);
   
-
-  
  }
  dataLoaded = true; 
 
@@ -241,15 +248,10 @@ addEventListener('click', () => {
  console.log(dataCollector.length);
  console.log(CSdataSet);
 
- createTable(CSdataSet);
 
- dataSetTable();
+ var tableData = appendDataCollector(dataCollector);
 
-
- testTable();
-
- //showDataTable();
- 
+ createTable(tableData); 
 }
 
 
@@ -286,9 +288,7 @@ function convertToJSON(fileNumber){
           nestBySuperClass();
           // Vergleiche unsere Datensamples(195+ Stoffe) mit der Datenbank(20k Stoffe) 
           filterFromTmap(); 
-           animate();
            updateSigmaGraph();
-           initTMap();
            visualizeSunburst(); 
            renderLegend();      
       }
@@ -854,21 +854,6 @@ function lockHiddenDataPoints(){
 let sampleDataPoint = new DataPoint(100,100,50,200,10,250,"magenta",2,false);
 sampleDataPoint.setSmiles("O=C1C2=C(N=CN2)N(C)C(N1C)=O");
 
-function animate(){
-//draw each Frame
-mainCanvas.width = window.innerWidth;
-mainCanvas.height = window.innerHeight; 
-//Remove current drawing 
- ctx.clearRect(0,0, mainCanvas.width, mainCanvas.height);
-if(toolTipActivated){
-//drawToolTip(); 
-}
-requestAnimationFrame(animate);
-}
-//animate();
-
-
-
 
 output.innerHTML = slider.value;
 slider.oninput = function() {
@@ -1358,6 +1343,7 @@ console.log("chart updated");
 }
 
 
+
 //===== Data Table Code START ======
 
 var datatable = document.getElementById('dataTable');
@@ -1394,3 +1380,211 @@ function createTable(data) {
 }
 
 //===== Data Table Code END ======
+
+
+
+function rgb2hsv (r,g,b) {
+  var computedH = 0;
+  var computedS = 0;
+  var computedV = 0;
+ 
+  //remove spaces from input RGB values, convert to int
+  var r = parseInt( (''+r).replace(/\s/g,''),10 ); 
+  var g = parseInt( (''+g).replace(/\s/g,''),10 ); 
+  var b = parseInt( (''+b).replace(/\s/g,''),10 ); 
+ 
+  if ( r==null || g==null || b==null ||
+      isNaN(r) || isNaN(g)|| isNaN(b) ) {
+    alert ('Please enter numeric RGB values!');
+    return;
+  }
+  if (r<0 || g<0 || b<0 || r>255 || g>255 || b>255) {
+    alert ('RGB values must be in the range 0 to 255.');
+    return;
+  }
+  r=r/255; g=g/255; b=b/255;
+  var minRGB = Math.min(r,Math.min(g,b));
+  var maxRGB = Math.max(r,Math.max(g,b));
+ 
+  // Black-gray-white
+  if (minRGB==maxRGB) {
+   computedV = minRGB;
+   return [0,0,computedV];
+  }
+ 
+  // Colors other than black-gray-white:
+  var d = (r==minRGB) ? g-b : ((b==minRGB) ? r-g : b-r);
+  var h = (r==minRGB) ? 3 : ((b==minRGB) ? 1 : 5);
+  computedH = 60*(h - d/(maxRGB - minRGB));
+  computedS = (maxRGB - minRGB)/maxRGB;
+  computedV = maxRGB;
+  return [computedH,computedS,computedV];
+ }
+
+ function lessSat (h, s, l){
+
+  var computedH = 0; 
+  var computedS = 0; 
+  var computedL = 0; 
+
+  computedH = h; 
+  computedS = s * 0.3;
+  computedL = l
+
+  return [computedH, computedS, computedL];
+ };
+
+
+
+ function rgbToHsl(r, g, b) {
+  r /= 255, g /= 255, b /= 255;
+
+  var max = Math.max(r, g, b), min = Math.min(r, g, b);
+  var h, s, l = (max + min) / 2;
+
+  if (max == min) {
+    h = s = 0; // achromatic
+  } else {
+    var d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+
+    h /= 6;
+  }
+
+  return [ h, s, l ];
+}; 
+
+/*
+
+function hslToRgb(h, s, l) {
+  var r, g, b;
+
+  if (s == 0) {
+    r = g = b = l; // achromatic
+  } else {
+    function hue2rgb(p, q, t) {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    }
+
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+
+  return [ r * 255, g * 255, b * 255 ];
+}
+
+*/
+
+
+
+ function hslToHex(h, s, l) {
+  l /= 100;
+  const a = s * Math.min(l, 1 - l) / 100;
+  const f = n => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+
+// input: h in [0,360] and s,v in [0,1] - output: r,g,b in [0,1]
+function hsl2rgb(h,s,l) 
+{
+  h = h * 360;
+  let a= s*Math.min(l,1-l);
+  let f= (n,k=(n+h/30)%12) => l - a*Math.max(Math.min(k-3,9-k,1),-1);
+  return [f(0),f(8),f(4)];
+}   
+
+
+function roundHue(h){
+
+  var h = h * 360; 
+
+  var h = Math.round(h);
+  return h; 
+
+
+};
+
+/**
+ * Converts an HSL color value to RGB. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes h, s, and l are contained in the set [0, 1] and
+ * returns r, g, and b in the set [0, 255].
+ *
+ * @param   {number}  h       The hue
+ * @param   {number}  s       The saturation
+ * @param   {number}  l       The lightness
+ * @return  {Array}           The RGB representation
+ */
+function hslToRgb(h, s, l){
+  var r, g, b;
+
+  if(s == 0){
+      r = g = b = l; // achromatic
+  }else{
+      var hue2rgb = function hue2rgb(p, q, t){
+          if(t < 0) t += 1;
+          if(t > 1) t -= 1;
+          if(t < 1/6) return p + (q - p) * 6 * t;
+          if(t < 1/2) return q;
+          if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          return p;
+      }
+
+      var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      var p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1/3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1/3);
+  }
+
+  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+
+
+// Input: An Array containing Arrays with content of different Files 
+// Return: One Array with concatenated Arrays from Input
+
+function appendDataCollector(datacollector) {
+
+  var nr_files = datacollector.length;
+  var newArray = datacollector[0];
+
+  if (nr_files > 1){
+
+  for (let i = 1; i < nr_files; i++) {
+
+    newArray = newArray.concat(datacollector[i])
+
+  }
+
+  return newArray;
+
+  } 
+  else {
+
+    return newArray;
+
+  }
+
+}; 
