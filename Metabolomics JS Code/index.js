@@ -283,7 +283,10 @@ function convertToJSON(fileNumber){
           filterFromTmap(); 
            updateSigmaGraph();
            visualizeSunburst(); 
-           renderLegend();      
+           renderLegend(); 
+
+           createSlider();
+ 
       }
        
         
@@ -317,14 +320,16 @@ let MIN_ZOOM = 0.1
 let SCROLL_SENSITIVITY = 0.003;
 let zoomAmount; 
 
-document.getElementById("heatMap").onclick = function(){
+// An dieser Stelle den Code ändern zu: Toggle Signal interpretieren 
+
+document.getElementById("switch").onclick = function(){
   showHeatMap();
  // cameraZoom = document.getElementById("zoomAmount").value;
 }
-document.getElementById("centerView").onclick = function(){
- cameraOffset.x = 0;
- cameraOffset.y = 0;
-}
+//document.getElementById("centerView").onclick = function(){
+// cameraOffset.x = 0;
+// cameraOffset.y = 0;
+//}
 
 // Gets the relevant location from a mouse or single touch event
 function getEventLocation(e)
@@ -1234,4 +1239,24 @@ function setChartJSRange(){
 console.log("Min:"+minCountRange.value+" Max:"+maxCountRange.value);
 console.log(chartCountData);
 console.log("chart updated");
+}
+
+
+
+function createSlider(){
+
+
+  var maxFile = dataCollector.length; 
+
+  var slider = document.getElementById('centerSlider');
+
+  var x = document.createElement('INPUT');
+
+  x.setAttribute("type", "range");
+  x.setAttribute("min", "0");
+  x.setAttribute("max", "5");
+  x.setAttribute("value", "0");
+
+  slider.appendChild(x);
+
 }

@@ -99,7 +99,7 @@
 
     <!-- Tab content -->
     <div id="T-Map" class="tabcontent">
-      <h3>T-Map</h3>
+      <h2>T-Map</h2>
 
       <div><canvas id="tip" width="100" height="25"></canvas></div>
 
@@ -162,29 +162,25 @@
       </div>
       <!-- <div id="plotly-container" style="position:absolute;  bottom:10px;" ></div> -->
 
+
+
+
       <div class="uiContainer">
 
         <div
         class="tmapLegend"
         id="legendContainer"
-        style="position: absolute; top: 150px";
+        style="position: absolute; top: 320px";
       >
         Legend
       </div>
 
-      <div class="dataSlideContainer" style="position: absolute; bottom: 60px">
-        <input
-          type="range"
-          min="0"
-          max="5"
-          value="0"
-          id="dataRange"
-          class="dataSlider"
-        />
-        <p>File No.: <span id="fvalue"> </span></p>
-      </div>
+      
 
-      <div class="slideContainer" style="position: absolute; top: 40px">
+      <div class="slideContainer" style="position: absolute; top: 20px">
+
+          <h3>Prediction Value</h3>
+
         <input
           type="range"
           min="0"
@@ -194,25 +190,52 @@
           class="slider"
         />
         <p>
-          Prediction-Value(%): <span id="value"> </span>
+          Selected Prediction-Value(%): <span id="value"> </span>
           <!--   <label>Zoom-Amount:</label> -->
           <!-- <input type="number" id="zoomAmount"> -->
         </p>
-        <button type="button" id="heatMap">heatMap</button>
+        
+        <div class="tooltip">
+          <h3>Activate Heatmap</h3>
+          <span class="tooltiptext">Activate the heatmap to show <br> the frequency of substances across all imported samples. <br>Red colored substances are rare and green substances more common. </span>
+        </div>
+       
+        <input type="checkbox" id="switch" style="display: none;"/>
+        <label for="switch">Toggle</label>
 
-        <button type="button" id="centerView">.</button>
+        <div class="tooltip">
+          <h3>Hide complete GNPS dataset</h3>
+          <span class="tooltiptext">Set the substances in the GNPS dataset on invisible <br> if they are not contained in the Input samples.</span>
+        </div>
 
-        <input type="checkbox" id="hide-checkbox" />
+        <input type="checkbox" id="hide-checkbox" style="display: none;"/>
         <label for="hide-checkbox">Hide complete GNPS dataset</label>
       </div>
+
+
       <div id="sunburst-container" style="position: absolute">
         <div id="sunburst"></div>
       </div>
       </div>
+      <div class="dataSlideContainer" >
+        
+
+        <h3 id = "SliderTitle">Sample showing: </h3>
+        
+        <input
+          type="range"
+          min="0"
+          max="3"
+          value="0"
+          id="dataRange"
+          class="dataSlider"
+        />
+
+      </div>
     </div>
 
     <div id="Alignment Chart" class="tabcontent">
-      <h3>Alignment Chart</h3>
+      <h2>Alignment Chart</h2>
       <button type="button" id="ShowGraphButton">Show Graph</button>
       <input type="button" value="Generate a table" onclick="generateTable()" />
 
@@ -245,7 +268,7 @@
     </div>
 
     <div id="Data" class="tabcontent">
-      <h3>Data</h3>
+      <h2>Data</h2>
 
     <input type="file" multiple id="uploadfile" accept=".csv" />
     <button id="uploadconfirm">Upload File</button>

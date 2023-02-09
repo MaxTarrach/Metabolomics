@@ -1,6 +1,12 @@
 @charset "utf-8";
 /* CSS Document*/
 
+* {
+
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+
 body {
   margin: 0px;
   padding: 0px;
@@ -9,6 +15,99 @@ body {
   overflow: hidden;
   white-space: nowrap;
 }
+
+h1 {
+
+  left: 50px;
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+
+/* Tab Headers (Data, T-Map etc) */ 
+
+h2 {
+
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+
+/* Headers inside Tabs (Windows) */ 
+
+h3 {
+
+}
+
+p {
+  margin-top: 28px;
+  opacity: 1;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(0, 0, 0);
+}
+
+label {
+
+  font-family: Arial, Helvetica, sans-serif;
+  color: white; 
+
+}
+
+/*
+
+DATA - TAB ELEMENTS 
+
+*/
+
+table {
+  margin-top: 20px;
+  display:block;
+  height: 600px;
+  overflow-x: auto;
+  overflow-y: auto; 
+  border: 1px solid gray;
+}
+
+th,
+td {
+  text-align: left;
+  font-family: monospace;
+  overflow: hidden; 
+  padding-left: 8px;
+}
+
+td {
+  border-left: 1px solid gray; 
+  border-bottom: 1px solid gray;
+
+}
+
+th {
+  height: 30px;
+  background: #eee;
+  position: sticky; /* make the table heads sticky */
+  border-bottom: 1px solid gray; 
+}
+
+
+/*
+
+T-Map - TAB ELEMENTS 
+
+*/
+
+
+
+
+/*
+
+Alignment - TAB ELEMENTS 
+
+*/
+
+
+
+
+
+
 
 #lore {
   position: absolute;
@@ -549,12 +648,7 @@ body {
   left: 0;
 }
 
-p {
-  margin-top: 28px;
-  opacity: 1;
-  font-family: Arial, Helvetica, sans-serif;
-  color: rgb(255, 255, 255);
-}
+
 
 .slider::after {
   content: '100';
@@ -562,7 +656,7 @@ p {
   font-size: 18pt;
   position: absolute;
   left: 92%;
-  top: 26%;
+  top: -30%;
 }
 
 .slider::before {
@@ -571,7 +665,7 @@ p {
   font-size: 18pt;
   position: absolute;
   left: 1%;
-  top: 26%;
+  top: -30%;
 }
 
 .slidecontainer {
@@ -621,21 +715,21 @@ p {
 }
 
 .dataSlider::after {
-  content: '5';
-  color: rgb(255, 255, 255);
+  content: '4';
+  color: rgb(66, 66, 66);
   font-size: 1.5rem;
   position: absolute;
-  left: 92%;
-  top: 26%;
+  left: 95%;
+  bottom: 30px;
 }
 
 .dataSlider::before {
-  content: '0';
-  color: rgb(255, 255, 255);
+  content: '1';
+  color: rgb(66, 66, 66);
   font-size: 1.5rem;
   position: absolute;
-  left: 1%;
-  top: 26%;
+  bottom: 30px;
+
 }
 
 .slidecontainer {
@@ -658,6 +752,10 @@ p {
   transition: opacity 0.2s;
   border-radius: 12px;
   box-shadow: 0px 1px 10px 1px black;
+  width:90%;
+  position: absolute;
+  left: 20px;
+  top: 100px;
 }
 
 .dataSlider:hover {
@@ -730,36 +828,6 @@ p {
 }
 
 
-table {
-  margin-top: 20px;
-  display:block;
-  height: 600px;
-  overflow-x: auto;
-  overflow-y: auto; 
-  border: 1px solid gray;
-}
-
-th,
-td {
-  text-align: left;
-  font-family: monospace;
-  overflow: hidden; 
-  padding-left: 8px;
-}
-
-td {
-  border-left: 1px solid gray; 
-  border-bottom: 1px solid gray;
-
-}
-
-th {
-  height: 30px;
-  background: #eee;
-  position: sticky; /* make the table heads sticky */
-  border-bottom: 1px solid gray; 
-}
-
 .uiContainer {
 
   position: absolute; 
@@ -775,16 +843,126 @@ th {
 
 }
 
-label {
 
-  font-family: Arial, Helvetica, sans-serif;
-  color: white; 
+.dataSlideContainer {
+
+  position: absolute; 
+  bottom: 40px;
+  left: 600px; 
+  width: 500px; 
+  height: 130px;
+  background-color: #d3d3d3;
+  outline: solid 1px black;
+  display: block; 
+  justify-content: center;
+
+}; 
+
+
+
+input[type=checkbox]{
+
+
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 50px;
+  height: 25px;
+  background: grey;
+  display: block;
+  border-radius: 25px;
+  position: relative;
+}
+
+label:after {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 25px;
+  height: 25px;
+  background: #fff;
+  border-radius: 90px;
+  transition: 0.3s;
+}
+
+input:checked + label {
+  background: #bada55;
+}
+
+input:checked + label:after {
+  left: calc(100%);
+  transform: translateX(-100%);
+}
+
+label:active:after {
+  width: 25px;
+}
+
+
+
+.SliderTitle {
+
+  position: absolute;
+  left: 20px; 
+
 
 }
 
-h1 {
+.switch {
 
-  left: 50px;
-  font-family: Arial, Helvetica, sans-serif;
+  display: none; 
 
+}
+
+.hide-checkbox {
+
+  display:none;
+
+}
+
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  width: auto; 
+  left: 170px;
+  top: 16px;
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 10px; 
+  border-radius: 6px;
+
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
 }
