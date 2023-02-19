@@ -1260,3 +1260,16 @@ function createSlider(){
   slider.appendChild(x);
 
 }
+
+
+const decrementButton = document.querySelector("#decrement");
+const incrementButton = document.querySelector("#increment");
+const incdecCount = document.querySelector("#incdecCount");
+
+decrementButton.addEventListener("click", () => {
+  incdecCount.innerText = parseInt(incdecCount.innerText) - 1;
+});
+
+incrementButton.addEventListener("click", () => {
+  incdecCount.innerText = parseInt(incdecCount.innerText) + 1;
+});
