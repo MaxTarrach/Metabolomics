@@ -28,6 +28,7 @@ h1 {
 h2 {
 
   font-family: Arial, Helvetica, sans-serif;
+  overflow: auto;
 
 }
 
@@ -38,7 +39,8 @@ h3 {
 }
 
 p {
-  margin-top: 28px;
+
+  margin-left: 10px;
   opacity: 1;
   font-family: Arial, Helvetica, sans-serif;
   color: rgb(0, 0, 0);
@@ -649,25 +651,6 @@ Alignment - TAB ELEMENTS
 }
 
 
-
-.slider::after {
-  content: '100';
-  color: rgb(255, 255, 255);
-  font-size: 18pt;
-  position: absolute;
-  left: 92%;
-  top: -30%;
-}
-
-.slider::before {
-  content: '0';
-  color: rgb(255, 255, 255);
-  font-size: 18pt;
-  position: absolute;
-  left: 1%;
-  top: -30%;
-}
-
 .slidecontainer {
   color:black;
   width: 75%;
@@ -965,4 +948,50 @@ label:active:after {
   border-width: 5px;
   border-style: solid;
   border-color: transparent black transparent transparent;
+}
+
+
+.headerParent {
+
+};
+
+
+.map-header {
+  text-align: center;
+}
+.float-container {
+  display: flex;
+  /*We want 1 row and we dont want items to wrap into other rows*/
+  flex-flow: row nowrap;
+  width: 100%;
+  /*Positions elements to the start, end and whatever is between while keeping some space between them */
+  justify-content: space-between; 
+  /*You can add this if you also want to horizontally align items*/
+  align-items: center;
+}
+/*gives all divs (the spacer and the checbox-div) inside of the header-wrapper the same size and leaves the rest of space for the header, with this the header is centered and looks better*/
+.float-container div {
+    width: 33%;
+}
+.checkbox-div {  
+  background-color: red;
+}
+
+#tmapHeader {
+
+  width: 33%; 
+
+
+}
+
+.counter-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#incdecCount {
+  margin-left: 15px;
+  margin-right: 15px;
+
 }
