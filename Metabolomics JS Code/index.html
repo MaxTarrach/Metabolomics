@@ -107,9 +107,14 @@
       <div class="counter-div">
         
         <button id="decrement">-</button>
-        <span id="incdecCount">0</span>
+        <input type="number" id="incdecInput" name="FileInput" min="0" max="3" value="0">
         <button id="increment">+</button>
-        <p>Select File Number</p>
+
+        <div class="tooltip">
+        <h3 id="selectFileNumber">Select File Number</h3>
+        <span class="tooltiptext">Select which one of the imported files is visualized.</span>
+        </div>
+
       </div>
 
       <div class="empty-div"></div>
@@ -190,7 +195,6 @@
         Legend
       </div>
 
-      
 
       <div class="slideContainer" style="position: absolute; top: 20px">
 
@@ -204,6 +208,7 @@
           id="myRange"
           class="slider"
         />
+
         <p>
           Selected Prediction-Value(%): <span id="value"> </span>
           <!--   <label>Zoom-Amount:</label> -->
@@ -219,8 +224,8 @@
         <label for="switch">Toggle</label>
 
         <div class="tooltip">
-          <h3>Hide complete GNPS dataset</h3>
-          <span class="tooltiptext">Set the substances in the GNPS dataset on invisible <br> if they are not contained in the Input samples.</span>
+          <h3>Show complete GNPS dataset</h3>
+          <span class="tooltiptext">Set the substances in the GNPS dataset on visible <br> and see their superclasses visualized through color.</span>
         </div>
 
         <input type="checkbox" id="hide-checkbox" style="display: none;"/>
@@ -232,21 +237,7 @@
         <div id="sunburst"></div>
       </div>
       </div>
-      <div class="dataSlideContainer" >
-        
 
-        <h3 id = "SliderTitle">Sample showing: </h3>
-        
-        <input
-          type="range"
-          min="0"
-          max="3"
-          value="0"
-          id="dataRange"
-          class="dataSlider"
-        />
-
-      </div>
     </div>
 
     <div id="Alignment Chart" class="tabcontent">
