@@ -37,6 +37,7 @@ var filteredTmapData = {
     y: [],
     z: [],
     labels: [],
+    ids: [],
     colors: [{
         r: [],
         g: [],
@@ -87,12 +88,24 @@ function updateSigmaGraph(){
      //Highlight all DataSamples that are in the chemical space: 
     }else{
 
+
+      // Smiles of current DataPoint
+      var smilesForNodes =  dataPoints[i].smiles; 
+
+      //Find Compound Name via Smiles 
+      const nameFromSmiles = filteredCSdataSet.find(item => item.Smiles_GNPS_results === smilesForNodes); 
+
       //Default Highlight found samples
       if(heatMapActive == false){
       //Class-Colors
-      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+      //graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: nameFromSmiles.Compound_Name_GNPS_results, color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
       
-      
+      s.on('clickNode', function(event){
+
+
+
+      }); 
 
       }
 
@@ -218,7 +231,9 @@ const {UndirectedGraph, DirectedGraph} = graphology;
 
 s = new Sigma(graph, container, {
  
-     allowInvalidContainer: true 
+     allowInvalidContainer: true,
+     nodeHoverPrecision: 10, // set the hover precision to 10 pixels
+     labelThreshold: 10 // set the label threshold to 10 pixels
 
 });
 
@@ -279,15 +294,26 @@ function convertToJSON(fileNumber){
           CSdataSet = uploadedData;
     
           console.log(CSdataSet);
-          console.log(dataCollector)
+          console.log(dataCollector); 
+          console.log(dataCollector[0]);
+          console.log(dataCollector[0][0].Compound_Name_GNPS_results);
+
+
+          if(functionCalled == false) {
+
+            createSubstancePopUp();
+
+          }
+
+          
 
           // Hierarchien erstellen 
           nestBySuperClass();
           // Vergleiche unsere Datensamples(195+ Stoffe) mit der Datenbank(20k Stoffe) 
           filterFromTmap(); 
-           updateSigmaGraph();
-           visualizeSunburst(); 
-           renderLegend(); 
+          updateSigmaGraph();
+          visualizeSunburst(); 
+          renderLegend(); 
  
       }
        
@@ -504,7 +530,7 @@ for(let i = 0; i < dataPoints.length; i++){
 }
 //mouseY - 200 because the canvas is positioned -200px
 mouseX = getEventLocation(event).x;
-mouseY = getEventLocation(event).y - 200;
+mouseY = getEventLocation(event).y-200;
 
 });
 
@@ -620,7 +646,7 @@ class DataPoint {
 
       toolTipCtx.fillStyle = "black";
       toolTipCtx.font = "12px Arial";
-     this.drawSmiles();
+      this.drawSmiles();
 
 
 
@@ -807,7 +833,7 @@ var filteredAndFoundCSDataSet;
 function  filterFromTmap(){
 
 //TMapData = ChemicalSpaceDataBackUp; 
-//console.log(TMapData);
+console.log(TMapData);
 filteredAndFoundDataPoints = [];
 var tempdata = [];
 
@@ -834,6 +860,8 @@ let stroke = "black";
  dataPoints[i].setSmiles(TMapData.Chemical_Space.labels[i]);
  //dataPoints[i].setCompoundName("["+[i]+ "] " + TMapData.Chemical_Space.labels[i]);
  dataPoints[i].setCompoundName("["+[i]+ "] " + subNames[Math.floor(Math.random()*subNames.length)]);
+ //dataPoints[i].setCompoundName(dataCollector[0][i].Compound_Name_GNPS_results);
+
 
  if(heatMapActive == false){
   dataPoints[i].setFileName("File: " + fileNumber);
@@ -1067,28 +1095,19 @@ const incdecCount = document.querySelector("#incdecCount");
 
 decrementButton.addEventListener("click", () => {
 
-  if (document.getElementById("incdecInput").value == 0) {
-
-    console.log('Hey');
+  if (document.getElementById("incdecInput").value == 1) {
 
     incdecCount.innerText = parseInt(incdecCount.innerText);
-
     document.getElementById("incdecInput").value = 0;
-
     convertToJSON(incdecCount.innerText);
-
     heatMapActive = false; 
 
   }
 
   else {
 
-    console.log('Ho');
-
     document.getElementById("incdecInput").value = document.getElementById("incdecInput").value - 1;
- 
-    convertToJSON(document.getElementById("incdecInput").value); 
-
+    convertToJSON(document.getElementById("incdecInput").value-1); 
     heatMapActive = false; 
 
   };
@@ -1097,14 +1116,10 @@ decrementButton.addEventListener("click", () => {
 
 incrementButton.addEventListener("click", () => {
 
-  if (document.getElementById("incdecInput").value == 3) {
-
+  if (document.getElementById("incdecInput").value == document.getElementById('uploadfile').files.length) {
 
     document.getElementById("incdecInput").value = document.getElementById("incdecInput").value;
-
-
-    convertToJSON(document.getElementById("incdecInput").value);
-
+    convertToJSON(document.getElementById("incdecInput").value-1);
     heatMapActive = false; 
 
   }
@@ -1112,14 +1127,82 @@ incrementButton.addEventListener("click", () => {
   else {
 
     document.getElementById("incdecInput").value = parseInt(document.getElementById("incdecInput").value) + 1;
-
-
-    convertToJSON(parseInt(document.getElementById("incdecInput").value));
-
+    convertToJSON(parseInt(document.getElementById("incdecInput").value)-1);
     heatMapActive = false; 
 
   }
   
 });
 
+
+// Implementation of entering a Filenumber via Enter Press
+
+var input_file_selector = document.getElementById("incdecInput"); 
+
+input_file_selector.addEventListener("keypress", function(event){
+
+  if (event.key === "Enter") {
+
+    event.preventDefault();
+    convertToJSON(parseInt(document.getElementById("incdecInput").value)-1);
+     
+  } 
+
+});
+
+
 // ========= File Navigation in Tmap END ==========
+
+
+
+
+var functionCalled = false; 
+
+// ======== Substance PopUp START ============
+
+function createSubstancePopUp(){
+
+  functionCalled = true; 
+ 
+  
+var inputSmiles = dataCollector[0][0].Smiles_GNPS_results; 
+var options = {}; 
+
+let smilesDrawer = new SmilesDrawer.Drawer(options); 
+
+SmilesDrawer.parse(inputSmiles.value, function(tree){
+
+  smilesDrawer.draw(tree, "example-canvas", "light", false); 
+
+});
+
+// Add Header Name also add the Prediction value 
+var paragraph_header = document.getElementById("substance-header"); 
+var text_substance_header = document.createTextNode(dataCollector[0][0].analog_compound_name_ms2query_results); 
+paragraph_header.appendChild(text_substance_header); 
+
+// Add mass Info
+var paragraph_mass = document.getElementById("mass-popup"); 
+var text_mass_popup = document.createTextNode(dataCollector[0][1].MassDiff_GNPS_results); 
+paragraph_mass.appendChild(text_mass_popup); 
+
+// Add Superclass Info
+var paragraph_superclass = document.getElementById("superclass-popup"); 
+var text_superclass_popup = document.createTextNode(dataCollector[0][0].cf_superclass_ms2query_results); 
+paragraph_superclass.appendChild(text_superclass_popup); 
+
+// Class Info
+var paragraph_class = document.getElementById("class-popup"); 
+var text_class_popup = document.createTextNode(dataCollector[0][0].cf_class_ms2query_results); 
+paragraph_class.appendChild(text_class_popup); 
+
+// Add Subclass Info
+var paragraph_subclass = document.getElementById("subclass-popup"); 
+var text_subclass_popup = document.createTextNode(dataCollector[0][0].cf_subclass_ms2query_results); 
+paragraph_subclass.appendChild(text_subclass_popup); 
+
+console.log(dataCollector[0][0].Smiles_GNPS_results);
+
+}
+
+// ======== Substance PopUp END ============
