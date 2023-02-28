@@ -20,6 +20,8 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css"
@@ -107,11 +109,11 @@
       <div class="counter-div">
         
         <button id="decrement">-</button>
-        <input type="number" id="incdecInput" name="FileInput" min="0" max="3" value="0">
+        <input type="number" id="incdecInput" name="FileInput" min="1"  value="1">
         <button id="increment">+</button>
 
         <div class="tooltip">
-        <h3 id="selectFileNumber">Select File Number</h3>
+        <h3 id="selectFileNumber">Select File Number &#9432</h3>
         <span class="tooltiptext">Select which one of the imported files is visualized.</span>
         </div>
 
@@ -198,7 +200,7 @@
 
       <div class="slideContainer" style="position: absolute; top: 20px">
 
-          <h3>Prediction Value</h3>
+          <h3>Prediction Value &#9432</h3>
 
         <input
           type="range"
@@ -216,15 +218,15 @@
         </p>
         
         <div class="tooltip">
-          <h3>Activate Heatmap</h3>
+          <h3>Activate Heatmap &#9432</h3>
           <span class="tooltiptext">Activate the heatmap to show <br> the frequency of substances across all imported samples. <br>Red colored substances are rare and green substances more common. </span>
         </div>
        
         <input type="checkbox" id="switch" style="display: none;"/>
         <label for="switch">Toggle</label>
 
-        <div class="tooltip">
-          <h3>Show complete GNPS dataset</h3>
+        <div class="tooltip"> 
+          <h3>Show complete GNPS dataset &#9432</h3>
           <span class="tooltiptext">Set the substances in the GNPS dataset on visible <br> and see their superclasses visualized through color.</span>
         </div>
 
@@ -236,6 +238,28 @@
       <div id="sunburst-container" style="position: absolute">
         <div id="sunburst"></div>
       </div>
+      </div>
+
+      <div class="substance-popup">
+
+        <h3 id="substance-header"></h3>
+
+
+        <P id="mass-popup">       <b>Mass: <b>       </P>
+        <P id="superclass-popup"> <b>Superclass: <b>  </P>
+        <P id="class-popup">      <b>Class: <b>      </P>
+        <P id="subclass-popup">   <b>Subclass: <b>   </P>
+
+        <!-- <canvas id="example-canvas" width="400" height="400"></canvas> -->
+
+        <img id="smilesDrawer" style="margin: 45px;" data-smiles="[H]C([H])([H])N(C(=O)1)C(=O)c(n([H])2)c(nc([H])2)N(C([H])([H])[H])1" data-smiles-options="{'width':300, 'height':300 }" />
+          
+        <script type="text/javascript" src="https://unpkg.com/smiles-drawer@2.0.1/dist/smiles-drawer.min.js"></script>
+        <script>
+        SmiDrawer.apply();
+        </script>
+
+
       </div>
 
     </div>

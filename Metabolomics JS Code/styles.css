@@ -638,7 +638,7 @@ Alignment - TAB ELEMENTS
   width: 260px;
   min-height: 40px;
   background-color: rgba(255, 255, 255, 0.635);
-  margin: 50px auto;
+  margin: 30px ;
   text-align: center;
   font-size: 1.5em;
   padding-top: 15px;
@@ -816,12 +816,12 @@ Alignment - TAB ELEMENTS
   position: absolute; 
   top: 210px;
   left: 10px; 
-  width: 400px; 
+  width: 350px; 
   height: 700px;
   background-color: #d3d3d3;
   outline: solid 1px black;
   display: flex; 
-  justify-content: center;
+  padding-left: 20px;
 
 
 }
@@ -1008,4 +1008,53 @@ label:active:after {
 margin-left: 10px; 
 margin-right: 10px; 
 
+}
+
+
+.substance-popup {
+
+  position: absolute; 
+  top: 210px;
+  right: 10px; 
+  width: 400px; 
+  height: 700px;
+  background-color: #d3d3d3;
+  outline: solid 1px black;
+  padding-left: 20px;
+
+
+}
+
+
+#substance-header {
+
+  max-width: 200px; 
+
+}
+
+img {
+
+  border: 2px solid black; 
+
+
+}; 
+
+
+#smilesDrawer {
+
+  margin: 45px; 
+
+}; 
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
