@@ -243,8 +243,8 @@ Alignment - TAB ELEMENTS
   background-color: #fff;
 }
 #sigma-container {
-  width: 1600px;
-  height: 800px;
+  width: 80vw; 
+  height: 80vh;
 }
 #legendCanvas {
   border: 0px solid black;

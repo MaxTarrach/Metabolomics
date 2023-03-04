@@ -25,10 +25,11 @@ let dataBaseHidden = false;
 var TMapData = data;
 var ChemicalSpaceDataBackUp = data;
 
+var cursorX; 
+var cursorY;
+
+
 let limit = 0; 
-
-let subNames = [ "Spectral Match to Baicalin from NIST14", "Spectral Match to 3-Hydroxy-4-methoxycinnamic acid from NIST14", "Massbank:PR301031 Harmane","Spectral Match to Baicalin from NIST14", "Pesticide3_Chlorotoluron_C10H13ClN2O_Urea, N'-(3-chloro-4-methylphenyl)-N,N-dimethyl-", "NCGC00380776-01_C16H24O7_"];
-
 
 var filteredTmapData = {
 
@@ -99,15 +100,27 @@ function updateSigmaGraph(){
       if(heatMapActive == false){
       //Class-Colors
       //graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
-      graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: nameFromSmiles.Compound_Name_GNPS_results, color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+      s.graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: "Hey", color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
       
       s.on('clickNode', function(event){
 
+        
+        // ^^^^^^^ HAHAHAH HIER WEITER ARBEITEN MORGEN HURENSOHNE ZEILE ^^^^^^^^^^^
+        console.log(event); 
+        console.log(event.node); 
+        console.log(dataPoints[event.node].smiles); 
 
+        var smilesString = dataPoints[event.node].smiles; 
+
+        document.getElementById("smilesDrawer").setAttribute("data-smiles", `${smilesString}`); 
+        //document.getElementById("smilesDrawer").setAttribute("data-smiles-options", "{'width':300, 'height':300 }");
+        //document.getElementById("smilesDrawer").setAttribute("data-smiles", smilesString);
+
+        createSubstancePopUp(String(smilesString)); 
 
       }); 
 
-      }
+      }; 
 
       // Heatmap colorization = Gradient and not just 4 colors 
 
@@ -229,24 +242,13 @@ var graph = new graphology.Graph();
 const {UndirectedGraph, DirectedGraph} = graphology;
 
 
-s = new Sigma(graph, container, {
+var s = new Sigma(graph, container, {
  
      allowInvalidContainer: true,
      nodeHoverPrecision: 10, // set the hover precision to 10 pixels
      labelThreshold: 10 // set the label threshold to 10 pixels
 
 });
-
-/*
-console.log(s);
-
-s.bind('clickNode', function(e) {
-    console.log('HEYOHEYO'); 
-}); 
-*/ 
-
-
-
 
 
 const uploadconfirm = document.getElementById('uploadconfirm').
@@ -292,18 +294,13 @@ function convertToJSON(fileNumber){
          
           // einzelne Files
           CSdataSet = uploadedData;
-    
-          console.log(CSdataSet);
-          console.log(dataCollector); 
-          console.log(dataCollector[0]);
-          console.log(dataCollector[0][0].Compound_Name_GNPS_results);
 
 
-          if(functionCalled == false) {
+          //if(functionCalled == false) {
 
-            createSubstancePopUp();
+            //createSubstancePopUp();
 
-          }
+//}
 
           
 
@@ -859,7 +856,7 @@ let stroke = "black";
     
  dataPoints[i].setSmiles(TMapData.Chemical_Space.labels[i]);
  //dataPoints[i].setCompoundName("["+[i]+ "] " + TMapData.Chemical_Space.labels[i]);
- dataPoints[i].setCompoundName("["+[i]+ "] " + subNames[Math.floor(Math.random()*subNames.length)]);
+
  //dataPoints[i].setCompoundName(dataCollector[0][i].Compound_Name_GNPS_results);
 
 
@@ -1160,49 +1157,55 @@ var functionCalled = false;
 
 // ======== Substance PopUp START ============
 
-function createSubstancePopUp(){
+function createSubstancePopUp(smiles){
 
   functionCalled = true; 
- 
-  
-var inputSmiles = dataCollector[0][0].Smiles_GNPS_results; 
-var options = {}; 
 
-let smilesDrawer = new SmilesDrawer.Drawer(options); 
+  // dataCollector sind alle Dateien => nur die Datei nötig, die gerade angezeigt wird
 
-SmilesDrawer.parse(inputSmiles.value, function(tree){
 
-  smilesDrawer.draw(tree, "example-canvas", "light", false); 
+  var index = dataCollector[0].findIndex(item => item.Smiles_GNPS_results === smiles); 
 
-});
+  console.log(index); 
 
-// Add Header Name also add the Prediction value 
-var paragraph_header = document.getElementById("substance-header"); 
-var text_substance_header = document.createTextNode(dataCollector[0][0].analog_compound_name_ms2query_results); 
-paragraph_header.appendChild(text_substance_header); 
+  // Bestimmtes Element aus dem Datensatz erhalten
+  console.log(dataCollector[0][index])
 
-// Add mass Info
-var paragraph_mass = document.getElementById("mass-popup"); 
-var text_mass_popup = document.createTextNode(dataCollector[0][1].MassDiff_GNPS_results); 
-paragraph_mass.appendChild(text_mass_popup); 
 
-// Add Superclass Info
-var paragraph_superclass = document.getElementById("superclass-popup"); 
-var text_superclass_popup = document.createTextNode(dataCollector[0][0].cf_superclass_ms2query_results); 
-paragraph_superclass.appendChild(text_superclass_popup); 
+  // Methode ändern => Nicht append sondern ersetzen 
 
-// Class Info
-var paragraph_class = document.getElementById("class-popup"); 
-var text_class_popup = document.createTextNode(dataCollector[0][0].cf_class_ms2query_results); 
-paragraph_class.appendChild(text_class_popup); 
+  // Add Header Name also add the Prediction value 
+  var paragraph_header = document.getElementById("substance-header"); 
+  var text_substance_header = document.createTextNode(dataCollector[0][index].analog_compound_name_ms2query_results); 
+  paragraph_header.appendChild(text_substance_header); 
 
-// Add Subclass Info
-var paragraph_subclass = document.getElementById("subclass-popup"); 
-var text_subclass_popup = document.createTextNode(dataCollector[0][0].cf_subclass_ms2query_results); 
-paragraph_subclass.appendChild(text_subclass_popup); 
+  // Add mass Info
+  var paragraph_mass = document.getElementById("mass-popup"); 
+  var text_mass_popup = document.createTextNode(dataCollector[0][index].MassDiff_GNPS_results); 
+  paragraph_mass.appendChild(text_mass_popup); 
 
-console.log(dataCollector[0][0].Smiles_GNPS_results);
+  // Add Superclass Info
+  var paragraph_superclass = document.getElementById("superclass-popup"); 
+  var text_superclass_popup = document.createTextNode(dataCollector[0][index].cf_superclass_ms2query_results); 
+  paragraph_superclass.appendChild(text_superclass_popup); 
+
+  // Class Info
+  var paragraph_class = document.getElementById("class-popup"); 
+  var text_class_popup = document.createTextNode(dataCollector[0][index].cf_class_ms2query_results); 
+  paragraph_class.appendChild(text_class_popup); 
+
+  // Add Subclass Info
+  var paragraph_subclass = document.getElementById("subclass-popup"); 
+  var text_subclass_popup = document.createTextNode(dataCollector[0][index].cf_subclass_ms2query_results); 
+  paragraph_subclass.appendChild(text_subclass_popup); 
+
+  console.log(dataCollector[0][index].Smiles_GNPS_results);
 
 }
 
 // ======== Substance PopUp END ============
+
+
+
+
+

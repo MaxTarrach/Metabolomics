@@ -39,6 +39,10 @@
       referrerpolicy="no-referrer"
     ></script>
 
+    <script type="text/javascript" src="https://unpkg.com/smiles-drawer@2.0.1/dist/smiles-drawer.min.js"></script>
+
+    
+
     <style>
       
     </style>
@@ -70,6 +74,7 @@
     <script src="index.js" defer></script>
     
     <script src="sigma.js"></script>
+    <script src="sigma.classes.dispatcher.js"></script>
     <!-- To use a Graph object -->
     <script src="graphology.min.js"></script>
     <!-- This exposes a global variable named "graphology" -->
@@ -252,12 +257,14 @@
 
         <!-- <canvas id="example-canvas" width="400" height="400"></canvas> -->
 
-        <img id="smilesDrawer" style="margin: 45px;" data-smiles="[H]C([H])([H])N(C(=O)1)C(=O)c(n([H])2)c(nc([H])2)N(C([H])([H])[H])1" data-smiles-options="{'width':300, 'height':300 }" />
+        <!--- <img id="smilesDrawer" style="margin: 45px;" data-smiles="CCOc1ccc(-c2oc3ccccc3c(=O)c2OS(=O)(=O)c2ccc(Br)cc2)cc1" data-smiles-options="{'width':300, 'height':300 }" /> --> 
+
+        <img id="smilesDrawer" style="margin: 45px;" data-smiles="CCOc1ccc(-c2oc3ccccc3c(=O)c2OS(=O)(=O)c2ccc(Br)cc2)cc1" data-smiles-options="{'width':300, 'height':300 }" />
           
-        <script type="text/javascript" src="https://unpkg.com/smiles-drawer@2.0.1/dist/smiles-drawer.min.js"></script>
         <script>
         SmiDrawer.apply();
         </script>
+       
 
 
       </div>
