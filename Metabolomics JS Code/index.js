@@ -100,19 +100,21 @@ function updateSigmaGraph(){
       if(heatMapActive == false){
       //Class-Colors
       //graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
-      s.graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: "Hey", color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
+      s.graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: "", color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
       
       s.on('clickNode', function(event){
 
-        
-        // ^^^^^^^ HAHAHAH HIER WEITER ARBEITEN MORGEN HURENSOHNE ZEILE ^^^^^^^^^^^
         console.log(event); 
         console.log(event.node); 
+        console.log(dataPoints[event.node]); 
         console.log(dataPoints[event.node].smiles); 
+
+        console.log(dataCollector); 
+
 
         var smilesString = dataPoints[event.node].smiles; 
 
-        document.getElementById("smilesDrawer").setAttribute("data-smiles", `${smilesString}`); 
+        //document.getElementById("smilesDrawer").setAttribute("data-smiles", `${smilesString}`); 
         //document.getElementById("smilesDrawer").setAttribute("data-smiles-options", "{'width':300, 'height':300 }");
         //document.getElementById("smilesDrawer").setAttribute("data-smiles", smilesString);
 
@@ -584,6 +586,7 @@ class DataPoint {
     this.lineWidth = lineWidth; 
     this.isFiltered = isFiltered; 
     this.smiles; 
+    this.spectrumID; 
     var a;
     var b;
     var d;
@@ -722,6 +725,12 @@ function printAt( context , text, x, y, lineHeight, fitWidth)
   getSmiles(){
     return this.smiles;
   }
+  setSpectrumID (spectrumID){
+    this.spectrumID = spectrumID; 
+  }
+  getSpectrumID(){
+    return this.spectrumID; 
+  }
   setSmilesCount(SMILEScount){
     this.SMILEScount = SMILEScount; 
   }
@@ -854,10 +863,14 @@ let stroke = "black";
  //Fill Array with all Datapoints
  dataPoints[i] = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth, isFiltered);
     
+ console.log(TMapData.Chemical_Space); 
+
  dataPoints[i].setSmiles(TMapData.Chemical_Space.labels[i]);
  //dataPoints[i].setCompoundName("["+[i]+ "] " + TMapData.Chemical_Space.labels[i]);
 
  //dataPoints[i].setCompoundName(dataCollector[0][i].Compound_Name_GNPS_results);
+
+ // Füge GNPS ID´s hinzu
 
 
  if(heatMapActive == false){
@@ -1161,46 +1174,31 @@ function createSubstancePopUp(smiles){
 
   functionCalled = true; 
 
-  // dataCollector sind alle Dateien => nur die Datei nötig, die gerade angezeigt wird
-
-
   var index = dataCollector[0].findIndex(item => item.Smiles_GNPS_results === smiles); 
 
-  console.log(index); 
 
   // Bestimmtes Element aus dem Datensatz erhalten
   console.log(dataCollector[0][index])
 
+  var paragraph_header = document.getElementById("substance-header");
+  paragraph_header.textContent = dataCollector[0][index].analog_compound_name_ms2query_results;  
 
-  // Methode ändern => Nicht append sondern ersetzen 
+  var paragraph_mass = document.getElementById("mass-popup");
+  paragraph_mass.textContent = dataCollector[0][index].MassDiff_GNPS_results; 
 
-  // Add Header Name also add the Prediction value 
-  var paragraph_header = document.getElementById("substance-header"); 
-  var text_substance_header = document.createTextNode(dataCollector[0][index].analog_compound_name_ms2query_results); 
-  paragraph_header.appendChild(text_substance_header); 
-
-  // Add mass Info
-  var paragraph_mass = document.getElementById("mass-popup"); 
-  var text_mass_popup = document.createTextNode(dataCollector[0][index].MassDiff_GNPS_results); 
-  paragraph_mass.appendChild(text_mass_popup); 
-
-  // Add Superclass Info
   var paragraph_superclass = document.getElementById("superclass-popup"); 
-  var text_superclass_popup = document.createTextNode(dataCollector[0][index].cf_superclass_ms2query_results); 
-  paragraph_superclass.appendChild(text_superclass_popup); 
+  paragraph_superclass.textContent = "Superclass: " + dataCollector[0][index].cf_superclass_ms2query_results; 
 
-  // Class Info
   var paragraph_class = document.getElementById("class-popup"); 
-  var text_class_popup = document.createTextNode(dataCollector[0][index].cf_class_ms2query_results); 
-  paragraph_class.appendChild(text_class_popup); 
+  paragraph_class.textContent = "Class: " + dataCollector[0][index].cf_class_ms2query_results;
 
-  // Add Subclass Info
-  var paragraph_subclass = document.getElementById("subclass-popup"); 
-  var text_subclass_popup = document.createTextNode(dataCollector[0][index].cf_subclass_ms2query_results); 
-  paragraph_subclass.appendChild(text_subclass_popup); 
+  var paragraph_subclass = document.getElementById("subclass-popup");
+  paragraph_subclass.textContent = "Subclass: " + dataCollector[0][index].cf_subclass_ms2query_results;
 
-  console.log(dataCollector[0][index].Smiles_GNPS_results);
 
+
+  
+  SmiDrawer.apply();
 }
 
 // ======== Substance PopUp END ============
