@@ -918,9 +918,7 @@ label:active:after {
 
 /* Tooltip text */
 .tooltip .tooltiptext {
-  width: auto; 
-  left: 170px;
-  top: 16px;
+  width: auto;
   visibility: hidden;
   background-color: black;
   color: #fff;
@@ -928,13 +926,11 @@ label:active:after {
   padding: 10px; 
   border-radius: 6px;
 
- 
-  /* Position the tooltip text - see examples below! */
+
   position: absolute;
   z-index: 1;
 }
 
-/* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
@@ -942,14 +938,12 @@ label:active:after {
 .tooltip .tooltiptext::after {
   content: " ";
   position: absolute;
-  top: 50%;
-  right: 100%; /* To the left of the tooltip */
+ 
   margin-top: -5px;
   border-width: 5px;
   border-style: solid;
   border-color: transparent black transparent transparent;
 }
-
 
 .headerParent {
 
@@ -1016,11 +1010,10 @@ margin-right: 10px;
   position: absolute; 
   top: 210px;
   right: 10px; 
-  width: 400px; 
-  height: 700px;
   background-color: #d3d3d3;
   outline: solid 1px black;
   padding-left: 20px;
+  padding-right: 20px;
 
 
 }

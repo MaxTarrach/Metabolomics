@@ -28,6 +28,9 @@ var ChemicalSpaceDataBackUp = data;
 var cursorX; 
 var cursorY;
 
+const startColor = [255, 0, 0]; // Red 
+const endColor = [0, 255, 0]; // Green 
+
 
 let limit = 0; 
 
@@ -104,23 +107,12 @@ function updateSigmaGraph(){
       
       s.on('clickNode', function(event){
 
-        console.log(event); 
-        console.log(event.node); 
-        console.log(dataPoints[event.node]); 
-        console.log(dataPoints[event.node].smiles); 
-
-        console.log(dataCollector); 
-
-
         var smilesString = dataPoints[event.node].smiles; 
-
-        //document.getElementById("smilesDrawer").setAttribute("data-smiles", `${smilesString}`); 
-        //document.getElementById("smilesDrawer").setAttribute("data-smiles-options", "{'width':300, 'height':300 }");
-        //document.getElementById("smilesDrawer").setAttribute("data-smiles", smilesString);
 
         createSubstancePopUp(String(smilesString)); 
 
-      }); 
+      });   
+
 
       }; 
 
@@ -248,31 +240,46 @@ var s = new Sigma(graph, container, {
  
      allowInvalidContainer: true,
      nodeHoverPrecision: 10, // set the hover precision to 10 pixels
-     labelThreshold: 10 // set the label threshold to 10 pixels
+     drawLabels: false,
 
 });
 
 
-const uploadconfirm = document.getElementById('uploadconfirm').
-addEventListener('click', () => {
+const uploadconfirm = document.getElementById('uploadconfirm')
+.addEventListener('click', async () => {
+
+  // convert and save all data in one array(datacollector)
+  const promises = [];
+
+  console.log("CLICKED THE BUTTON: !!!")
+
+  //convert and save all data in one array(datacollector)
+  for (var i = 0; i < document.getElementById('uploadfile').files.length; i++){
+    fileNumber = i;
+    await convertToJSON(i);
+    console.log(fileNumber);
+  }
+
+  await Promise.all(promises); // wait for all promises to resolve before continuing
+
+  dataLoaded = true;
+
+
+
+  if (dataLoaded === true){
+
+    var temporary_data = appendDataCollector(dataCollector); 
+    console.log(temporary_data);
+    createTable(temporary_data);
+
+  }
   
-//convert and save all data in one array(datacollector)
- for(var i = 0; i<document.getElementById('uploadfile').files.length;i++){
-  fileNumber = i;   
-  convertToJSON(i);
-  console.log(fileNumber);
-  
- }
- dataLoaded = true; 
-
- var tableData = appendDataCollector(dataCollector);
-
- createTable(tableData); 
-}
+});
 
 
-)
-function convertToJSON(fileNumber){
+async function convertToJSON(fileNumber){
+
+  return new Promise((resolve) => {
   var uploadedData = [];
   filteredCSdataSet = [];
   filteredAndFoundCSDataSet = [];
@@ -297,15 +304,14 @@ function convertToJSON(fileNumber){
           // einzelne Files
           CSdataSet = uploadedData;
 
+          
+
 
           //if(functionCalled == false) {
 
             //createSubstancePopUp();
 
 //}
-
-          
-
           // Hierarchien erstellen 
           nestBySuperClass();
           // Vergleiche unsere Datensamples(195+ Stoffe) mit der Datenbank(20k Stoffe) 
@@ -313,15 +319,16 @@ function convertToJSON(fileNumber){
           updateSigmaGraph();
           visualizeSunburst(); 
           renderLegend(); 
- 
+
+          resolve(); // resolve the promise when data is saved in dataCollector
+      
+          
       }
        
-        
-     
    })
 
 
-}
+} ) }; 
 
 let mainCanvas = document.getElementById("mainCanvas");
 let ctx = mainCanvas.getContext("2d");
@@ -350,6 +357,7 @@ let zoomAmount;
 // An dieser Stelle den Code ändern zu: Toggle Signal interpretieren 
 
 document.getElementById("switch").onclick = function(){
+
   
   if (heatMapActive == false) {
 
@@ -358,6 +366,10 @@ document.getElementById("switch").onclick = function(){
   }
   
   else {
+
+    heatMapActive = false; 
+
+    updateSigmaGraph(); 
 
   }
 
@@ -862,8 +874,6 @@ let stroke = "black";
 
  //Fill Array with all Datapoints
  dataPoints[i] = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth, isFiltered);
-    
- console.log(TMapData.Chemical_Space); 
 
  dataPoints[i].setSmiles(TMapData.Chemical_Space.labels[i]);
  //dataPoints[i].setCompoundName("["+[i]+ "] " + TMapData.Chemical_Space.labels[i]);
@@ -1180,8 +1190,13 @@ function createSubstancePopUp(smiles){
   // Bestimmtes Element aus dem Datensatz erhalten
   console.log(dataCollector[0][index])
 
+  console.log(dataCollector[0][index].ms2query_model_prediction_ms2query_results); 
+
   var paragraph_header = document.getElementById("substance-header");
   paragraph_header.textContent = dataCollector[0][index].analog_compound_name_ms2query_results;  
+
+  var paragraph_prediction = document.getElementById("prediction-popup"); 
+  paragraph_prediction.textContent = "Prediction value: " + String(dataCollector[0][index].ms2query_model_prediction_ms2query_results); 
 
   var paragraph_mass = document.getElementById("mass-popup");
   paragraph_mass.textContent = dataCollector[0][index].MassDiff_GNPS_results; 
@@ -1195,7 +1210,9 @@ function createSubstancePopUp(smiles){
   var paragraph_subclass = document.getElementById("subclass-popup");
   paragraph_subclass.textContent = "Subclass: " + dataCollector[0][index].cf_subclass_ms2query_results;
 
-
+  var smiles_vis = document.getElementById("smilesDrawer");
+  var smiles_popup = dataCollector[0][index].Smiles_GNPS_results;
+  smiles_vis.setAttribute("data-smiles", smiles_popup);
 
   
   SmiDrawer.apply();
@@ -1206,4 +1223,30 @@ function createSubstancePopUp(smiles){
 
 
 
+
+// ======== Heat Map colors START =========
+
+
+var stepR = (endColor[0] - startColor[0] ) / 10; 
+var stepG = (endColor[1] - startColor[1] ) / 10; 
+var stepB = (endColor[2] - startColor[2] ) / 10; 
+
+var gradientColors = []; 
+
+
+for (var i = 0; i <= 10; i++) {
+
+  var currentColor = {
+
+    r: Math.round(startColor[0] + (stepR * i)),
+    g: Math.round(startColor[1] + (stepR * i)),
+    b: Math.round(startColor[2] + (stepR * i)),
+
+  }; 
+
+  gradientColors.push(currentColor); 
+
+}; 
+
+// =========== Heat Map Colors END ===========
 
