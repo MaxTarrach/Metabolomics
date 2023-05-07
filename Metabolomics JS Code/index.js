@@ -73,6 +73,11 @@ function updateSigmaGraph(){
   graph.clear(); 
 
   for(var i = 0; i < dataPoints.length; i++){
+
+    // alle Farben aus den Datapoints eindeutig in einem Array Speichern 
+
+    
+
     // Datapoints with false Filterstatus => all Datapoints from the chemical space that are not found in the loaded samples
     if(dataPoints[i].getFilterStatus() == false){
      
@@ -92,12 +97,14 @@ function updateSigmaGraph(){
      //Highlight all DataSamples that are in the chemical space: 
     }else{
 
+    // Smiles of current DataPoint
+    var smilesForNodes =  dataPoints[i].smiles; 
 
-      // Smiles of current DataPoint
-      var smilesForNodes =  dataPoints[i].smiles; 
+    //Find Compound Name via Smiles 
+    const nameFromSmiles = filteredCSdataSet.find(item => item.Smiles_GNPS_results === smilesForNodes);
 
-      //Find Compound Name via Smiles 
-      const nameFromSmiles = filteredCSdataSet.find(item => item.Smiles_GNPS_results === smilesForNodes); 
+
+
 
       //Default Highlight found samples
       if(heatMapActive == false){
@@ -123,33 +130,32 @@ function updateSigmaGraph(){
          
        // get the max, min SmilesCount value
         var smilesCounts = filteredAndFoundDataPoints.map(object => { return object.SMILEScount; });
-        console.log(smilesCounts);
         
         var highestSmilesCount= Math.max(...smilesCounts); 
         var lowestSmilesCount = Math.min(...smilesCounts); 
- 
+
         // Using 4 colors: Green, yellow, orange, red
     
         //green 
      if(dataPoints[i].getSmilesCount() <= (highestSmilesCount/4)){
 
-        graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb(0,250,0)" });
+        graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: dataPoints[i].getCompoundName(), color: "rgb(0,250,0)" });
         }
          //yellow 
        else if(dataPoints[i].getSmilesCount() <= (highestSmilesCount/4 *2)){
 
-        graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb(255,255,0)" });
+        graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: dataPoints[i].getCompoundName(), color: "rgb(255,255,0)" });
         }
        //orange
        else if(dataPoints[i].getSmilesCount() <= (highestSmilesCount/4 *3)){
 
-         graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb(255,140,0)" });
+         graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: dataPoints[i].getCompoundName(), color: "rgb(255,140,0)" });
     }
 
         //red 
        else if(dataPoints[i].getSmilesCount() <= (highestSmilesCount)){
 
-          graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 9, label: dataPoints[i].getCompoundName(), color: "rgb(250,0,0)" });
+          graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: dataPoints[i].getCompoundName(), color: "rgb(250,0,0)" });
           }
 
       }
@@ -1023,8 +1029,6 @@ var arc = d3.arc()
   .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
 
-  
-
 
 var svg = d3.select("#sunburst").append("svg")
   .attr("width", width)
@@ -1248,5 +1252,41 @@ for (var i = 0; i <= 10; i++) {
 
 }; 
 
+function median(values) {
+
+}; 
+
+function mean(values) {
+
+  
+  var total = 0; 
+  for (var i = 0; i < values.length; i++){
+
+    total += values[i]; 
+
+  }
+
+  var avg = total / values.length; 
+
+  return avg; 
+
+
+}; 
+
+
+
+
 // =========== Heat Map Colors END ===========
+
+
+
+// ========== GET TMAP COLORS ==============
+function uniqueColors(dataPoints) {
+
+
+
+
+
+}; 
+
 

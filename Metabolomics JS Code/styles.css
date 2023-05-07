@@ -257,7 +257,7 @@ Alignment - TAB ELEMENTS
 #mainCanvas {
   position: absolute;
   border: 0px solid black;
-  background: rgb(59, 88, 102);
+  background: rgb(233, 233, 233);
   top: 200px;
   left: 0;
   width: 100%;
