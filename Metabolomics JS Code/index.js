@@ -32,6 +32,12 @@ const startColor = [255, 0, 0]; // Red
 const endColor = [0, 255, 0]; // Green 
 
 
+// Color-sheme from: https://observablehq.com/@d3/color-schemes  Set3
+const colorScheme = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]; 
+
+var rgb_coloscheme = []; 
+
+
 let limit = 0; 
 
 var filteredTmapData = {
@@ -68,15 +74,37 @@ Chemical_Space_tree: {
 
 };
 
+// Für alle HEX Werte einen RGB Wert erstellen und zum Array hinzufügen 
+for(i = 0; i < colorScheme.length; i++){
+
+  var converted = hexToRgb(colorScheme[i]); 
+
+  rgb_coloscheme.push(converted); 
+
+  console.log(rgb_coloscheme); 
+
+}; 
+
+
+function hexToRgb(hex){
+
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+
+}; 
+
+
+
+
 function updateSigmaGraph(){
 
   graph.clear(); 
 
   for(var i = 0; i < dataPoints.length; i++){
-
-    // alle Farben aus den Datapoints eindeutig in einem Array Speichern 
-
-    
 
     // Datapoints with false Filterstatus => all Datapoints from the chemical space that are not found in the loaded samples
     if(dataPoints[i].getFilterStatus() == false){
@@ -103,18 +131,38 @@ function updateSigmaGraph(){
     //Find Compound Name via Smiles 
     const nameFromSmiles = filteredCSdataSet.find(item => item.Smiles_GNPS_results === smilesForNodes);
 
-
-
-
       //Default Highlight found samples
       if(heatMapActive == false){
       //Class-Colors
+
+
+      // über datapoints zu smiles zu superclass zu farbe
+
+
+      //superclassForColors(smilesForNodes); 
+      
+      console.log(smilesForNodes); 
+
+      var yessire = dataCollector[0].findIndex(item => item.Smiles_GNPS_results === smilesForNodes); 
+
+      // Bestimmtes Element aus dem Datensatz erhalten
+      console.log(dataCollector[0][yessire]); 
+      console.log(dataCollector[0][yessire]); 
+
+
+
       //graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: dataPoints[i].getCompoundName(), color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
       s.graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: "", color: "rgb("+dataPoints[i].r+","+dataPoints[i].g+","+ dataPoints[i].b +")" });
-      
+      //s.graph.addNode([i], { x:dataPoints[i].x , y: dataPoints[i].y, size: 10, label: "", color: "rgb("+rgb_coloscheme[i].r+","+rgb_coloscheme[i].g+","+ rgb_coloscheme[i].b +")" });
+
       s.on('clickNode', function(event){
 
-        var smilesString = dataPoints[event.node].smiles; 
+        var smilesString = dataPoints[event.node].smiles;  
+
+        // s.graph.addNode([i], { x:dataPoints[event.node].x , y: dataPoints[event.node].y, size: 16, label: "", color: "rgb("+dataPoints[event.node].r+","+dataPoints[event.node].g+","+ dataPoints[event.node].b +")" });
+
+        console.log(event); 
+        console.log(rgb_coloscheme); 
 
         createSubstancePopUp(String(smilesString)); 
 
@@ -1273,20 +1321,22 @@ function mean(values) {
 
 }; 
 
+function superclassForColors(smiles){
+
+  var index = dataCollector[0].findIndex(item => item.Smiles_GNPS_results === smiles); 
 
 
+  // Bestimmtes Element aus dem Datensatz erhalten
+  console.log(dataCollector[0][index])
 
-// =========== Heat Map Colors END ===========
-
-
-
-// ========== GET TMAP COLORS ==============
-function uniqueColors(dataPoints) {
+  console.log(dataCollector[0][index].ms2query_model_prediction_ms2query_results);
 
 
+  var returnthis = dataCollector[0][index].ms2query_model_prediction_ms2query_results; 
+  //var superclass  = dataCollector[0][index].cf_superclass_ms2query_results;
 
+  //return superclass; 
 
+  return returnthis;  
 
 }; 
-
-
