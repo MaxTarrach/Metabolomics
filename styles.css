@@ -1,0 +1,1042 @@
+@charset "utf-8";
+/* CSS Document*/
+
+* {
+
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+h1 {
+
+  left: 50px;
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+
+/* Tab Headers (Data, T-Map etc) */ 
+
+h2 {
+
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: auto;
+
+}
+
+/* Headers inside Tabs (Windows) */ 
+
+h3 {
+
+  color: white;
+
+}
+
+p {
+
+  margin-left: 10px;
+  opacity: 1;
+  font-family: Arial, Helvetica, sans-serif;
+  color: black;
+}
+
+label {
+
+  font-family: Arial, Helvetica, sans-serif;
+  color: white; 
+
+}
+
+/*
+
+DATA - TAB ELEMENTS 
+
+*/
+
+table {
+  margin-top: 20px;
+  display:block;
+  height: 600px;
+  overflow-x: auto;
+  overflow-y: auto; 
+  border: 1px solid gray;
+}
+
+th,
+td {
+  text-align: left;
+  font-family: monospace;
+  overflow: hidden; 
+  padding-left: 8px;
+}
+
+td {
+  border-left: 1px solid gray; 
+  border-bottom: 1px solid gray;
+
+}
+
+th {
+  height: 30px;
+  background: #eee;
+  position: sticky; /* make the table heads sticky */
+  border-bottom: 1px solid gray; 
+}
+
+#lore {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#title {
+  position: absolute;
+  z-index: 9999;
+  pointer-events: none;
+  text-height: 1;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+
+  padding-bottom: 20px;
+
+  font-size: 1em;
+
+  color: #888888;
+
+  font-family: 'Open Sans';
+}
+
+#x-axis {
+  position: absolute;
+  z-index: 9999;
+  pointer-events: none;
+  text-height: 1;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+
+  padding-top: 20px;
+
+  font-size: 0.7em;
+
+  color: #888888;
+
+  font-family: 'Open Sans';
+}
+
+#y-axis {
+  position: absolute;
+  z-index: 9999;
+  pointer-events: none;
+  text-height: 1;
+  transition: opacity 0.5s ease-in;
+
+  padding-bottom: 20px;
+
+  font-size: 0.7em;
+
+  color: #888888;
+
+  font-family: 'Open Sans';
+
+  transform: rotate(-90deg);
+}
+
+#tip {
+  position: absolute;
+  z-index: 9999;
+  padding: 5px;
+  font-family: 'Open Sans';
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 2px;
+  border-left: 5px solid #000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s ease-out;
+  filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 1));
+}
+
+#tip.show {
+  opacity: 1;
+  transition: opacity 0.1s ease-out;
+}
+
+#tip-text {
+  position: relative;
+  max-width: 250px;
+  font-size: 0.8em;
+  font-weight: bold;
+  white-space: normal;
+  line-break: normal;
+}
+
+#hover-indicator {
+  display: none;
+  position: absolute;
+  z-index: 999;
+  border: 1px solid #fff;
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+#hover-indicator.show {
+  display: block !important;
+}
+
+.selected-indicator {
+  position: absolute;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.selected-indicator .crosshair-x {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 2px;
+  width: 100%;
+  margin: auto;
+
+  background-color: #fff;
+}
+
+.selected-indicator .crosshair-y {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  margin: auto;
+
+  background-color: #fff;
+}
+#sigma-container {
+  width: 80vw; 
+  height: 80vh;
+}
+#legendCanvas {
+  border: 0px solid black;
+  background: rgba(255, 255, 255, 0.568);
+
+  width: 100%;
+  height: 100%;
+}
+
+#mainCanvas {
+  position: absolute;
+  border: 0px solid black;
+  background: rgb(31, 48, 77);
+  top: 200px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#toolTipCanvas {
+  pointer-events: none;
+  position: absolute;
+
+  top: 200px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+#smilesCanvas {
+  pointer-events: none;
+  position: absolute;
+
+  top: 200px;
+  left: 0;
+}
+
+#canvasLayerStack {
+  pointer-events: none;
+  position: absolute;
+  background: rgba(195, 14, 180, 0.226);
+  top: 200px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+#layer1 {
+  pointer-events: none;
+  top: 200px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#tip {
+  background-color: white;
+  border: 1px solid blue;
+  position: absolute;
+  left: -200px;
+  top: 100px;
+}
+
+#legend {
+  position: absolute;
+  z-index: 9998;
+
+  bottom: 10px;
+
+  right: 10px;
+
+  padding: 10px;
+
+  border: 1px solid #262626;
+
+  border-radius: 2px;
+
+  background-color: #11111186;
+
+  filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+
+  color: #eeeeee;
+
+  font-family: 'Open Sans';
+}
+
+#legend .container {
+  display: flex;
+  flex: auto;
+  align-items: flex-start;
+
+  flex-direction: column;
+}
+
+#legend .legend-section {
+  width: 100%;
+}
+
+#legend .legend-section:not(:first-child) {
+}
+
+#legend h2 {
+  font-size: 1em;
+  font-weight: 600;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 5px;
+  text-align: center;
+  max-width: 250px;
+  white-space: normal;
+}
+
+#legend h3 {
+  font-size: 0.8em;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  max-width: 250px;
+  white-space: normal;
+}
+
+#legend select {
+  width: 100%;
+  margin-bottom: 5px;
+  background: transparent;
+  color: #fff;
+  border-radius: 2px;
+  font-size: 0.75em;
+}
+
+#legend select option {
+  background: #000;
+}
+
+#legend .legend-element,
+#legend .legend-element-range {
+  position: relative;
+  display: flex;
+  flex: auto;
+  align-items: flex-start;
+  padding-bottom: 2px;
+  padding-top: 2px;
+}
+
+#legend .legend-element {
+  align-items: flex-start;
+}
+
+#legend .legend-element-range {
+  flex-direction: column;
+}
+
+#legend .color-box {
+  width: 15px;
+
+  height: 15px;
+
+  border: solid 0px;
+}
+
+#legend .color-stripe {
+  width: 15px;
+
+  height: 1px;
+
+  border: solid 0px;
+}
+
+#legend .legend-label {
+  height: 15px;
+  font-size: 0.7em;
+  padding-left: 5px;
+}
+
+#legend .legend-label.max {
+  position: absolute;
+  top: 0px;
+  margin-left: 15px;
+}
+
+#legend .legend-label.min {
+  position: absolute;
+  bottom: 2px;
+  margin-left: 15px;
+}
+
+#selected {
+  position: absolute;
+  display: none;
+  z-index: 9998;
+  width: 250px;
+
+  bottom: 10px;
+
+  left: 10px;
+
+  padding: 0px;
+
+  border: 1px solid #262626;
+
+  border-radius: 2px;
+
+  background-color: #111111;
+
+  filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+
+  color: #eeeeee;
+
+  font-family: 'Open Sans';
+}
+
+#selected #selected-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 5px 10px;
+  border-bottom: 1px solid #262626;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+#selected #selected-controls * {
+  display: inline-block;
+}
+
+#selected #selected-controls #selected-title {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #aaa;
+}
+
+#selected #selected-controls a {
+  margin: 0px 2px;
+  font-size: 1.5em;
+  color: #fff;
+  opacity: 0.75;
+  transition: 0.2s;
+}
+
+#selected #selected-controls a:hover {
+  opacity: 1;
+}
+
+#selected #selected-controls a#selected-remove {
+  position: absolute;
+  right: 10px;
+  top: 42px;
+  color: #e74c3c;
+}
+
+#selected #selected-container {
+  padding: 10px;
+  font-size: 0.8em;
+}
+
+#selected #selected-container img {
+  margin-left: -10px;
+}
+
+#selected #selected-container .label {
+  font-weight: bold;
+  color: #aaa;
+  font-size: 0.7em;
+}
+
+#selected #selected-container .label:not(:first-child) {
+  margin-top: 2px;
+}
+
+#selected #selected-container .content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#selected #selected-container .content a {
+  text-decoration: none;
+  color: #3498db;
+}
+
+#controls {
+  position: absolute;
+  z-index: 9998;
+
+  top: 10px;
+
+  right: 10px;
+
+  padding: 2px;
+
+  border: 1px solid #262626;
+
+  border-radius: 2px;
+
+  background-color: #111111;
+
+  filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+
+  color: #eeeeee;
+
+  font-family: 'Open Sans';
+}
+
+#controls a {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 1.2em;
+  color: #fff;
+  opacity: 0.75;
+  transition: 0.2s;
+}
+
+#controls a:hover {
+  opacity: 1;
+}
+
+#controls #more-controls {
+  display: inline-block;
+}
+
+#impress {
+  position: absolute;
+  z-index: 9999;
+  top: 10px;
+  left: 10px;
+  font-size: 0.7em;
+  color: #eee;
+}
+
+#impress a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+#smiles-canvas {
+  position: absolute;
+  z-index: 9999;
+  left: -999px;
+  top: -999px;
+  width: 250px;
+  height: 250px;
+}
+
+#overlay-structure-container {
+  position: absolute;
+  z-index: 9999;
+  top: 50px;
+  left: 275px;
+  right: 100px;
+  bottom: 10px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+#overlay-structure {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.show {
+  opacity: 1 !important;
+}
+
+.hide {
+  display: none !important;
+}
+
+@media only screen and (max-width: 600px) {
+  #selected {
+    position: absolute;
+    display: none;
+    z-index: 9998;
+    width: 125px;
+    opacity: 0.8;
+    background-filter: blur(10px);
+  }
+
+  #selected img {
+    width: 125px;
+  }
+
+  #tip {
+    display: none;
+  }
+}
+
+.tmapLegend {
+  position: absolute;
+  width: 260px;
+  min-height: 40px;
+  background-color: rgba(255, 255, 255, 0.635);
+  margin: 30px ;
+  text-align: center;
+  font-size: 1.5em;
+  padding-top: 15px;
+  border-radius: 15px;
+}
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+.slidecontainer {
+  color:black;
+  width: 75%;
+  margin-top: 40px;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 20px;
+  background: linear-gradient(
+    90deg,
+    rgb(214, 214, 214) 60%,
+    rgb(214, 214, 214) 60%
+  );
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+  border-radius: 12px;
+  box-shadow: 0px 1px 10px 1px black;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dataSlider::after {
+  content: '4';
+  color: rgb(66, 66, 66);
+  font-size: 1.5rem;
+  position: absolute;
+  left: 95%;
+  bottom: 30px;
+}
+
+.dataSlider::before {
+  content: '1';
+  color: rgb(66, 66, 66);
+  font-size: 1.5rem;
+  position: absolute;
+  bottom: 30px;
+
+}
+
+.slidecontainer {
+  width: 75%;
+  margin-top: 40px;
+}
+
+.dataSlider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 20px;
+  background: linear-gradient(
+    90deg,
+    rgb(214, 214, 214) 60%,
+    rgb(214, 214, 214) 60%
+  );
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+  border-radius: 12px;
+  box-shadow: 0px 1px 10px 1px black;
+  width:90%;
+  position: absolute;
+  left: 20px;
+  top: 100px;
+}
+
+.dataSlider:hover {
+  opacity: 1;
+}
+
+.dataSlider::-webkit-dataslider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dataSlider::-moz-range-thumb {
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+  animation: fadeEffect 0.5s; /* Fading effect takes 1 second */
+}
+/* Go from zero to full opacity */
+@keyframes fadeEffect {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+.uiContainer {
+
+  position: absolute; 
+  top: 220px;
+  left: 30px; 
+  width: 350px; 
+  height: 700px; 
+  /*
+  background-color: #d3d3d3;
+  outline: solid 1px black;
+  */
+  display: flex; 
+  padding-left: 20px;
+
+
+}
+
+
+.dataSlideContainer {
+
+  position: absolute; 
+  bottom: 40px;
+  left: 600px; 
+  width: 500px; 
+  height: 130px;
+  background-color: #d3d3d3;
+  outline: solid 1px black;
+  display: block; 
+  justify-content: center;
+
+}; 
+
+
+
+input[type=checkbox]{
+
+
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 50px;
+  height: 25px;
+  background: grey;
+  display: block;
+  border-radius: 25px;
+  position: relative;
+}
+
+label:after {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 25px;
+  height: 25px;
+  background: #fff;
+  border-radius: 90px;
+  transition: 0.3s;
+}
+
+input:checked + label {
+  background: #bada55;
+}
+
+input:checked + label:after {
+  left: calc(100%);
+  transform: translateX(-100%);
+}
+
+label:active:after {
+  width: 25px;
+}
+
+
+
+.SliderTitle {
+
+  position: absolute;
+  left: 20px; 
+
+
+}
+
+.switch {
+
+  display: none; 
+
+}
+
+.hide-checkbox {
+
+  display:none;
+
+}
+
+
+/* Tooltip container */
+.tooltip {
+  color: white;
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  width: auto;
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 10px; 
+  border-radius: 6px;
+
+
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+ 
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
+}
+
+.headerParent {
+
+};
+
+
+.map-header {
+  text-align: center;
+}
+.float-container {
+  display: flex;
+  /*We want 1 row and we dont want items to wrap into other rows*/
+  flex-flow: row nowrap;
+  width: 100%;
+  /*Positions elements to the start, end and whatever is between while keeping some space between them */
+  justify-content: space-between; 
+  /*You can add this if you also want to horizontally align items*/
+  align-items: center;
+}
+/*gives all divs (the spacer and the checbox-div) inside of the header-wrapper the same size and leaves the rest of space for the header, with this the header is centered and looks better*/
+.float-container div {
+    width: 33%;
+}
+.checkbox-div {  
+  background-color: red;
+}
+
+#tmapHeader {
+
+  width: 33%; 
+
+
+}
+
+.counter-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#incdecCount {
+  margin-left: 15px;
+  margin-right: 15px;
+
+}
+
+
+#selectFileNumber {
+
+  margin-left: 15px;
+
+}
+
+#incdecInput {
+
+margin-left: 10px; 
+margin-right: 10px; 
+
+}
+
+.substance-popup {
+
+  position: absolute; 
+  top: 210px;
+  right: 10px; 
+  background-color: #e5e5e5;
+  outline: solid 1px black;
+  padding-left: 20px;
+  padding-right: 20px;
+
+}
+
+#substance-header {
+
+  max-width: 200px; 
+
+}
+
+img {
+
+  border: 2px solid black; 
+
+
+}; 
+
+
+#smilesDrawer {
+
+  margin: 45px; 
+
+}; 
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+#sampleTable {
+  border-collapse: collapse;
+  display: flex;
+  width: 100%;
+  height: 150px;
+  border: 1px solid black;
+}
+

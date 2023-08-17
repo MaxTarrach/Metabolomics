@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Metabolomics App</title>
+    <link href="styles.css" type="text/css" rel="stylesheet" />
+    <link
+      rel="shortcut icon"
+      href="data:image/vnd.microsoft.icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA25g0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAERAAAAAAAAAREAAAAAAAABEQAAAAAAAAERAAAAAAAAARERERAAAAABEREREAAAAAEREREQAAAAAREAAAAAAAABEQAAAAAAAAEREREQAAAAARERERAAAAABEREREAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAPH/AADx/wAA8f8AAPH/AADwDwAA8A8AAPAPAADx/wAA8f8AAPAPAADwDwAA8A8AAP//AAD//wAA"
+    />
+    <script src="https://unpkg.com/lore-engine@1.1.10/dist/lore.min.js"></script>
+    <script src="https://unpkg.com/smiles-drawer@1.2.0/dist/smiles-drawer.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.3.1/sigma.min.js"
+      integrity="sha512-rU8OO+H1WUkbSf/0Enr4ZVFw2Kydx9kK0b805tWXgrcyyJu/S4YM09xxYlCeh/BHf2WqL89ioXIppy8ghHB1sQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css"
+      integrity="sha256-piqEf7Ap7CMps8krDQsSOTZgF+MU/0MPyPW2enj5I40="
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400,600"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.0/graphology.umd.min.js"
+      integrity="sha512-N+WcElMiKUys+lyqZvhK5Svlmp1628tPbHWXgTROdVtWCoCWBSiLWliVLh3c7hEh6TgUA34gSYip2jinoHZGGA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script type="text/javascript" src="https://unpkg.com/smiles-drawer@2.0.1/dist/smiles-drawer.min.js"></script>
+
+    
+
+    <style>
+      
+    </style>
+  </head>
+  <body>
+    <h1>Metabolomics</h1>
+
+    <script src="TmapData.js" defer></script>
+
+    <script src="TmapCode.js" defer></script>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="canvasLayers.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale@4" defer></script>
+
+    <script
+      src="https://requirejs.org/docs/release/2.3.5/minified/require.js"
+      defer
+    ></script>
+
+    <!-- <script src='jquery-3.2.1.min.js'></script> -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+
+    <script src="table.js" defer></script>
+
+    <script src="index.js" defer></script>
+    
+    <script src="sigma.js"></script>
+    <script src="sigma.classes.dispatcher.js"></script>
+    <!-- To use a Graph object -->
+    <script src="graphology.min.js"></script>
+    <!-- This exposes a global variable named "graphology" -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  
+
+
+    <!-- Tab links -->
+    <div class="tab">
+
+      <button 
+      class="tablinks" 
+      onclick="openCity(event, 'Data')"
+      id="defaultOpen"
+      >
+        Data
+      </button>
+      <button
+        class="tablinks"
+        onclick="openCity(event, 'T-Map')"
+      >
+        T-Map
+      </button>
+      <!--<button class="tablinks" onclick="openCity(event, 'Alignment Chart')">
+        Alignment Chart
+      </button>-->
+    </div>
+
+
+    <!-- Tab content -->
+    <div id="T-Map" class="tabcontent">
+
+      <div id="headerParent" class="float-container">
+
+      <h2 id="tMapHeader" class="map-header" style="width: 33%; " >T-Map</h2>
+
+      <div class="counter-div">
+        
+        <button id="decrement">-</button>
+        <input type="number" id="incdecInput" name="FileInput" min="1"  value="1">
+        <button id="increment">+</button>
+        <p id="display-file">clustered_spectra_sample.csv</p>
+        
+        <!--
+        <div class="tooltip-popup">
+        <h3 id="selectFileNumber">Select File Number &#9432</h3>
+        <span class="tooltiptext">Select which one of the imported files is visualized.</span>
+        </div>
+        -->
+
+      </div>
+
+      <div class="empty-div"></div>
+
+      </div>
+
+      <div><canvas id="tip" width="100" height="25"></canvas></div>
+
+      <div id="Tmap">
+        <div
+          id="overlay-structure-container"
+          data-binding-id="overlayStructureContainer"
+          class=""
+        >
+          <canvas
+            id="overlay-structure"
+            data-binding-id="overlayStructure"
+            width="450"
+            height="687"
+          >
+          </canvas>
+        </div>
+
+        <div id="selected" data-bind="selected">
+          <div id="selected-controls" data-bind="selectedControls">
+            <a id="selected-toggle" data-bind="selectedToggle" href="#">
+              <i class="fas fa-toggle-on"></i>
+            </a>
+            <span>&nbsp;&nbsp;</span>
+            <span id="selected-title" data-bind="selectedTitle"></span>
+            <span>&nbsp;&nbsp;</span>
+            <span
+              id="selected-current"
+              data-bind="selectedCurrent"
+              data-bind="selectedCurrent"
+              >0</span
+            ><span> / </span
+            ><span id="selected-total" data-bind="selectedTotal">0</span>
+            <span>&nbsp;&nbsp;</span>
+            <a id="selected-prev" data-bind="selectedPrev" href="#">
+              <i class="fas fa-angle-left"></i>
+            </a>
+            <span>&nbsp;</span>
+            <a id="selected-next" data-bind="selectedNext" href="#">
+              <i class="fas fa-angle-right"></i>
+            </a>
+            <a id="selected-remove" data-bind="selectedRemove" href="#">
+              <i class="fas fa-times"></i>
+            </a>
+          </div>
+          <div id="selected-container" data-bind="selectedContainer"></div>
+        </div>
+
+        <div id="hover-indicator" data-bind="hoverIndicator"></div>
+
+        <canvas id="lore"></canvas>
+
+        <!-- <canvas id="canvasLayerStack"></canvas>-->
+      </div>
+
+      <div id="sigma-container">
+        <canvas id="mainCanvas" class="canvas"></canvas>
+        <canvas id="toolTipCanvas" class="canvas"></canvas>
+        <canvas id="smilesCanvas" class="canvas"></canvas>
+      </div>
+      <!-- <div id="plotly-container" style="position:absolute;  bottom:10px;" ></div> -->
+
+      <div class="uiContainer">
+
+        <!--
+        <div
+        class="tmapLegend"
+        id="legendContainer"
+        style="position: absolute; top: 320px";
+      >
+        Legend
+      </div>
+      -->
+
+
+      <div class="slideContainer" style="position: absolute; top: 20px">
+
+          <h3 style="color: white">Prediction Value &#9432</h3>
+
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value="60"
+          id="myRange"
+          class="slider"
+        />
+
+        <p style="color: white">
+          Selected Prediction-Value:   0.<span  style="color: white" id="value"> </span>
+          <!--   <label>Zoom-Amount:</label> -->
+          <!-- <input type="number" id="zoomAmount"> -->
+        </p>
+        
+        <div class="tooltip">
+          <h3>Activate Heatmap &#9432</h3>
+          <span class="tooltiptext">Activate the heatmap to show <br> the frequency of substances across all imported samples. <br>Red colored substances are rare and green substances more common. </span>
+        </div>
+       
+        <input type="checkbox" id="switch" style="display: none;"/>
+        <label for="switch">Toggle</label>
+
+        <div class="tooltip"> 
+          <h3>Show complete GNPS dataset &#9432</h3>
+          <span class="tooltiptext">Set the substances in the GNPS dataset on visible <br> and see their superclasses visualized through color.</span>
+        </div>
+
+        <input type="checkbox" id="hide-checkbox" style="display: none;"/>
+        <label for="hide-checkbox">Hide complete GNPS dataset</label>
+      </div>
+
+<!--
+      <div id="sunburst-container" style="position: absolute">
+        <div id="sunburst"></div>
+      </div>
+
+      -->
+      </div>
+
+      <div class="substance-popup">
+
+        <div id="popup-content-container">
+
+        <h3 id="substance-header" style="color: black"></h3>
+
+        <p id="prediction-popup"> </p>
+        <P id="mass-popup" >       </P>
+        <P id="superclass-popup" > </P>
+        <P id="class-popup" >      </P>
+        <P id="subclass-popup" >   </P>
+
+        <table id="sampleTable" border="1">
+          <tr>
+              <th>Substance can be found in:</th>
+          </tr>
+          <tr>
+              <td>clustered_spectra_sample.csv</td>
+          </tr>
+          <tr>
+              <td>clustered_spectra_two.csv</td>
+          </tr>
+          <tr>
+              <td>clustered_spectra_three.csv</td>
+          </tr>
+      </table>
+
+        <script>
+          SmiDrawer.apply();
+        </script>
+         
+        <img id="smilesDrawer" style="margin: 45px;" data-smiles="" data-smiles-options="{'width':300, 'height':300 }" />
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div id="Alignment Chart" class="tabcontent">
+      <h2>Alignment Chart</h2>
+      <button type="button" id="ShowGraphButton">Show Graph</button>
+      <input type="button" value="Generate a table" onclick="generateTable()" />
+
+      <div
+        class="chart-container"
+        style="position: relative; height: 40vh; width: 80vw"
+      >
+        <canvas id="chartJS" style="height: 500px; width: 500px"></canvas>
+
+        <div style="margin-top: 20px">
+          <label for="maxCount">max count:</label>
+          <input
+            type="number"
+            id="maxCount"
+            placeholder="default"
+            maxlength="10"
+          />
+
+          <label for="minCount">min count:</label>
+          <input
+            type="number"
+            id="minCount"
+            placeholder="default"
+            maxlength="10"
+          />
+
+          <input type="button" id="countRangeButton" value="set" />
+        </div>
+      </div>
+    </div>
+
+    <div id="Data" class="tabcontent">
+      <h2>Data</h2>
+
+    <input type="file" multiple id="uploadfile" accept=".csv" />
+    <button id="uploadconfirm">Upload File</button>
+
+      <div id="dataTable">
+
+      </div>
+    </div>
+
+    
+  </body>
+</html>
