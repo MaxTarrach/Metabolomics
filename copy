@@ -1,0 +1,46 @@
+
+//init temp values 
+  let isFiltered = false; 
+  let lineWidth = 0 ;
+  let dataPointSize = 3;
+  let stroke = "black";
+
+
+ // drawPoint(30,30,5,100,200,100);   
+  for(let i = 0; i < TMapData.Chemical_Space.x.length; i++){
+ 
+    //Fill Array with all Datapoints
+    dataPoints[i] = new DataPoint(TMapData.Chemical_Space.x[i],TMapData.Chemical_Space.y[i],dataPointSize, TMapData.Chemical_Space.colors[0].r[i], TMapData.Chemical_Space.colors[0].g[i], TMapData.Chemical_Space.colors[0].b[i],stroke, lineWidth, isFiltered);
+    
+    dataPoints[i].setSmiles(TMapData.Chemical_Space.labels[i]);
+    dataPoints[i].setCompoundName("["+[i]+ "] " + TMapData.Chemical_Space.labels[i]);
+
+   // dataPoints[i].setCompoundName(TMapData.Chemical_Space[i].analog_compound_name_ms2query_results);
+   //seperate Filtered Data from whole Dataset
+
+
+    if(TMapData.Chemical_Space.dataFiltered[i] == true){
+
+      dataPoints[i].setLineWidth(2);
+      dataPoints[i].setPointSize(6);
+      dataPoints[i].setFilterStatus(true);
+      dataPoints[i].setStrokeStyle("black"); 
+      dataPoints[i].setClickable(true);
+      
+      //DataPoints should be labeled with the fileNumber only once at the beginning: 
+      if(heatMapActive == false){
+      dataPoints[i].setFileName("File: " + fileNumber);
+      }  
+
+      filteredDataPoints.push(dataPoints[i]); 
+      
+
+    }else{
+    dataPoints[i].setLineWidth(0.1);
+    dataPoints[i].setPointSize(3);
+    dataPoints[i].setFilterStatus(false);
+    dataPoints[i].setStrokeStyle("black"); 
+
+  }
+ 
+}
